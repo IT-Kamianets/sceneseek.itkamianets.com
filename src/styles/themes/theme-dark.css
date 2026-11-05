@@ -1,0 +1,48 @@
+html[data-mode='dark'] {
+  color-scheme: dark;
+
+  /* SceneSeek luxury palette */
+  --champagne: #F2E4D0;
+  --antique-gold: #C6A15B;
+  --burgundy: #6E1734;
+  --wine: #8F2948;
+  --espresso: #2A1018;
+
+  /* Semantic design tokens */
+  --background: #2A1018;
+  --foreground: #F2E4D0;
+  --card: #3B1422;
+  --card-foreground: #F2E4D0;
+  --popover: #35121F;
+  --popover-foreground: #F2E4D0;
+  --primary: #8F2948;
+  --primary-foreground: #FFF7F0;
+  --secondary: #6E1734;
+  --secondary-foreground: #F2E4D0;
+  --muted: #481B2B;
+  --muted-foreground: #D1B8A8;
+  --accent: #C6A15B;
+  --accent-foreground: #2A1018;
+  --destructive: #A93653;
+  --destructive-foreground: #FFF7F0;
+  --border: #673047;
+  --input: #35121F;
+  --ring: #C6A15B;
+
+  /* Existing SceneSeek app tokens */
+  --c-primary: var(--wine);
+  --c-primary-hover: #A83A59;
+  --c-secondary: var(--burgundy);
+  --c-secondary-hover: var(--wine);
+  --c-bg-primary: var(--espresso);
+  --c-bg-secondary: #35121F;
+  --c-bg-tertiary: #481B2B;
+  --c-text: #E6CFBB;
+  --c-text-strong: var(--champagne);
+  --c-text-muted: #C6A3A8;
+  --c-placeholder: #C6A3A8;
+  --c-border: #673047;
+  --focus-ring: 0 0 0 3px color-mix(in srgb, var(--antique-gold) 48%, transparent);
+  --shadow-sm: 0 2px 6px rgb(0 0 0 / 28%);
+  --shadow-md: 0 14px 34px rgb(0 0 0 / 38%);
+}

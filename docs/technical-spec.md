@@ -200,11 +200,11 @@ SceneSeek — навчальний вебпроєкт, що демонструє
 | Frontend | Angular 22, TypeScript, Angular Router |
 | Рендеринг | Angular SSR; сторінки prerendered під час build |
 | Мобільний UI | Не виявлено Ionic чи Capacitor у поточній структурі |
-| Стилі | Tailwind CSS 4 для повсякденного UI; SCSS для глобальних токенів і складних локальних стилів |
+| Стилі | Tailwind CSS 4; SCSS для структурних токенів; окремі світла й темна CSS-палітри SceneSeek |
 | Реактивність | Zoneless Angular та Angular Signals |
 | Форми | Signal Forms рекомендовані для нових форм |
 | Асинхронне завантаження | `ngxResource()` з `@wawjs/ngx-core`, коли ресурсна модель підходить; стартова ініціалізація залишається явним async-процесом |
-| Тема | Централізований `ThemeService` з `@wawjs/ngx-ui` |
+| Тема | `ThemeService` з `@wawjs/ngx-ui`; підключені світла й темна палітри |
 | Переклади | `@wawjs/ngx-translate`; наразі лише українська; структуру зберігати готовою до майбутнього перемикача мови в налаштуваннях акаунту |
 | Іконки | Material Symbols Outlined |
 | Статичні дані | JSON у `src/data/`; bootstrap може отримувати дані через наявний RegionIT API та використовувати локальний fallback |
@@ -233,7 +233,10 @@ src/
   environments/
   i18n/                       # локалізації
   styles/
-    _theme.scss               # спільні змінні теми
+    _theme.scss               # структурні токени без палітри
+    themes/
+      theme-light.css        # світла шампаньово-бордова палітра
+      theme-dark.css         # темна еспресо-бордова палітра
   styles.scss                 # глобальна точка входу
 
 tools/seo/
@@ -264,13 +267,16 @@ npm start
 npm run build
 ```
 
+
 `npm start` запускає клієнт розробки; типовий локальний URL — `http://localhost:4200`. Команди й залежності проєкту перевіряти за `package.json` та `AGENTS.md` у репозиторії. GitHub Actions розгортає зібраний вміст `dist/app/browser` на GitHub Pages.
 
 ### 6.5. Стилі, переклади та іконки
 
 - Для типового layout, spacing, typography, кольорів, borders, sizing і responsive поведінки використовувати Tailwind CSS 4.
 - SCSS залишати для компонентних стилів, спільних токенів/міксинів, складних станів і невеликого обсягу глобальних стилів.
-- Спільні змінні кольорів, поверхонь, відступів, радіусів і motion тримати в `src/styles/_theme.scss`; стан теми керувати через `ThemeService` з `@wawjs/ngx-ui`.
+- Кольорові палітри зберігати окремо у `src/styles/themes/theme-light.css` та `theme-dark.css`; обидві таблиці стилів підключені в `angular.json`.
+- Світла палітра задає токени в `:root`, темна перевизначає їх на `html[data-mode='dark']`, яке перемикає `ThemeService` з `@wawjs/ngx-ui`.
+- Спільні структурні токени, типографіку, відступи, радіуси й motion тримати в `src/styles/_theme.scss`.
 - Для UI-тексту використовувати `@wawjs/ngx-translate`; не використовувати `TranslatePipe`, оскільки README репозиторію вказує, що він відсутній у поточному пакеті.
 - Український текст у шаблонах і `src/i18n/ua.json` має збігатися. Масиви інших мов мають відповідати українському за індексами; файли зберігати як UTF-8.
 - За замовчуванням використовувати Material Symbols Outlined. Для іконок у кнопках забезпечувати доступну текстову назву або `aria-label`.

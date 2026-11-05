@@ -1,0 +1,48 @@
+:root {
+  color-scheme: light;
+
+  /* SceneSeek luxury palette */
+  --champagne: #F2E4D0;
+  --antique-gold: #C6A15B;
+  --burgundy: #6E1734;
+  --wine: #8F2948;
+  --espresso: #2A1018;
+
+  /* Semantic design tokens */
+  --background: #F2E4D0;
+  --foreground: #2A1018;
+  --card: #FBF5EC;
+  --card-foreground: #2A1018;
+  --popover: #FBF5EC;
+  --popover-foreground: #2A1018;
+  --primary: #8F2948;
+  --primary-foreground: #FFF7F0;
+  --secondary: #6E1734;
+  --secondary-foreground: #F2E4D0;
+  --muted: #E8D4C0;
+  --muted-foreground: #68434A;
+  --accent: #C6A15B;
+  --accent-foreground: #2A1018;
+  --destructive: #6E1734;
+  --destructive-foreground: #FFF7F0;
+  --border: #D8BFA5;
+  --input: #FBF5EC;
+  --ring: #8F2948;
+
+  /* Existing SceneSeek app tokens */
+  --c-primary: var(--wine);
+  --c-primary-hover: var(--burgundy);
+  --c-secondary: var(--burgundy);
+  --c-secondary-hover: var(--wine);
+  --c-bg-primary: var(--champagne);
+  --c-bg-secondary: #FBF5EC;
+  --c-bg-tertiary: #F7EDDF;
+  --c-text: #5C3E47;
+  --c-text-strong: var(--espresso);
+  --c-text-muted: #82636A;
+  --c-placeholder: #82636A;
+  --c-border: #D8BFA5;
+  --focus-ring: 0 0 0 3px color-mix(in srgb, var(--wine) 35%, transparent);
+  --shadow-sm: 0 2px 5px rgb(42 16 24 / 8%);
+  --shadow-md: 0 12px 30px rgb(42 16 24 / 12%);
+}

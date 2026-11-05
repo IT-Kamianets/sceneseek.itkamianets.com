@@ -28,12 +28,12 @@ SceneSeek допомагає знаходити потрібні сцени за
 | --- | --- |
 | Web-клієнт | Angular 22, TypeScript, Angular Router |
 | Рендеринг | Angular SSR і prerender сторінок під час build |
-| Стилі | Tailwind CSS 4; SCSS для глобальних токенів і складних локальних стилів |
+| Стилі | Tailwind CSS 4; SCSS для структурних токенів; палітри у `src/styles/themes/theme-light.css` і `theme-dark.css` |
 | Реактивність | Zoneless Angular та Angular Signals |
 | Форми | Signal Forms рекомендовані для нових форм |
 | Асинхронні дані | `ngxResource()` з `@wawjs/ngx-core`, коли підходить ресурсна модель |
 | Переклади | `@wawjs/ngx-translate`; зараз лише українська, з можливістю додати інші мови пізніше |
-| Тема | `ThemeService` з `@wawjs/ngx-ui` |
+| Тема | `ThemeService` з `@wawjs/ngx-ui`; темний режим використовує токени `html[data-mode='dark']` |
 | Іконки | Material Symbols Outlined |
 | Збірка і розгортання | npm, GitHub Actions, GitHub Pages; публікується `dist/app/browser` |
 | Середовище | Node.js 20+, npm 11+ рекомендовано репозиторієм |
@@ -76,7 +76,10 @@ src/
   environments/
   i18n/                   # переклади
   styles/
-    _theme.scss           # спільні змінні теми
+    _theme.scss           # спільні структурні токени
+    themes/
+      theme-light.css    # світла шампаньово-бордова палітра
+      theme-dark.css     # темна еспресо-бордова палітра
   styles.scss             # глобальна точка входу стилів
 tools/seo/                # SEO-інструменти
 angular.json
