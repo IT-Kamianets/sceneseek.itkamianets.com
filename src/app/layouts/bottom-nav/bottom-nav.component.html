@@ -1,0 +1,42 @@
+<nav class="bottom-nav" aria-label="Основна навігація">
+	<a
+		class="bottom-nav__link"
+		routerLink="/"
+		routerLinkActive="is-active"
+		[routerLinkActiveOptions]="{ exact: true }"
+		ariaCurrentWhenActive="page"
+	>
+		<span class="material-symbols-outlined" aria-hidden="true">home</span>
+		<span>Головна</span>
+	</a>
+
+	<a
+		class="bottom-nav__link"
+		routerLink="/history"
+		routerLinkActive="is-active"
+		ariaCurrentWhenActive="page"
+	>
+		<span class="material-symbols-outlined" aria-hidden="true">history</span>
+		<span>Історія</span>
+	</a>
+
+	<a
+		class="bottom-nav__link"
+		routerLink="/saved"
+		routerLinkActive="is-active"
+		ariaCurrentWhenActive="page"
+	>
+		<span class="material-symbols-outlined" aria-hidden="true">bookmarks</span>
+		<span>Збережене</span>
+	</a>
+
+	<a
+		class="bottom-nav__link"
+		routerLink="/profile"
+		routerLinkActive="is-active"
+		ariaCurrentWhenActive="page"
+	>
+		<span class="material-symbols-outlined" aria-hidden="true">person</span>
+		<span>Профіль</span>
+	</a>
+</nav>
