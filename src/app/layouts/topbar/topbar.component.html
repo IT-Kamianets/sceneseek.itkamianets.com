@@ -9,16 +9,20 @@
 			class="inline-flex items-center gap-3"
 			routerLink="/"
 		>
-			<img
-				class="h-10 w-auto"
-				[translate]="{ alt: 'Project logo' }"
-				ngSrc="sceneseek-logo.jpg"
-				width="132"
-				height="40"
-				priority
-			/>
+			<span
+				class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white bg-white p-1 shadow-[var(--shadow-sm)]"
+			>
+				<img
+					class="h-full w-full rounded-xl object-cover"
+					[translate]="{ alt: 'Project logo' }"
+					ngSrc="sceneseek-logo.jpg"
+					width="40"
+					height="40"
+					priority
+				/>
+			</span>
 			@if (company().name) {
-				<span class="hidden text-sm font-semibold tracking-[0.16em] text-[var(--c-text-strong)] sm:inline">
+				<span class="hidden text-sm font-semibold text-[var(--c-text-strong)] sm:inline">
 					{{ company().name }}
 				</span>
 			}
