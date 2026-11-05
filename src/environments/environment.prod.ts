@@ -10,7 +10,7 @@ export const environment: {
 	appVersion: '1.0.0',
 	production: true,
 	companyId: 'demo',
-	defaultLanguage: 'en',
+	defaultLanguage: 'ua',
 	languages: [
 		{
 			code: 'en',
