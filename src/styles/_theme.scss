@@ -1,0 +1,113 @@
+/* Design tokens (CSS variables). Runtime-themable; keep SCSS using var(--token) */
+:root {
+  color-scheme: light;
+
+  /* brand / actions */
+  --c-primary: #256eff;
+  --c-primary-hover: #0051f1;
+  --c-secondary: #c53d3d;
+  --c-secondary-hover: #962a2a;
+
+  /* surfaces */
+  --c-bg-primary: #f3f4f7;
+  --c-bg-secondary: #ffffff;
+  --c-bg-tertiary: #fcfdfe;
+
+  /* content */
+  --c-text: #5f6066;
+  --c-text-strong: #17224f;
+  --c-text-muted: #8b8d94;
+  --c-placeholder: #313335ab;
+
+  /* borders & elevation */
+  --c-border: #eceef5;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.08);
+
+  /* typography */
+  --ff-base: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  --fs: 16px;
+  --letter-spacing: 0.3px;
+
+  /* radius (default rounded) */
+  --radius: 8px;
+  --radius-card: 10px;
+  --radius-btn: 10px;
+
+  /* spacing (default comfortable) */
+  --sp-0: 0px;
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --sp-7: 32px;
+  --sp-8: 40px;
+  --sp-10: 48px;
+  --sp-12: 56px;
+  --sp-16: 72px;
+  --sp-20: 96px;
+
+  /* layout */
+  --container: 1210px;
+  --gutter: 10px;
+
+  /* motion */
+  --easing: cubic-bezier(0.25, 0.8, 0.25, 1);
+  --motion-fast: 0.15s;
+  --motion: 0.25s;
+  --motion-slow: 0.4s;
+
+  /* focus */
+  --focus-ring: 0 0 0 3px rgba(37, 110, 255, 0.35);
+}
+
+/* ========= modes ========= */
+html[data-mode='dark'] {
+  color-scheme: dark;
+
+  /* surfaces */
+  --c-bg-primary: #282828;
+  --c-bg-secondary: #343434;
+  --c-bg-tertiary: #404040;
+
+  /* borders & elevation */
+  --c-border: #404040;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.45);
+
+  /* content */
+  --c-text: #e8e8e8;
+  --c-text-strong: #ffffff;
+  --c-text-muted: #b7b7b7;
+  --c-placeholder: #d3cdcd;
+
+  /* focus (keeps using primary) */
+  --focus-ring: 0 0 0 3px rgba(37, 110, 255, 0.35);
+}
+
+/* ========= density ========= */
+html[data-density='compact'] {
+  --sp-1: 2px;
+  --sp-2: 6px;
+  --sp-3: 10px;
+  --sp-4: 14px;
+  --sp-5: 18px;
+  --sp-6: 22px;
+  --sp-7: 28px;
+  --sp-8: 36px;
+  --sp-10: 42px;
+  --sp-12: 48px;
+  --sp-16: 64px;
+  --sp-20: 84px;
+
+  --gutter: 8px;
+}
+
+/* ========= radius ========= */
+html[data-radius='square'] {
+  --radius: 0px;
+  --radius-card: 0px;
+  --radius-btn: 0px;
+}
