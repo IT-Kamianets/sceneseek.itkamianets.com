@@ -1,8 +1,20 @@
 {
   "_id": "",
-  "name": "IT Kamianets",
-  "title": "IT Kamianets",
-  "description": "Web and mobile app development, IT education, internships, and digital solutions for businesses.",
-  "image": "https://ngx.itkamianets.com/logo.png",
-	"siteUrl": "https://ngx.itkamianets.com"
+  "name": "SceneSeek",
+  "title": "SceneSeek — AI-платформа для пошуку відеофутажів",
+  "description": "Знаходьте відеофутажі за текстовим описом, переглядайте результати в одній стрічці та зберігайте їх у власних папках.",
+  "image": "https://sceneseek.itkamianets.com/sceneseek-logo.jpg",
+  "siteUrl": "https://sceneseek.itkamianets.com",
+  "lang": "uk",
+  "locale": "uk_UA",
+  "logo": "https://sceneseek.itkamianets.com/sceneseek-logo.jpg",
+  "defaultSeo": {
+    "title": "SceneSeek — AI-платформа для пошуку відеофутажів",
+    "description": "Знаходьте відеофутажі за текстовим описом, переглядайте результати в одній стрічці та зберігайте їх у власних папках.",
+    "image": "https://sceneseek.itkamianets.com/sceneseek-seo.jpg",
+    "author": "SceneSeek",
+    "robots": "index, follow",
+    "type": "website",
+    "twitterCard": "summary_large_image"
+  }
 }
