@@ -1,26 +1,26 @@
 html[data-mode='dark'] {
   color-scheme: dark;
 
-  /* Instrument palette: machined gold controls on a layered graphite console. */
-  --background: oklch(0.158 0.012 285);
-  --foreground: oklch(0.93 0.008 85);
-  --card: oklch(0.205 0.014 283);
-  --card-foreground: oklch(0.93 0.008 85);
-  --popover: oklch(0.228 0.015 283);
-  --popover-foreground: oklch(0.93 0.008 85);
-  --primary: oklch(0.8 0.115 85);
-  --primary-foreground: oklch(0.24 0.05 85);
-  --secondary: oklch(0.262 0.016 283);
-  --secondary-foreground: oklch(0.88 0.01 85);
-  --muted: oklch(0.235 0.014 283);
-  --muted-foreground: oklch(0.66 0.018 281);
-  --accent: oklch(0.288 0.018 283);
-  --accent-foreground: oklch(0.93 0.008 85);
+  /* Futuristic palette: violet light on a deep ink-purple interface. */
+  --background: oklch(0.12 0.022 291);
+  --foreground: oklch(0.95 0.012 292);
+  --card: oklch(0.17 0.026 291);
+  --card-foreground: oklch(0.95 0.012 292);
+  --popover: oklch(0.205 0.032 291);
+  --popover-foreground: oklch(0.95 0.012 292);
+  --primary: oklch(0.68 0.205 292);
+  --primary-foreground: oklch(0.985 0.008 292);
+  --secondary: oklch(0.215 0.03 291);
+  --secondary-foreground: oklch(0.89 0.02 292);
+  --muted: oklch(0.195 0.026 291);
+  --muted-foreground: oklch(0.72 0.035 292);
+  --accent: oklch(0.265 0.06 292);
+  --accent-foreground: oklch(0.96 0.015 292);
   --destructive: oklch(0.55 0.19 25);
   --destructive-foreground: oklch(0.97 0.015 25);
-  --border: oklch(0.31 0.018 285);
-  --input: oklch(0.135 0.012 285);
-  --ring: oklch(0.8 0.115 85);
+  --border: oklch(0.31 0.035 291);
+  --input: oklch(0.135 0.024 291);
+  --ring: oklch(0.74 0.18 292);
 
   --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
@@ -31,7 +31,7 @@ html[data-mode='dark'] {
 
   /* Existing app token bridge */
   --c-primary: var(--primary);
-  --c-primary-hover: oklch(0.845 0.108 88);
+  --c-primary-hover: oklch(0.75 0.18 292);
   --c-primary-foreground: var(--primary-foreground);
   --c-secondary: var(--secondary);
   --c-secondary-hover: var(--accent);
@@ -43,17 +43,17 @@ html[data-mode='dark'] {
   --c-text-muted: var(--muted-foreground);
   --c-placeholder: var(--muted-foreground);
   --c-border: var(--border);
-  --surface-bezel: oklch(0.188 0.013 284);
+  --surface-bezel: oklch(0.145 0.024 291);
   --surface-raised: var(--card);
   --surface-recessed: var(--input);
-  --selection-bg: oklch(0.32 0.025 282);
-  --focus-ring: 0 0 0 0.1875rem oklch(0.8 0.115 85 / 0.25);
+  --selection-bg: oklch(0.28 0.055 292);
+  --focus-ring: 0 0 0 0.1875rem oklch(0.74 0.18 292 / 0.3);
   --shadow-panel: inset 0 0.0625rem 0 oklch(1 0 0 / 0.05), 0 0 0 0.0625rem oklch(0 0 0 / 0.25), 0 0.0625rem 0.125rem oklch(0 0 0 / 0.45), 0 0.375rem 1.25rem -0.375rem oklch(0 0 0 / 0.5);
   --shadow-nested: inset 0 0.0625rem 0 oklch(1 0 0 / 0.04), 0 0.0625rem 0.125rem oklch(0 0 0 / 0.4), 0 0.1875rem 0.5rem -0.125rem oklch(0 0 0 / 0.35);
   --shadow-well: inset 0 0.0625rem 0.125rem oklch(0 0 0 / 0.5), inset 0 0.125rem 0.375rem oklch(0 0 0 / 0.3), 0 0.0625rem 0 oklch(1 0 0 / 0.04);
   --shadow-raised: inset 0 0.0625rem 0 oklch(1 0 0 / 0.09), 0 0.0625rem 0.125rem oklch(0 0 0 / 0.45), 0 0.125rem 0.3125rem -0.0625rem oklch(0 0 0 / 0.35);
-  --shadow-primary: inset 0 0.0625rem 0 oklch(1 0 0 / 0.35), inset 0 -0.0625rem 0 oklch(0 0 0 / 0.18), 0 0.0625rem 0.125rem oklch(0 0 0 / 0.5), 0 0.1875rem 0.625rem -0.125rem oklch(0.8 0.115 85 / 0.28);
-  --shadow-focus: 0 0 0 0.1875rem oklch(0.8 0.115 85 / 0.25);
+  --shadow-primary: inset 0 0.0625rem 0 oklch(1 0 0 / 0.28), inset 0 -0.0625rem 0 oklch(0 0 0 / 0.18), 0 0.0625rem 0.125rem oklch(0 0 0 / 0.5), 0 0 1.125rem -0.125rem oklch(0.68 0.205 292 / 0.48);
+  --shadow-focus: 0 0 0 0.1875rem oklch(0.74 0.18 292 / 0.3);
   --shadow-sm: var(--shadow-raised);
   --shadow-md: var(--shadow-panel);
   --shadow-action: var(--shadow-primary);

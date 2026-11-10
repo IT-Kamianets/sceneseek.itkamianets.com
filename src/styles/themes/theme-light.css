@@ -1,26 +1,26 @@
 :root {
   color-scheme: light;
 
-  /* Interior palette: warm off-white bezel, lifted white panels, quiet ink. */
-  --background: oklch(0.9488 0.0054 95.1);
-  --foreground: oklch(0.2213 0.0038 106.71);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.2213 0.0038 106.71);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.2213 0.0038 106.71);
-  --primary: oklch(0.2685 0.0063 34.3);
-  --primary-foreground: oklch(0.9848 0.0013 106.42);
-  --secondary: oklch(0.9726 0.0026 106.45);
-  --secondary-foreground: oklch(0.3919 0.0115 106.92);
-  --muted: oklch(0.9726 0.0026 106.45);
-  --muted-foreground: oklch(0.5357 0.0122 106.8);
-  --accent: oklch(0.9592 0.0193 273.24);
-  --accent-foreground: oklch(0.5832 0.227 268.34);
+  /* Futuristic light mode: cool lavender surfaces with a precise violet accent. */
+  --background: oklch(0.968 0.012 291);
+  --foreground: oklch(0.24 0.04 291);
+  --card: oklch(0.995 0.004 291);
+  --card-foreground: oklch(0.24 0.04 291);
+  --popover: oklch(0.995 0.004 291);
+  --popover-foreground: oklch(0.24 0.04 291);
+  --primary: oklch(0.55 0.205 292);
+  --primary-foreground: oklch(0.99 0.008 292);
+  --secondary: oklch(0.944 0.018 291);
+  --secondary-foreground: oklch(0.36 0.05 291);
+  --muted: oklch(0.944 0.018 291);
+  --muted-foreground: oklch(0.49 0.04 291);
+  --accent: oklch(0.922 0.05 292);
+  --accent-foreground: oklch(0.47 0.2 292);
   --destructive: oklch(0.5563 0.1632 32);
   --destructive-foreground: oklch(1 0 0);
-  --border: oklch(0.9232 0.0026 48.72);
-  --input: oklch(0.9699 0.0013 106.42 / 0.7);
-  --ring: oklch(0.5832 0.227 268.34);
+  --border: oklch(0.89 0.025 291);
+  --input: oklch(0.955 0.012 291 / 0.8);
+  --ring: oklch(0.56 0.2 292);
 
   --font-sans: "Geist", -apple-system, BlinkMacSystemFont, ui-sans-serif, system-ui, "Segoe UI", sans-serif;
   --font-serif: Georgia, "Iowan Old Style", "Times New Roman", serif;
@@ -32,7 +32,7 @@
 
   /* Existing app token bridge */
   --c-primary: var(--primary);
-  --c-primary-hover: oklch(0.34 0.007 34.3);
+  --c-primary-hover: oklch(0.48 0.19 292);
   --c-primary-foreground: var(--primary-foreground);
   --c-secondary: var(--secondary);
   --c-secondary-hover: var(--accent);
@@ -44,11 +44,11 @@
   --c-text-muted: var(--muted-foreground);
   --c-placeholder: var(--muted-foreground);
   --c-border: var(--border);
-  --surface-bezel: oklch(0.9488 0.0054 95.1);
+  --surface-bezel: oklch(0.952 0.015 291);
   --surface-raised: var(--card);
   --surface-recessed: var(--input);
-  --selection-bg: oklch(0.88 0.01 96);
-  --focus-ring: 0 0 0 3px color-mix(in oklch, var(--ring) 35%, transparent);
+  --selection-bg: oklch(0.9 0.05 292);
+  --focus-ring: 0 0 0 3px color-mix(in oklch, var(--ring) 34%, transparent);
   --shadow-well: inset 0 0.0625rem 0.125rem oklch(0.2161 0.0061 56.04 / 0.07);
   --shadow-raised: 0 0.0625rem 0.125rem oklch(0.2161 0.0061 56.04 / 0.06), 0 0.25rem 0.625rem -0.5rem oklch(0.2161 0.0061 56.04 / 0.45);
   --shadow-sm: var(--shadow-raised);
