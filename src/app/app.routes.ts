@@ -24,7 +24,11 @@ export const routes: Routes = [
 	},
 	sectionRoute('history', 'Історія'),
 	sectionRoute('saved', 'Збережене'),
-	sectionRoute('profile', 'Профіль / акаунт'),
+	{
+		...sectionRoute('profile', 'Профіль'),
+		loadComponent: () =>
+			import('./pages/profile/profile.component').then((module) => module.ProfileComponent),
+	},
 	{
 		path: '**',
 		redirectTo: '',

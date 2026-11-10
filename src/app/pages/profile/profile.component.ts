@@ -1,0 +1,39 @@
+import { Component, computed, inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { LanguageService, TranslateService } from '@wawjs/ngx-translate';
+import { ThemeService } from '@wawjs/ngx-ui';
+import { environment } from '../../../environments/environment';
+
+type ProfileTheme = 'light' | 'dark';
+
+@Component({
+	selector: 'app-profile',
+	templateUrl: './profile.component.html',
+	styleUrl: './profile.component.scss',
+})
+export class ProfileComponent {
+	private readonly _themeService = inject(ThemeService);
+	private readonly _languageService = inject(LanguageService);
+	private readonly _translateService = inject(TranslateService);
+	private readonly _router = inject(Router);
+
+	protected readonly themeMode = computed<ProfileTheme>(() =>
+		this._themeService.mode() === 'dark' ? 'dark' : 'light',
+	);
+	protected readonly languages = environment.languages;
+	protected readonly currentLanguage = this._languageService.language;
+
+	protected setTheme(mode: ProfileTheme) {
+		this._themeService.setMode(mode);
+	}
+
+	protected async setLanguage(language: string) {
+		await this._translateService.setLanguage(language);
+		await this._router.navigateByUrl(this._router.url);
+	}
+
+	protected onLanguageChange(event: Event) {
+		const language = (event.target as HTMLSelectElement).value;
+		void this.setLanguage(language);
+	}
+}

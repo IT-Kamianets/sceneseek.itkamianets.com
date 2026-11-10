@@ -1,0 +1,122 @@
+<section class="profile-page" aria-labelledby="profile-title">
+	<div class="profile-page__content">
+		<header class="profile-page__heading">
+			<p class="profile-page__eyebrow">Особистий простір</p>
+			<h1 id="profile-title">Профіль</h1>
+			<p>Керуйте даними акаунта та налаштуваннями SceneSeek.</p>
+		</header>
+
+		<section class="profile-identity" aria-label="Дані профілю">
+			<div class="profile-identity__avatar" aria-hidden="true">ІП</div>
+			<div class="profile-identity__details">
+				<p class="profile-identity__name">Ім’я користувача</p>
+				<p class="profile-identity__email">email@example.com</p>
+			</div>
+			<button class="profile-identity__edit" type="button" aria-label="Редагувати профіль">
+				<span class="material-symbols-outlined" aria-hidden="true">edit</span>
+				<span>Редагувати профіль</span>
+			</button>
+		</section>
+
+		<details class="profile-pro">
+			<summary>
+				<span class="profile-pro__icon material-symbols-outlined" aria-hidden="true">auto_awesome</span>
+				<span class="profile-pro__copy">
+					<span class="profile-pro__title">SceneSeek Pro <span class="profile-pro__badge">PRO</span></span>
+					<span class="profile-pro__hint">Переглянути план і можливості</span>
+				</span>
+				<span class="profile-pro__chevron material-symbols-outlined" aria-hidden="true">chevron_right</span>
+			</summary>
+			<div class="profile-pro__details">
+				<p>Переглядайте статус плану та доступні можливості акаунта.</p>
+				<div class="profile-pro__plan"><strong>Pro</strong><span>Поточний план</span></div>
+			</div>
+		</details>
+
+		<div class="profile-groups">
+			<section class="profile-group" aria-labelledby="profile-account-title">
+				<h2 class="profile-group__title" id="profile-account-title">Акаунт</h2>
+				<div class="profile-group__list">
+					<details class="profile-row">
+						<summary>
+							<span class="profile-row__icon material-symbols-outlined" aria-hidden="true">person</span>
+							<span class="profile-row__label">Особисті дані</span>
+							<span class="profile-row__chevron material-symbols-outlined" aria-hidden="true">chevron_right</span>
+						</summary>
+						<div class="profile-row__details">
+							<div class="profile-setting"><span>Ім’я</span><span class="profile-setting__value">Ваше ім’я <span class="material-symbols-outlined" aria-hidden="true">edit</span></span></div>
+							<div class="profile-setting"><span>Електронна пошта</span><span class="profile-setting__value">email@example.com <span class="material-symbols-outlined" aria-hidden="true">edit</span></span></div>
+							<div class="profile-setting"><span>Фото профілю</span><span class="profile-setting__value">Змінити фото <span class="material-symbols-outlined" aria-hidden="true">chevron_right</span></span></div>
+						</div>
+					</details>
+
+					<details class="profile-row">
+						<summary>
+							<span class="profile-row__icon material-symbols-outlined" aria-hidden="true">shield</span>
+							<span class="profile-row__label">Безпека й акаунт</span>
+							<span class="profile-row__chevron material-symbols-outlined" aria-hidden="true">chevron_right</span>
+						</summary>
+						<div class="profile-row__details profile-account-actions">
+							<button type="button"><span class="material-symbols-outlined" aria-hidden="true">key</span>Змінити пароль</button>
+							<button type="button"><span class="material-symbols-outlined" aria-hidden="true">logout</span>Вийти з акаунта</button>
+							<button class="profile-account-actions__danger" type="button"><span class="material-symbols-outlined" aria-hidden="true">delete</span>Видалити акаунт</button>
+						</div>
+					</details>
+				</div>
+			</section>
+
+			<section class="profile-group" aria-labelledby="profile-preferences-title">
+				<h2 class="profile-group__title" id="profile-preferences-title">Налаштування</h2>
+				<div class="profile-group__list">
+					<details class="profile-row">
+						<summary>
+							<span class="profile-row__icon material-symbols-outlined" aria-hidden="true">language</span>
+							<span class="profile-row__label">Мова інтерфейсу</span>
+							<span class="profile-row__value">Українська</span>
+							<span class="profile-row__chevron material-symbols-outlined" aria-hidden="true">chevron_right</span>
+						</summary>
+						<div class="profile-row__details">
+							<label class="profile-setting" for="profile-language">
+								<span>Мова інтерфейсу</span>
+								<select id="profile-language" class="profile-setting__select" [value]="currentLanguage()" (change)="onLanguageChange($event)">
+									@for (language of languages; track language.code) {
+										<option [value]="language.code">{{ language.nativeName }}</option>
+									}
+								</select>
+							</label>
+						</div>
+					</details>
+
+					<details class="profile-row">
+						<summary>
+							<span class="profile-row__icon material-symbols-outlined" aria-hidden="true">dark_mode</span>
+							<span class="profile-row__label">Оформлення</span>
+							<span class="profile-row__value">{{ themeMode() === 'dark' ? 'Темна тема' : 'Світла тема' }}</span>
+							<span class="profile-row__chevron material-symbols-outlined" aria-hidden="true">chevron_right</span>
+						</summary>
+						<div class="profile-row__details">
+							<div class="profile-theme-options" role="group" aria-label="Вибір теми">
+								<button
+									type="button"
+									[class.is-selected]="themeMode() === 'light'"
+									[attr.aria-pressed]="themeMode() === 'light'"
+									(click)="setTheme('light')"
+								>
+									Світла
+								</button>
+								<button
+									type="button"
+									[class.is-selected]="themeMode() === 'dark'"
+									[attr.aria-pressed]="themeMode() === 'dark'"
+									(click)="setTheme('dark')"
+								>
+									Темна
+								</button>
+							</div>
+						</div>
+					</details>
+				</div>
+			</section>
+		</div>
+	</div>
+</section>
