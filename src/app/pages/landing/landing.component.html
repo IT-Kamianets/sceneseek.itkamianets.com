@@ -1,189 +1,60 @@
-<section class="home-page" aria-labelledby="home-title">
+<main class="home-page" aria-labelledby="home-title">
 	<div class="home-content">
-		<header class="home-hero">
-			<div class="home-hero__copy">
-				<p class="home-eyebrow">
-					<span class="material-symbols-outlined" aria-hidden="true">auto_awesome</span>
-					Пошук, що розуміє ваш задум
-				</p>
-				<h1 id="home-title">Знайдіть кадр,<br /><span>який у вас в голові</span></h1>
-				<p class="home-hero__description">
-					Опишіть атмосферу, дію чи місце — і відкрийте відеофутажі, що пасують вашій історії.
-				</p>
-			</div>
-
-			<form class="home-search" (submit)="onSearchSubmit($event)">
-				<div class="home-search__row">
-					<div class="home-search__field">
-						<span class="material-symbols-outlined" aria-hidden="true">search</span>
-						<label class="visually-hidden" for="home-query">Опис сцени</label>
-						<input
-							id="home-query"
-							type="search"
-							[value]="query()"
-							(input)="onQueryChange($event)"
-							placeholder="Наприклад: туман над озером на світанку"
-						/>
-						<button
-							class="home-photo-action"
-							type="button"
-							aria-label="Додати фото до пошуку"
-							aria-controls="home-photo-input"
-							(click)="photoInput.click()"
-						>
-							<span class="material-symbols-outlined" aria-hidden="true">add_photo_alternate</span>
-							<span>Фото</span>
-						</button>
-						<input
-							#photoInput
-							id="home-photo-input"
-							class="visually-hidden"
-							tabindex="-1"
-							type="file"
-							accept="image/*"
-							(change)="onPhotoSelected($event)"
-						/>
-					</div>
-					<button class="home-primary-action" type="submit">
-						<span class="material-symbols-outlined" aria-hidden="true">search</span>
-						Знайти відео
-					</button>
-				</div>
-
-				@if (selectedPhotoName(); as photoName) {
-					<div class="home-photo-preview" aria-live="polite">
-						<span class="material-symbols-outlined" aria-hidden="true">image</span>
-						<span class="home-photo-preview__name">{{ photoName }}</span>
-						<button class="home-icon-action" type="button" aria-label="Прибрати додане фото" (click)="removePhoto(photoInput)">
-							<span class="material-symbols-outlined" aria-hidden="true">close</span>
-						</button>
-					</div>
-				}
-
-				@if (searchMessage()) {
-					<p class="home-search__message" [class.home-search__message--error]="searchError()" role="alert">
-						{{ searchMessage() }}
-					</p>
-				}
-
-				<div class="home-search__suggestions" aria-label="Популярні напрямки пошуку">
-					<span>Спробуйте:</span>
-					<span class="home-suggestion">м’яке світло</span>
-					<span class="home-suggestion">кінематографічно</span>
-					<span class="home-suggestion">повільний рух</span>
-				</div>
-			</form>
-
-			<div class="home-hero__glow" aria-hidden="true"></div>
-			<div class="home-hero__preview" aria-label="Приклади відеосцен">
-				<div class="home-preview__topline">
-					<span class="home-preview__lights" aria-hidden="true"><i></i><i></i><i></i></span>
-					<span>SceneSeek · Візуальна добірка</span>
-					<span class="home-preview__live"><i></i> Перегляд сцен</span>
-				</div>
-				<div class="home-preview__frames">
-					<div class="home-preview__frame home-preview__frame--mountain"><span>Туман над вершинами</span></div>
-					<div class="home-preview__frame home-preview__frame--city"><span>Місто після дощу</span></div>
-					<div class="home-preview__frame home-preview__frame--coast"><span>Тихе узбережжя</span></div>
-				</div>
-			</div>
+		<section class="home-search-track" aria-label="Пошук відеосцен">
+			<div class="home-search-stage">
+		<header class="home-header">
+			<p class="home-eyebrow"><span class="status-dot" aria-hidden="true"></span> Візуальний пошук</p>
+			<h1 id="home-title">Знайдіть потрібну сцену</h1>
+			<p class="home-header__description">Опишіть сцену або додайте фото — відкрийте кадр, який пасує вашій історії.</p>
 		</header>
 
-		<section class="home-recommendations" aria-labelledby="recommendations-title">
-			<div class="home-section-heading">
-				<div>
-					<p class="home-section-heading__eyebrow">Добірка SceneSeek</p>
-					<h2 id="recommendations-title">{{ submittedQuery() ? 'Результати пошуку' : 'Щоденні рекомендації' }}</h2>
-					<p class="home-section-heading__description">{{ submittedQuery() ? 'Сцени, що відповідають вашому опису.' : 'Нові візуальні ідеї для вашого наступного проєкту.' }}</p>
+		<form class="home-search" (submit)="onSearchSubmit($event)">
+			<div class="home-search__row">
+				<div class="home-search__field">
+					<span class="material-symbols-outlined" aria-hidden="true">search</span>
+					<label class="visually-hidden" for="home-query">Опис сцени</label>
+					<input id="home-query" type="search" [value]="query()" (input)="onQueryChange($event)" placeholder="Наприклад: туман над озером на світанку" />
+					<button class="home-photo-action" type="button" aria-label="Додати фото до пошуку" aria-controls="home-photo-input" (click)="photoInput.click()"><span class="material-symbols-outlined" aria-hidden="true">add_photo_alternate</span><span>Фото</span></button>
+					<input #photoInput id="home-photo-input" class="visually-hidden" tabindex="-1" type="file" accept="image/*" (change)="onPhotoSelected($event)" />
 				</div>
+				<button class="home-primary-action" type="submit"><span class="material-symbols-outlined" aria-hidden="true">search</span>Знайти відео</button>
+			</div>
+
+			@if (selectedPhotoName(); as photoName) {
+				<div class="home-photo-preview" aria-live="polite"><span class="material-symbols-outlined" aria-hidden="true">image</span><span class="home-photo-preview__name">{{ photoName }}</span><button class="home-icon-action" type="button" aria-label="Прибрати додане фото" (click)="removePhoto(photoInput)"><span class="material-symbols-outlined" aria-hidden="true">close</span></button></div>
+			}
+			@if (searchMessage()) { <p class="home-search__message" [class.home-search__message--error]="searchError()" role="alert">{{ searchMessage() }}</p> }
+
+			<div class="home-toolbar" aria-label="Фільтри та сортування">
+				<label class="home-filter"><span class="material-symbols-outlined" aria-hidden="true">schedule</span><span class="visually-hidden">Тривалість</span><select aria-label="Тривалість відео" [value]="durationFilter()" (change)="setDurationFilter($event)"><option value="any">Тривалість</option><option value="under-15">До 15 секунд</option><option value="15-30">15–30 секунд</option><option value="over-30">Понад 30 секунд</option></select></label>
+				<label class="home-filter"><span class="material-symbols-outlined" aria-hidden="true">crop</span><span class="visually-hidden">Орієнтація</span><select aria-label="Орієнтація відео" [value]="orientationFilter()" (change)="setOrientationFilter($event)"><option value="any">Орієнтація</option><option value="landscape">Горизонтальне</option><option value="portrait">Вертикальне</option></select></label>
+				<label class="home-filter home-filter--sort"><span class="material-symbols-outlined" aria-hidden="true">sort</span><span class="visually-hidden">Сортування</span><select aria-label="Сортування результатів" [value]="sortOrder()" (change)="setSortOrder($event)"><option value="relevance">Релевантність</option><option value="shortest">Коротші спочатку</option><option value="longest">Довші спочатку</option></select></label>
+			</div>
+		</form>
+			</div>
+		</section>
+
+		<section class="home-recommendations home-results-stage" aria-labelledby="recommendations-title">
+			<div class="home-section-heading">
+				<div><p class="home-section-heading__eyebrow">Відеобібліотека</p><h2 id="recommendations-title">{{ submittedQuery() ? 'Результати пошуку' : 'Щоденні рекомендації' }}</h2><p class="home-section-heading__description">{{ submittedQuery() ? 'Сцени, що відповідають вашому опису.' : 'Нові візуальні ідеї для вашого наступного проєкту.' }}</p></div>
 				<div class="home-results-count"><span class="material-symbols-outlined" aria-hidden="true">movie</span>{{ recommendations().length }} сцен</div>
 			</div>
 
 			<div class="home-categories" role="group" aria-label="Категорії рекомендацій">
-				@for (category of categories; track category.id) {
-					<button
-						class="home-category"
-						type="button"
-						[class.is-active]="activeCategory() === category.id"
-						[attr.aria-pressed]="activeCategory() === category.id"
-						(click)="setCategory(category.id)"
-					>
-						{{ category.label }}
-					</button>
-				}
-			</div>
-
-			<div class="home-toolbar" aria-label="Фільтри та сортування">
-				<label class="home-filter">
-					<span class="material-symbols-outlined" aria-hidden="true">schedule</span>
-					<span class="visually-hidden">Тривалість</span>
-					<select aria-label="Тривалість відео" [value]="durationFilter()" (change)="setDurationFilter($event)">
-						<option value="any">Будь-яка тривалість</option><option value="under-15">До 15 секунд</option><option value="15-30">15–30 секунд</option><option value="over-30">Понад 30 секунд</option>
-					</select>
-				</label>
-				<label class="home-filter">
-					<span class="material-symbols-outlined" aria-hidden="true">crop</span>
-					<span class="visually-hidden">Орієнтація</span>
-					<select aria-label="Орієнтація відео" [value]="orientationFilter()" (change)="setOrientationFilter($event)">
-						<option value="any">Будь-який формат</option><option value="landscape">Горизонтальне</option><option value="portrait">Вертикальне</option>
-					</select>
-				</label>
-				<label class="home-filter home-filter--sort">
-					<span class="material-symbols-outlined" aria-hidden="true">sort</span>
-					<span class="visually-hidden">Сортування</span>
-					<select aria-label="Сортування результатів" [value]="sortOrder()" (change)="setSortOrder($event)">
-						<option value="relevance">За релевантністю</option><option value="shortest">Коротші спочатку</option><option value="longest">Довші спочатку</option>
-					</select>
-				</label>
+				@for (category of categories; track category.id) { <button class="home-category" type="button" [class.is-active]="activeCategory() === category.id" [attr.aria-pressed]="activeCategory() === category.id" (click)="setCategory(category.id)">{{ category.label }}</button> }
 			</div>
 
 			@if (recommendations().length) {
 				<div class="home-video-grid" aria-live="polite">
 					@for (item of recommendations(); track item.id) {
 						<article class="home-video">
-							<div
-								class="home-video__poster"
-								[class.home-video__poster--mountains]="item.scene === 'mountains'"
-								[class.home-video__poster--city]="item.scene === 'city'"
-								[class.home-video__poster--coast]="item.scene === 'coast'"
-							>
-								<span class="home-video__scene-sun" aria-hidden="true"></span>
-								<span class="home-video__scene-ridge" aria-hidden="true"></span>
-								<span class="home-video__scene-front" aria-hidden="true"></span>
-								<span class="home-video__play" aria-hidden="true"><span class="material-symbols-outlined">play_arrow</span></span>
-								<span class="home-video__duration">{{ item.durationLabel }}</span>
-							</div>
-							<div class="home-video__body">
-								<h3>{{ item.title }}</h3>
-								<div class="home-video__meta"><span>Відеосцена · Приклад</span><button class="home-save" type="button" (click)="promptForSignIn()"><span class="material-symbols-outlined" aria-hidden="true">bookmark</span>Зберегти</button></div>
-							</div>
+							<div class="home-video__poster" [class.home-video__poster--mountains]="item.scene === 'mountains'" [class.home-video__poster--city]="item.scene === 'city'" [class.home-video__poster--coast]="item.scene === 'coast'"><span class="home-video__scene-sun" aria-hidden="true"></span><span class="home-video__scene-ridge" aria-hidden="true"></span><span class="home-video__scene-front" aria-hidden="true"></span><span class="home-video__duration">{{ item.durationLabel }}</span></div>
+							<div class="home-video__body"><h3>{{ item.title }}</h3><div class="home-video__meta"><span>{{ item.orientation === 'landscape' ? 'Горизонтальне' : 'Вертикальне' }}</span><button class="home-save" type="button" (click)="promptForSignIn()"><span class="material-symbols-outlined" aria-hidden="true">bookmark</span>Зберегти</button></div></div>
 						</article>
 					}
 				</div>
-			} @else {
-				<p class="home-empty-state" role="status">Немає сцен для вибраних умов. Змініть опис або фільтри.</p>
-			}
+			} @else { <p class="home-empty-state" role="status">Немає сцен для вибраних умов. Змініть опис або фільтри.</p> }
 		</section>
 
-		<section class="home-discovery" aria-labelledby="discovery-title">
-			<div class="home-discovery__copy">
-				<p class="home-section-heading__eyebrow">Від задуму до кадру</p>
-				<h2 id="discovery-title">Шукайте сцену<br />за її настроєм</h2>
-				<p>Опишіть потрібну атмосферу або додайте фото-орієнтир. Переглядайте відео в одній стрічці та зберігайте знахідки до власних папок.</p>
-				<div class="home-discovery__tags"><span>Текстовий опис</span><span>Фото-орієнтир</span><span>Власні папки</span></div>
-			</div>
-			<div class="home-discovery__steps" id="how-it-works">
-				<div><span class="home-step-number">01</span><span class="material-symbols-outlined" aria-hidden="true">edit_note</span><h3>Опишіть ідею</h3><p>Вкажіть сюжет, місце або світло.</p></div>
-				<div><span class="home-step-number">02</span><span class="material-symbols-outlined" aria-hidden="true">travel_explore</span><h3>Перегляньте сцени</h3><p>Відберіть відео, що пасують задуму.</p></div>
-				<div><span class="home-step-number">03</span><span class="material-symbols-outlined" aria-hidden="true">folder_open</span><h3>Збережіть знахідки</h3><p>Складіть футажі у власні папки.</p></div>
-			</div>
-		</section>
-
-		<section class="home-bottom-cta" aria-label="Почати пошук відеофутажів">
-			<span class="material-symbols-outlined" aria-hidden="true">auto_awesome</span>
-			<h2>Ваша наступна сцена<br />починається з ідеї</h2>
-			<p>Опишіть кадр, який хочете знайти.</p>
-			<a class="home-cta-link" href="#home-title">Перейти до пошуку <span class="material-symbols-outlined" aria-hidden="true">arrow_upward</span></a>
-		</section>
 	</div>
-</section>
+</main>
