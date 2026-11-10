@@ -17,7 +17,11 @@ const sectionRoute = (path: string, title: string) => ({
 });
 
 export const routes: Routes = [
-	sectionRoute('', 'Головна'),
+	{
+		...sectionRoute('', 'Головна'),
+		loadComponent: () =>
+			import('./pages/landing/landing.component').then((module) => module.LandingComponent),
+	},
 	sectionRoute('history', 'Історія'),
 	sectionRoute('saved', 'Збережене'),
 	sectionRoute('profile', 'Профіль / акаунт'),

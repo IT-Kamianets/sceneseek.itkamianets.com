@@ -1,87 +1,180 @@
-<section class="relative overflow-hidden">
-	<div class="relative mx-auto max-w-[var(--container)] px-4 py-8 sm:px-6 sm:py-12">
-		<section
-			class="overflow-hidden rounded-[var(--radius-card)] border border-[var(--c-border)] bg-[var(--surface-raised)] p-6 shadow-[var(--shadow-md)] sm:p-8 lg:p-10"
-		>
-			<p
-				class="inline-flex items-center gap-2 rounded-[var(--radius-btn)] border border-[var(--c-border)] bg-[var(--surface-recessed)] px-3 py-1 text-xs font-medium text-[var(--c-text-muted)]"
-			>
-				<span
-					class="h-2 w-2 rounded-full bg-[var(--c-primary)] shadow-[0_0_0_6px_color-mix(in_srgb,var(--c-primary)_14%,transparent)]"
-					aria-hidden="true"
-				></span>
-				<span translate>Bootstrap, company, language</span>
-			</p>
+<section class="home-page" aria-labelledby="home-title">
+	<div class="home-content">
+		<header class="home-heading">
+			<h1 id="home-title">Знайдіть потрібну сцену</h1>
+			<p>Опишіть сцену або додайте фото.</p>
+		</header>
 
-			<div class="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(18rem,0.85fr)]">
-				<div class="max-w-3xl">
-					<h1
-						class="text-4xl font-semibold tracking-[-0.04em] text-[var(--c-text-strong)] sm:text-5xl lg:text-6xl"
+		<form class="home-search" (submit)="onSearchSubmit($event)">
+			<div class="home-search__row">
+				<div class="home-search__field">
+					<span class="material-symbols-outlined" aria-hidden="true">search</span>
+					<label class="visually-hidden" for="home-query">Опис сцени</label>
+					<input
+						id="home-query"
+						type="search"
+						[value]="query()"
+						(input)="onQueryChange($event)"
+						placeholder="Наприклад: туман над озером на світанку"
+					/>
+					<button
+						class="home-photo-action"
+						type="button"
+						aria-label="Додати фото до пошуку"
+						aria-controls="home-photo-input"
+						(click)="photoInput.click()"
 					>
-						@if (company().name) {
-							{{ company().name }}
-						} @else {
-							<span translate>Company profile is ready for bootstrap data.</span>
-						}
-					</h1>
-
-					<p
-						class="mt-5 max-w-2xl text-base leading-8 text-[var(--c-text)] sm:text-lg"
-						translate
-					>
-						This starter now keeps only the core runtime pieces: app bootstrap, company state, and multilingual switching. The rest of the demo feature surface has been removed.
-					</p>
-
-					<div class="mt-8 flex flex-wrap gap-3">
-						<span
-							class="inline-flex min-h-12 items-center rounded-[var(--radius-btn)] bg-[var(--c-primary)] px-5 py-3 text-sm font-semibold text-[var(--c-primary-foreground)] shadow-[var(--shadow-action)]"
-						>
-							<span translate>SSR-safe bootstrap</span>
-						</span>
-						<span
-							class="inline-flex min-h-12 items-center rounded-[var(--radius-btn)] border border-[var(--c-border)] bg-[var(--surface-recessed)] px-5 py-3 text-sm font-medium text-[var(--c-text-strong)]"
-						>
-							<span translate>Company signal state</span>
-						</span>
-						<span
-							class="inline-flex min-h-12 items-center rounded-[var(--radius-btn)] border border-[var(--c-border)] bg-[var(--surface-recessed)] px-5 py-3 text-sm font-medium text-[var(--c-text-strong)]"
-						>
-							<span translate>Language switching</span>
-						</span>
-					</div>
+						<span class="material-symbols-outlined" aria-hidden="true">add_photo_alternate</span>
+						<span>Фото</span>
+					</button>
+					<input
+						#photoInput
+						id="home-photo-input"
+						class="visually-hidden"
+						tabindex="-1"
+						type="file"
+						accept="image/*"
+						(change)="onPhotoSelected($event)"
+					/>
 				</div>
 
-				<div
-				class="rounded-[var(--radius)] border border-[var(--c-border)] bg-[var(--surface-bezel)] p-5 shadow-[var(--shadow-sm)]"
-				>
-					<p class="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--c-text-muted)]">
-						<span translate>Company bootstrap state</span>
-					</p>
+				<button class="home-primary-action" type="submit">
+					<span class="material-symbols-outlined" aria-hidden="true">search</span>
+					Знайти відео
+				</button>
+			</div>
 
-					<div class="mt-5 space-y-4">
-						<div class="rounded-[var(--radius)] bg-[var(--surface-raised)] p-4 shadow-[var(--shadow-sm)]">
-							<p class="text-sm text-[var(--c-text-muted)]" translate>Company name</p>
-							<p class="mt-2 text-lg font-semibold text-[var(--c-text-strong)]">
-								@if (company().name) {
-									{{ company().name }}
-								} @else {
-									<span translate>Using environment fallback</span>
-								}
-							</p>
-						</div>
+			@if (selectedPhotoName(); as photoName) {
+				<div class="home-photo-preview" aria-live="polite">
+					<span class="material-symbols-outlined" aria-hidden="true">image</span>
+					<span class="home-photo-preview__name">{{ photoName }}</span>
+					<button
+						class="home-icon-action"
+						type="button"
+						aria-label="Прибрати додане фото"
+						(click)="removePhoto(photoInput)"
+					>
+						<span class="material-symbols-outlined" aria-hidden="true">close</span>
+					</button>
+				</div>
+			}
 
-						<div
-							class="rounded-[var(--radius)] border border-[var(--c-border)] bg-[var(--surface-recessed)] p-4 text-sm leading-7 text-[var(--c-text)] shadow-[var(--shadow-well)]"
-						>
-							@if (company().description) {
-								{{ company().description }}
-							} @else {
-								<span translate>Company description is available from bootstrap state.</span>
-							}
-						</div>
-					</div>
+			@if (searchMessage()) {
+				<p class="home-search__message" [class.home-search__message--error]="searchError()" role="alert">
+					{{ searchMessage() }}
+				</p>
+			}
+
+			<div class="home-filters" aria-label="Фільтри пошуку">
+				<label class="home-filter">
+					<span class="material-symbols-outlined" aria-hidden="true">schedule</span>
+					<span class="visually-hidden">Тривалість</span>
+					<select aria-label="Тривалість відео" [value]="durationFilter()" (change)="setDurationFilter($event)">
+						<option value="any">Тривалість</option>
+						<option value="under-15">До 15 секунд</option>
+						<option value="15-30">15–30 секунд</option>
+						<option value="over-30">Понад 30 секунд</option>
+					</select>
+				</label>
+				<label class="home-filter">
+					<span class="material-symbols-outlined" aria-hidden="true">crop</span>
+					<span class="visually-hidden">Орієнтація</span>
+					<select
+						aria-label="Орієнтація відео"
+						[value]="orientationFilter()"
+						(change)="setOrientationFilter($event)"
+					>
+						<option value="any">Орієнтація</option>
+						<option value="landscape">Горизонтальне</option>
+						<option value="portrait">Вертикальне</option>
+					</select>
+				</label>
+				<label class="home-filter">
+					<span class="material-symbols-outlined" aria-hidden="true">sort</span>
+					<span class="visually-hidden">Сортування</span>
+					<select aria-label="Сортування результатів" [value]="sortOrder()" (change)="setSortOrder($event)">
+						<option value="relevance">Релевантність</option>
+						<option value="shortest">Коротші спочатку</option>
+						<option value="longest">Довші спочатку</option>
+					</select>
+				</label>
+			</div>
+		</form>
+
+		<section class="home-recommendations" aria-labelledby="recommendations-title">
+			<div class="home-recommendations__heading">
+				<div>
+					<h2 id="recommendations-title">
+						{{ submittedQuery() ? 'Результати пошуку' : 'Щоденні рекомендації' }}
+					</h2>
 				</div>
 			</div>
+
+			<div class="home-categories" role="group" aria-label="Категорії рекомендацій">
+				@for (category of categories; track category.id) {
+					<button
+						class="home-category"
+						type="button"
+						[class.is-active]="activeCategory() === category.id"
+						[attr.aria-pressed]="activeCategory() === category.id"
+						(click)="setCategory(category.id)"
+					>
+						{{ category.label }}
+					</button>
+				}
+			</div>
+
+			@if (recommendations().length) {
+				<div class="home-video-grid" aria-live="polite">
+					@for (item of recommendations(); track item.id) {
+						<article class="home-video">
+							<div
+								class="home-video__poster"
+								[class.home-video__poster--mountains]="item.scene === 'mountains'"
+								[class.home-video__poster--city]="item.scene === 'city'"
+								[class.home-video__poster--coast]="item.scene === 'coast'"
+								role="img"
+								[attr.aria-label]="'Ескіз відеокадру: ' + item.title"
+							>
+								<span class="home-video__scene-sun" aria-hidden="true"></span>
+								<span class="home-video__scene-ridge" aria-hidden="true"></span>
+								<span class="home-video__scene-front" aria-hidden="true"></span>
+								<span class="home-video__play" aria-hidden="true">
+									<span class="material-symbols-outlined">play_arrow</span>
+								</span>
+								<span class="home-video__duration">{{ item.durationLabel }}</span>
+							</div>
+
+							<div class="home-video__body">
+								<h3>{{ item.title }}</h3>
+								<div class="home-video__meta">
+									<span>Приклад сцени</span>
+									<button
+										class="home-save"
+										type="button"
+										[attr.aria-pressed]="isSaved(item.id)"
+										[attr.aria-label]="
+											isSaved(item.id)
+												? 'Вилучити зі збереженого: ' + item.title
+												: 'Зберегти відео: ' + item.title
+										"
+										(click)="toggleSaved(item.id)"
+									>
+										<span class="material-symbols-outlined" aria-hidden="true">
+											{{ isSaved(item.id) ? 'bookmark_added' : 'bookmark' }}
+										</span>
+										<span>{{ isSaved(item.id) ? 'Збережено' : 'Зберегти' }}</span>
+									</button>
+								</div>
+							</div>
+						</article>
+					}
+				</div>
+			} @else {
+				<p class="home-empty-state" role="status">
+					Немає сцен для вибраних умов. Змініть опис або фільтри.
+				</p>
+			}
 		</section>
 	</div>
 </section>
