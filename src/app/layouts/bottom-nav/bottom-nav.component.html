@@ -1,44 +1,70 @@
-<nav class="bottom-nav" aria-label="Основна навігація">
-	<a
-		class="bottom-nav__link"
-		routerLink="/"
-		routerLinkActive="is-active"
-		[routerLinkActiveOptions]="{ exact: true }"
-		ariaCurrentWhenActive="page"
+<aside class="sidebar" [class.sidebar--expanded]="expanded()">
+	<button
+		class="sidebar__toggle"
+		type="button"
+		[attr.aria-expanded]="expanded()"
+		[attr.aria-label]="expanded() ? 'Згорнути навігацію' : 'Розгорнути навігацію'"
+		(click)="toggleExpanded()"
 	>
-		<span class="material-symbols-outlined" aria-hidden="true">home</span>
-		<span>Головна</span>
-	</a>
+		<span class="material-symbols-outlined" aria-hidden="true">
+			{{ expanded() ? 'left_panel_close' : 'left_panel_open' }}
+		</span>
+		@if (expanded()) {
+			<span>Згорнути меню</span>
+		}
+	</button>
 
-	<a
-		class="bottom-nav__link"
-		routerLink="/history"
-		routerLinkActive="is-active"
-		ariaCurrentWhenActive="page"
-		(click)="promptForSignIn('history')"
-	>
-		<span class="material-symbols-outlined" aria-hidden="true">history</span>
-		<span>Історія</span>
-	</a>
+	<nav class="sidebar__nav" aria-label="Основна навігація">
+		<a
+			class="sidebar__link"
+			routerLink="/"
+			routerLinkActive="is-active"
+			[routerLinkActiveOptions]="{ exact: true }"
+			ariaCurrentWhenActive="page"
+			aria-label="Головна"
+			title="Головна"
+		>
+			<span class="material-symbols-outlined" aria-hidden="true">home</span>
+			@if (expanded()) { <span>Головна</span> }
+		</a>
 
-	<a
-		class="bottom-nav__link"
-		routerLink="/saved"
-		routerLinkActive="is-active"
-		ariaCurrentWhenActive="page"
-		(click)="promptForSignIn('saved')"
-	>
-		<span class="material-symbols-outlined" aria-hidden="true">bookmarks</span>
-		<span>Збережене</span>
-	</a>
+		<a
+			class="sidebar__link"
+			routerLink="/history"
+			routerLinkActive="is-active"
+			ariaCurrentWhenActive="page"
+			aria-label="Історія"
+			title="Історія"
+			(click)="promptForSignIn('history')"
+		>
+			<span class="material-symbols-outlined" aria-hidden="true">history</span>
+			@if (expanded()) { <span>Історія</span> }
+		</a>
 
-	<a
-		class="bottom-nav__link"
-		routerLink="/profile"
-		routerLinkActive="is-active"
-		ariaCurrentWhenActive="page"
-	>
-		<span class="material-symbols-outlined" aria-hidden="true">person</span>
-		<span>Профіль</span>
-	</a>
-</nav>
+		<a
+			class="sidebar__link"
+			routerLink="/saved"
+			routerLinkActive="is-active"
+			ariaCurrentWhenActive="page"
+			aria-label="Збережене"
+			title="Збережене"
+			(click)="promptForSignIn('saved')"
+		>
+			<span class="material-symbols-outlined" aria-hidden="true">bookmarks</span>
+			@if (expanded()) { <span>Збережене</span> }
+		</a>
+
+		<a
+			class="sidebar__link"
+			routerLink="/profile"
+			routerLinkActive="is-active"
+			ariaCurrentWhenActive="page"
+			aria-label="Профіль"
+			title="Профіль"
+		>
+			<span class="material-symbols-outlined" aria-hidden="true">person</span>
+			@if (expanded()) { <span>Профіль</span> }
+		</a>
+	</nav>
+
+</aside>

@@ -12,12 +12,14 @@ import { TopbarComponent } from './layouts/topbar/topbar.component';
 	selector: 'app-root',
 	imports: [RouterOutlet, TopbarComponent, BottomNavComponent, AuthPromptComponent],
 	template: `
-		<div class="flex min-h-[100dvh] flex-col">
-			<app-topbar />
-			<main class="flex-1 pb-28">
-				<router-outlet />
-			</main>
+		<div class="flex min-h-[100dvh]">
 			<app-bottom-nav />
+			<div class="flex min-w-0 flex-1 flex-col">
+				<app-topbar />
+				<main class="flex-1">
+					<router-outlet />
+				</main>
+			</div>
 			<app-auth-prompt />
 		</div>
 	`,
