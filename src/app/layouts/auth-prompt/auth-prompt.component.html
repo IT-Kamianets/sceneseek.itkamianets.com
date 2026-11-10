@@ -1,0 +1,48 @@
+@if (prompt.isOpen()) {
+	<div class="auth-prompt" (click)="closeFromBackdrop($event)" (keydown.escape)="prompt.close()">
+		<section
+			class="auth-prompt__dialog"
+			role="dialog"
+			aria-modal="true"
+			aria-labelledby="auth-prompt-title"
+			aria-describedby="auth-prompt-description"
+		>
+			<div class="auth-prompt__topline">
+				<span class="auth-prompt__icon" aria-hidden="true">
+					<span class="material-symbols-outlined">lock</span>
+				</span>
+				<button
+					class="auth-prompt__close"
+					type="button"
+					aria-label="Закрити вікно входу"
+					(click)="prompt.close()"
+				>
+					<span class="material-symbols-outlined" aria-hidden="true">close</span>
+				</button>
+			</div>
+
+			<p class="auth-prompt__eyebrow">SceneSeek</p>
+			<h2 id="auth-prompt-title">Увійдіть у SceneSeek</h2>
+			<p class="auth-prompt__description" id="auth-prompt-description">
+				@if (prompt.reason() === 'history') {
+					Увійдіть або створіть акаунт, щоб переглядати історію пошуку.
+				} @else {
+					Увійдіть або створіть акаунт, щоб зберігати улюблені сцени у власній добірці.
+				}
+			</p>
+
+			<div class="auth-prompt__actions">
+				<button class="auth-prompt__button auth-prompt__button--primary" type="button">
+					Увійти
+				</button>
+				<button class="auth-prompt__button auth-prompt__button--secondary" type="button">
+					Створити акаунт
+				</button>
+			</div>
+
+			<button class="auth-prompt__dismiss" type="button" (click)="prompt.close()">
+				Поки продовжити без акаунта
+			</button>
+		</section>
+	</div>
+}

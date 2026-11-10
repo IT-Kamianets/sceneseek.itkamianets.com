@@ -152,18 +152,13 @@
 									<button
 										class="home-save"
 										type="button"
-										[attr.aria-pressed]="isSaved(item.id)"
-										[attr.aria-label]="
-											isSaved(item.id)
-												? 'Вилучити зі збереженого: ' + item.title
-												: 'Зберегти відео: ' + item.title
-										"
-										(click)="toggleSaved(item.id)"
+										[attr.aria-label]="'Зберегти відео: ' + item.title"
+										(click)="promptForSignIn()"
 									>
 										<span class="material-symbols-outlined" aria-hidden="true">
-											{{ isSaved(item.id) ? 'bookmark_added' : 'bookmark' }}
+											bookmark
 										</span>
-										<span>{{ isSaved(item.id) ? 'Збережено' : 'Зберегти' }}</span>
+										<span>Зберегти</span>
 									</button>
 								</div>
 							</div>

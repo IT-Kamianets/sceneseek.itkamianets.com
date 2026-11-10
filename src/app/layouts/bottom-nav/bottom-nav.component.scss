@@ -37,6 +37,9 @@
 	font-weight: 500;
 	line-height: 1;
 	text-decoration: none;
+	font-family: inherit;
+	background: transparent;
+	cursor: pointer;
 	transition:
 		background-color 160ms ease,
 		color 160ms ease,

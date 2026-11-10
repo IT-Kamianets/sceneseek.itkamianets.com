@@ -5,11 +5,12 @@ import { CanonicalService } from '@wawjs/ngx-default';
 import { LanguageService } from '@wawjs/ngx-translate';
 import { environment } from '../environments/environment';
 import { BottomNavComponent } from './layouts/bottom-nav/bottom-nav.component';
+import { AuthPromptComponent } from './layouts/auth-prompt/auth-prompt.component';
 import { TopbarComponent } from './layouts/topbar/topbar.component';
 
 @Component({
 	selector: 'app-root',
-	imports: [RouterOutlet, TopbarComponent, BottomNavComponent],
+	imports: [RouterOutlet, TopbarComponent, BottomNavComponent, AuthPromptComponent],
 	template: `
 		<div class="flex min-h-[100dvh] flex-col">
 			<app-topbar />
@@ -17,6 +18,7 @@ import { TopbarComponent } from './layouts/topbar/topbar.component';
 				<router-outlet />
 			</main>
 			<app-bottom-nav />
+			<app-auth-prompt />
 		</div>
 	`,
 })

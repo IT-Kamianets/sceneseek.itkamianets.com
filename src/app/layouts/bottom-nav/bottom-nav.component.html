@@ -15,6 +15,7 @@
 		routerLink="/history"
 		routerLinkActive="is-active"
 		ariaCurrentWhenActive="page"
+		(click)="promptForSignIn('history')"
 	>
 		<span class="material-symbols-outlined" aria-hidden="true">history</span>
 		<span>Історія</span>
@@ -25,6 +26,7 @@
 		routerLink="/saved"
 		routerLinkActive="is-active"
 		ariaCurrentWhenActive="page"
+		(click)="promptForSignIn('saved')"
 	>
 		<span class="material-symbols-outlined" aria-hidden="true">bookmarks</span>
 		<span>Збережене</span>

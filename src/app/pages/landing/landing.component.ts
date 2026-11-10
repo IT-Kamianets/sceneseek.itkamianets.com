@@ -1,4 +1,5 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
+import { AuthPromptService } from '../../feature/auth-prompt/auth-prompt.service';
 
 type CategoryId = 'for-you' | 'atmosphere' | 'cinematic' | 'nature' | 'city';
 type RecommendationTag = Exclude<CategoryId, 'for-you'>;
@@ -79,7 +80,7 @@ export class LandingComponent {
 	protected readonly sortOrder = signal<SortOrder>('relevance');
 	protected readonly durationFilter = signal<DurationFilter>('any');
 	protected readonly orientationFilter = signal<OrientationFilter>('any');
-	protected readonly savedIds = signal<ReadonlySet<string>>(new Set<string>());
+	private readonly _authPrompt = inject(AuthPromptService);
 	protected readonly recommendations = computed(() => {
 		const category = this.activeCategory();
 		const terms = this.submittedQuery()
@@ -189,17 +190,7 @@ export class LandingComponent {
 		this.selectedPhotoName.set('');
 	}
 
-	protected isSaved(id: string) {
-		return this.savedIds().has(id);
-	}
-
-	protected toggleSaved(id: string) {
-		const next = new Set(this.savedIds());
-		if (next.has(id)) {
-			next.delete(id);
-		} else {
-			next.add(id);
-		}
-		this.savedIds.set(next);
+	protected promptForSignIn() {
+		this._authPrompt.open('saved');
 	}
 }
