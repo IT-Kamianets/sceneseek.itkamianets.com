@@ -1,14 +1,10 @@
 <section class="relative overflow-hidden">
-	<div class="landing-mesh" aria-hidden="true"></div>
-	<div class="landing-orb landing-orb--primary" aria-hidden="true"></div>
-	<div class="landing-orb landing-orb--secondary" aria-hidden="true"></div>
-
 	<div class="relative mx-auto max-w-[var(--container)] px-4 py-8 sm:px-6 sm:py-12">
 		<section
-			class="overflow-hidden rounded-[calc(var(--radius-card)*2.4)] border border-[color:color-mix(in_srgb,var(--c-border)_72%,transparent)] bg-[color:color-mix(in_srgb,var(--c-bg-secondary)_84%,transparent)] p-6 shadow-[var(--shadow-md)] backdrop-blur-xl sm:p-8 lg:p-10"
+			class="overflow-hidden rounded-[var(--radius-card)] border border-[var(--c-border)] bg-[var(--surface-raised)] p-6 shadow-[var(--shadow-md)] sm:p-8 lg:p-10"
 		>
 			<p
-				class="inline-flex items-center gap-2 rounded-full border border-[color:color-mix(in_srgb,var(--c-border)_72%,transparent)] bg-[color:color-mix(in_srgb,var(--c-bg-primary)_76%,transparent)] px-3 py-1 text-[0.72rem] font-semibold uppercase tracking-[0.24em] text-[var(--c-text-muted)]"
+				class="inline-flex items-center gap-2 rounded-[var(--radius-btn)] border border-[var(--c-border)] bg-[var(--surface-recessed)] px-3 py-1 text-xs font-medium text-[var(--c-text-muted)]"
 			>
 				<span
 					class="h-2 w-2 rounded-full bg-[var(--c-primary)] shadow-[0_0_0_6px_color-mix(in_srgb,var(--c-primary)_14%,transparent)]"
@@ -38,17 +34,17 @@
 
 					<div class="mt-8 flex flex-wrap gap-3">
 						<span
-							class="inline-flex min-h-12 items-center rounded-full bg-[var(--c-primary)] px-5 py-3 text-sm font-semibold text-white"
+							class="inline-flex min-h-12 items-center rounded-[var(--radius-btn)] bg-[var(--c-primary)] px-5 py-3 text-sm font-semibold text-[var(--c-primary-foreground)] shadow-[var(--shadow-action)]"
 						>
 							<span translate>SSR-safe bootstrap</span>
 						</span>
 						<span
-							class="inline-flex min-h-12 items-center rounded-full border border-[var(--c-border)] bg-[color:color-mix(in_srgb,var(--c-bg-primary)_78%,transparent)] px-5 py-3 text-sm font-semibold text-[var(--c-text-strong)]"
+							class="inline-flex min-h-12 items-center rounded-[var(--radius-btn)] border border-[var(--c-border)] bg-[var(--surface-recessed)] px-5 py-3 text-sm font-medium text-[var(--c-text-strong)]"
 						>
 							<span translate>Company signal state</span>
 						</span>
 						<span
-							class="inline-flex min-h-12 items-center rounded-full border border-[var(--c-border)] bg-[color:color-mix(in_srgb,var(--c-bg-primary)_78%,transparent)] px-5 py-3 text-sm font-semibold text-[var(--c-text-strong)]"
+							class="inline-flex min-h-12 items-center rounded-[var(--radius-btn)] border border-[var(--c-border)] bg-[var(--surface-recessed)] px-5 py-3 text-sm font-medium text-[var(--c-text-strong)]"
 						>
 							<span translate>Language switching</span>
 						</span>
@@ -56,14 +52,14 @@
 				</div>
 
 				<div
-					class="rounded-[calc(var(--radius-card)*2)] border border-[color:color-mix(in_srgb,var(--c-border)_72%,transparent)] bg-[linear-gradient(180deg,color-mix(in_srgb,var(--c-bg-secondary)_96%,transparent),color-mix(in_srgb,var(--c-bg-primary)_92%,transparent))] p-5 shadow-[var(--shadow-sm)]"
+				class="rounded-[var(--radius)] border border-[var(--c-border)] bg-[var(--surface-bezel)] p-5 shadow-[var(--shadow-sm)]"
 				>
 					<p class="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--c-text-muted)]">
 						<span translate>Company bootstrap state</span>
 					</p>
 
 					<div class="mt-5 space-y-4">
-						<div class="rounded-[calc(var(--radius-card)*1.4)] bg-[var(--c-bg-primary)] p-4">
+						<div class="rounded-[var(--radius)] bg-[var(--surface-raised)] p-4 shadow-[var(--shadow-sm)]">
 							<p class="text-sm text-[var(--c-text-muted)]" translate>Company name</p>
 							<p class="mt-2 text-lg font-semibold text-[var(--c-text-strong)]">
 								@if (company().name) {
@@ -75,7 +71,7 @@
 						</div>
 
 						<div
-							class="rounded-[calc(var(--radius-card)*1.4)] border border-[color:color-mix(in_srgb,var(--c-border)_70%,transparent)] bg-[color:color-mix(in_srgb,var(--c-bg-primary)_82%,transparent)] p-4 text-sm leading-7 text-[var(--c-text)]"
+							class="rounded-[var(--radius)] border border-[var(--c-border)] bg-[var(--surface-recessed)] p-4 text-sm leading-7 text-[var(--c-text)] shadow-[var(--shadow-well)]"
 						>
 							@if (company().description) {
 								{{ company().description }}

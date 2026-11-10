@@ -30,10 +30,10 @@
 
 		<div class="flex items-center gap-2">
 			<div
-				class="relative flex items-center gap-1 rounded-full border border-[var(--c-border)] bg-[var(--c-bg-primary)] p-1 shadow-[var(--shadow-sm)]"
+				class="relative flex items-center gap-1 rounded-[var(--radius)] border border-[var(--c-border)] bg-[var(--surface-bezel)] p-1 shadow-[var(--shadow-sm)]"
 			>
 				<button
-					class="theme-interactive theme-focus inline-flex h-9 items-center gap-2 rounded-full px-3 text-sm font-medium text-[var(--c-text)] hover:bg-[var(--c-bg-tertiary)]"
+					class="theme-interactive theme-focus inline-flex h-9 items-center gap-2 rounded-[var(--radius-btn)] px-3 text-sm font-medium text-[var(--c-text)] hover:bg-[var(--c-bg-tertiary)]"
 					[attr.aria-label]="languageCycleLabel()"
 					(click)="nextLanguage()"
 					type="button"
@@ -48,7 +48,7 @@
 				</button>
 
 				<button
-					class="theme-interactive theme-focus inline-flex h-9 w-9 items-center justify-center rounded-full text-[var(--c-text-strong)] hover:bg-[var(--c-bg-tertiary)]"
+					class="theme-interactive theme-focus inline-flex h-9 w-9 items-center justify-center rounded-[var(--radius-btn)] text-[var(--c-text-strong)] hover:bg-[var(--c-bg-tertiary)]"
 					[attr.aria-expanded]="languageMenuOpen()"
 					[attr.aria-label]="languageMenuLabel()"
 					(click)="toggleLanguageMenu()"
@@ -61,7 +61,7 @@
 
 				@if (languageMenuOpen()) {
 					<div
-						class="absolute right-0 top-[calc(100%+0.5rem)] z-50 min-w-48 overflow-hidden rounded-2xl border border-[var(--c-border)] bg-[var(--c-bg-primary)] p-1 shadow-[var(--shadow-md)]"
+						class="absolute right-0 top-[calc(100%+0.5rem)] z-50 min-w-48 overflow-hidden rounded-[var(--radius)] border border-[var(--c-border)] bg-[var(--c-bg-secondary)] p-1 shadow-[var(--shadow-md)]"
 					>
 						@for (language of languages(); track language.code) {
 							<button
@@ -84,7 +84,7 @@
 			</div>
 
 			<button
-				class="theme-interactive theme-focus inline-flex h-11 w-11 items-center justify-center rounded-full border border-[var(--c-border)] bg-[var(--c-bg-primary)] text-[var(--c-text-strong)] hover:bg-[var(--c-bg-tertiary)]"
+				class="theme-interactive theme-focus inline-flex h-11 w-11 items-center justify-center rounded-[var(--radius-btn)] border border-[var(--c-border)] bg-[var(--c-bg-secondary)] text-[var(--c-text-strong)] hover:bg-[var(--c-bg-tertiary)]"
 				[attr.aria-label]="toggleLabel()"
 				(click)="toggleMode()"
 				type="button"

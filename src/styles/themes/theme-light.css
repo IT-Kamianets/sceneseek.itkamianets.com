@@ -1,48 +1,57 @@
 :root {
   color-scheme: light;
 
-  /* SceneSeek luxury palette */
-  --champagne: #F2E4D0;
-  --antique-gold: #C6A15B;
-  --burgundy: #6E1734;
-  --wine: #8F2948;
-  --espresso: #2A1018;
+  /* Interior palette: warm off-white bezel, lifted white panels, quiet ink. */
+  --background: oklch(0.9488 0.0054 95.1);
+  --foreground: oklch(0.2213 0.0038 106.71);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.2213 0.0038 106.71);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.2213 0.0038 106.71);
+  --primary: oklch(0.2685 0.0063 34.3);
+  --primary-foreground: oklch(0.9848 0.0013 106.42);
+  --secondary: oklch(0.9726 0.0026 106.45);
+  --secondary-foreground: oklch(0.3919 0.0115 106.92);
+  --muted: oklch(0.9726 0.0026 106.45);
+  --muted-foreground: oklch(0.5357 0.0122 106.8);
+  --accent: oklch(0.9592 0.0193 273.24);
+  --accent-foreground: oklch(0.5832 0.227 268.34);
+  --destructive: oklch(0.5563 0.1632 32);
+  --destructive-foreground: oklch(1 0 0);
+  --border: oklch(0.9232 0.0026 48.72);
+  --input: oklch(0.9699 0.0013 106.42 / 0.7);
+  --ring: oklch(0.5832 0.227 268.34);
 
-  /* Semantic design tokens */
-  --background: #F2E4D0;
-  --foreground: #2A1018;
-  --card: #FBF5EC;
-  --card-foreground: #2A1018;
-  --popover: #FBF5EC;
-  --popover-foreground: #2A1018;
-  --primary: #8F2948;
-  --primary-foreground: #FFF7F0;
-  --secondary: #6E1734;
-  --secondary-foreground: #F2E4D0;
-  --muted: #E8D4C0;
-  --muted-foreground: #68434A;
-  --accent: #C6A15B;
-  --accent-foreground: #2A1018;
-  --destructive: #6E1734;
-  --destructive-foreground: #FFF7F0;
-  --border: #D8BFA5;
-  --input: #FBF5EC;
-  --ring: #8F2948;
+  --font-sans: "Geist", -apple-system, BlinkMacSystemFont, ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+  --font-serif: Georgia, "Iowan Old Style", "Times New Roman", serif;
+  --font-mono: "Geist Mono", ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  --ff-base: var(--font-sans);
+  --radius: 0.625rem;
+  --radius-card: 0.875rem;
+  --radius-btn: 0.3125rem;
 
-  /* Existing SceneSeek app tokens */
-  --c-primary: var(--wine);
-  --c-primary-hover: var(--burgundy);
-  --c-secondary: var(--burgundy);
-  --c-secondary-hover: var(--wine);
-  --c-bg-primary: var(--champagne);
-  --c-bg-secondary: #FBF5EC;
-  --c-bg-tertiary: #F7EDDF;
-  --c-text: #5C3E47;
-  --c-text-strong: var(--espresso);
-  --c-text-muted: #82636A;
-  --c-placeholder: #82636A;
-  --c-border: #D8BFA5;
-  --focus-ring: 0 0 0 3px color-mix(in srgb, var(--wine) 35%, transparent);
-  --shadow-sm: 0 2px 5px rgb(42 16 24 / 8%);
-  --shadow-md: 0 12px 30px rgb(42 16 24 / 12%);
+  /* Existing app token bridge */
+  --c-primary: var(--primary);
+  --c-primary-hover: oklch(0.34 0.007 34.3);
+  --c-primary-foreground: var(--primary-foreground);
+  --c-secondary: var(--secondary);
+  --c-secondary-hover: var(--accent);
+  --c-bg-primary: var(--background);
+  --c-bg-secondary: var(--card);
+  --c-bg-tertiary: var(--secondary);
+  --c-text: var(--secondary-foreground);
+  --c-text-strong: var(--foreground);
+  --c-text-muted: var(--muted-foreground);
+  --c-placeholder: var(--muted-foreground);
+  --c-border: var(--border);
+  --surface-bezel: oklch(0.9488 0.0054 95.1);
+  --surface-raised: var(--card);
+  --surface-recessed: var(--input);
+  --selection-bg: oklch(0.88 0.01 96);
+  --focus-ring: 0 0 0 3px color-mix(in oklch, var(--ring) 35%, transparent);
+  --shadow-well: inset 0 0.0625rem 0.125rem oklch(0.2161 0.0061 56.04 / 0.07);
+  --shadow-raised: 0 0.0625rem 0.125rem oklch(0.2161 0.0061 56.04 / 0.06), 0 0.25rem 0.625rem -0.5rem oklch(0.2161 0.0061 56.04 / 0.45);
+  --shadow-sm: var(--shadow-raised);
+  --shadow-md: 0 1rem 2.25rem -1.125rem oklch(0.2161 0.0061 56.04 / 0.5);
+  --shadow-action: var(--shadow-raised);
 }

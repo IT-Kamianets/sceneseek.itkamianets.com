@@ -1,13 +1,13 @@
 /* Shared structural tokens. Palette values live in themes/theme-*.css. */
 :root {
-  --ff-base: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  --ff-base: var(--font-sans, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif);
   --fs: 16px;
   --letter-spacing: 0.3px;
 
   /* Radius */
-  --radius: 10px;
-  --radius-card: 10px;
-  --radius-btn: 10px;
+  --radius: 0.625rem;
+  --radius-card: var(--radius);
+  --radius-btn: var(--radius);
 
   /* Spacing */
   --sp-0: 0px;
