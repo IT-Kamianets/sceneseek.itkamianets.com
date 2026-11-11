@@ -32,12 +32,12 @@
 			</p>
 
 			<div class="auth-prompt__actions">
-				<button class="auth-prompt__button auth-prompt__button--primary" type="button">
+				<a class="auth-prompt__button auth-prompt__button--primary" routerLink="/auth/login" (click)="prompt.close()">
 					Увійти
-				</button>
-				<button class="auth-prompt__button auth-prompt__button--secondary" type="button">
+				</a>
+				<a class="auth-prompt__button auth-prompt__button--secondary" routerLink="/auth/register" (click)="prompt.close()">
 					Створити акаунт
-				</button>
+				</a>
 			</div>
 
 			<button class="auth-prompt__dismiss" type="button" (click)="prompt.close()">

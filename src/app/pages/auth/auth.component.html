@@ -1,0 +1,55 @@
+<main class="auth-page">
+	<section class="auth-card" aria-labelledby="auth-title">
+		<aside class="auth-brand-panel">
+			<a class="auth-brand" routerLink="/" aria-label="SceneSeek — на головну">
+				<img src="/assets/logo.png" alt="" width="48" height="48" />
+				<span>SceneSeek</span>
+			</a>
+			<div class="auth-brand-panel__copy">
+				<p class="auth-eyebrow"><span></span>Візуальний пошук нового покоління</p>
+				<p class="auth-brand-panel__title">Знаходьте кадри, що формують історію.</p>
+				<p class="auth-brand-panel__description">Зберігайте сцени, повертайтеся до пошуків і створюйте власні добірки.</p>
+			</div>
+			<div class="auth-brand-panel__orb auth-brand-panel__orb--one" aria-hidden="true"></div>
+			<div class="auth-brand-panel__orb auth-brand-panel__orb--two" aria-hidden="true"></div>
+			<div class="auth-brand-panel__footnote">FIND <i>·</i> SEARCH <i>·</i> CREATE</div>
+		</aside>
+
+		<div class="auth-form-panel">
+			<div class="auth-form-panel__top"><span class="auth-form-panel__mark material-symbols-outlined" aria-hidden="true">{{ mode() === 'reset' ? 'lock_reset' : 'lock' }}</span><a routerLink="/" class="auth-back-link"><span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>На головну</a></div>
+			<p class="auth-eyebrow">SceneSeek · акаунт</p>
+			<h1 id="auth-title">{{ heading() }}</h1>
+			<p class="auth-form-panel__description">
+				@if (mode() === 'login') { Увійдіть, щоб переглядати історію й зберігати сцени. }
+				@else if (mode() === 'register') { Створіть акаунт для власних папок і збережених відеосцен. }
+				@else { Вкажіть адресу електронної пошти, пов’язану з вашим акаунтом. }
+			</p>
+
+			<form class="auth-form" (submit)="onSubmit($event)">
+				@if (mode() === 'register') {
+					<label class="auth-field"><span>Ім’я</span><input type="text" name="fullName" autocomplete="name" [value]="fullName()" (input)="updateName($event)" placeholder="Ваше ім’я" required minlength="2" /></label>
+				}
+				<label class="auth-field"><span>Електронна пошта</span><input type="email" name="email" autocomplete="email" [value]="email()" (input)="updateEmail($event)" placeholder="name@example.com" required /></label>
+				@if (mode() !== 'reset') {
+					<label class="auth-field"><span>Пароль</span><span class="auth-password-field"><input [type]="showPassword() ? 'text' : 'password'" name="password" [attr.autocomplete]="mode() === 'login' ? 'current-password' : 'new-password'" [value]="password()" (input)="updatePassword($event)" [attr.minlength]="mode() === 'register' ? 8 : null" placeholder="{{ mode() === 'register' ? 'Щонайменше 8 символів' : 'Введіть пароль' }}" required /><button type="button" [attr.aria-label]="showPassword() ? 'Приховати пароль' : 'Показати пароль'" (click)="togglePasswordVisibility()"><span class="material-symbols-outlined" aria-hidden="true">{{ showPassword() ? 'visibility_off' : 'visibility' }}</span></button></span></label>
+				}
+				@if (mode() === 'register') {
+					<label class="auth-field"><span>Підтвердіть пароль</span><input [type]="showPassword() ? 'text' : 'password'" name="confirmPassword" autocomplete="new-password" [value]="confirmPassword()" (input)="updateConfirmPassword($event)" placeholder="Повторіть пароль" required minlength="8" /></label>
+				}
+				@if (mode() === 'login') {
+					<a class="auth-inline-link auth-forgot-link" routerLink="/auth/forgot-password">Забули пароль?</a>
+				}
+				@if (formMessage()) { <p class="auth-form-message" [class.auth-form-message--error]="formError()" role="status">{{ formMessage() }}</p> }
+				<button class="auth-submit" type="submit">{{ submitLabel() }}<span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></button>
+			</form>
+
+			@if (mode() === 'login') {
+				<p class="auth-switch">Ще не маєте акаунта? <a class="auth-inline-link" routerLink="/auth/register">Зареєструватися</a></p>
+			} @else if (mode() === 'register') {
+				<p class="auth-switch">Вже маєте акаунт? <a class="auth-inline-link" routerLink="/auth/login">Увійти</a></p>
+			} @else {
+				<p class="auth-switch"><a class="auth-inline-link" routerLink="/auth/login">Повернутися до входу</a></p>
+			}
+		</div>
+	</section>
+</main>

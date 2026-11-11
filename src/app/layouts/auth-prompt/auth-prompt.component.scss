@@ -93,7 +93,9 @@
 }
 
 .auth-prompt__button {
+	display: grid;
 	min-height: 2.875rem;
+	place-items: center;
 	padding: 0.5rem 1rem;
 	border: 1px solid var(--c-border);
 	border-radius: var(--radius-btn);
@@ -101,6 +103,8 @@
 	font-size: 0.875rem;
 	font-weight: 500;
 	cursor: pointer;
+	text-align: center;
+	text-decoration: none;
 }
 
 .auth-prompt__button--primary {
