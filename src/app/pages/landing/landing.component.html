@@ -1,5 +1,22 @@
 <main class="home-page" aria-labelledby="home-title">
 	<div class="home-content">
+		<section class="home-hero-track" aria-labelledby="hero-title">
+			<div class="home-hero-stage">
+				<div class="hero-orbit hero-orbit--outer" aria-hidden="true"></div>
+				<div class="hero-orbit hero-orbit--inner" aria-hidden="true"></div>
+				<div class="hero-star" aria-hidden="true">✦</div>
+				<div class="hero-object hero-object--play" aria-hidden="true"><span></span></div>
+				<div class="hero-object hero-object--clapper" aria-hidden="true"><span class="clapper-top"></span><span class="clapper-body"><i>SS</i></span></div>
+				<div class="hero-object hero-object--frame" aria-hidden="true"><span class="material-symbols-outlined">movie</span></div>
+				<div class="hero-brand">
+					<p class="hero-brand__eyebrow">Візуальний пошук нового покоління</p>
+					<h1 id="hero-title">SceneSeek</h1>
+					<p class="hero-brand__tagline">FIND <i>·</i> SEARCH <i>·</i> CREATE</p>
+				</div>
+				<a class="hero-scroll-cue" href="#home-search"><span>Прокрутіть, щоб почати</span><span class="material-symbols-outlined" aria-hidden="true">south</span></a>
+			</div>
+		</section>
+
 		<section class="home-search-track" aria-label="Пошук відеосцен">
 			<div class="home-search-stage">
 		<header class="home-header">
@@ -8,7 +25,7 @@
 			<p class="home-header__description">Опишіть сцену або додайте фото — відкрийте кадр, який пасує вашій історії.</p>
 		</header>
 
-		<form class="home-search" (submit)="onSearchSubmit($event)">
+		<form id="home-search" class="home-search" (submit)="onSearchSubmit($event)">
 			<div class="home-search__row">
 				<div class="home-search__field">
 					<span class="material-symbols-outlined" aria-hidden="true">search</span>
