@@ -24,8 +24,16 @@ Never place service-account credentials or Admin SDK private keys in the browser
 - Password reset email with a non-enumerating confirmation message
 - Sign-out and return to the originally requested History or Saved page
 - Friendly handling for common Firebase Auth errors
+- Per-account saved scenes in Cloud Firestore
 
-History and Saved content are not persisted to Firestore yet. Their data model and access rules
-should be decided before adding database writes. The production Firebase Web App configuration
-is now set; authentication still requires the Email/Password provider and authorized domains above
-to be enabled in the Firebase Console.
+## Enable saved scenes
+
+1. In Firebase Console, open **Build > Firestore Database** and create a database in **Production
+   mode**. Choose a region in Europe that suits your users; the database location cannot be changed
+   after creation.
+2. Open the database's **Rules** tab and publish the rules from [`../firestore.rules`](../firestore.rules).
+   They allow each signed-in user to read and change only documents under their own UID.
+
+The app stores each saved scene at `users/{uid}/savedScenes/{sceneId}`. Search history is not yet
+persisted. The production Firebase Web App configuration is set; Email/Password and authorized
+domains must also be enabled in the Firebase Console.

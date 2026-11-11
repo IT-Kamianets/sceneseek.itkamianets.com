@@ -1,0 +1,33 @@
+:host { display: block; min-height: 100%; }
+.saved-page { width: min(100% - 2rem, 76rem); min-height: calc(100dvh - 7rem); margin-inline: auto; padding: clamp(2rem,5vw,4rem) 0 5rem; color: var(--c-text-strong); }
+.saved-heading { margin-bottom: 1.75rem; }
+.saved-eyebrow { margin: 0 0 .55rem; color: var(--primary); font-size: .68rem; font-weight: 700; letter-spacing: .18em; }
+.saved-heading h1 { margin: 0; font-family: var(--font-display, Georgia,serif); font-size: clamp(2rem,5vw,3.2rem); font-weight: 500; letter-spacing: -.035em; }
+.saved-heading > p:last-child { margin: .55rem 0 0; color: var(--muted-foreground); font-size: .9rem; }
+.saved-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(min(100%,17rem),1fr)); gap: 1rem; }
+.saved-card { overflow: hidden; border: 1px solid var(--border); border-radius: 1rem; background: color-mix(in oklch,var(--card) 92%,transparent); }
+.saved-card__poster { position: relative; aspect-ratio: 16/9; overflow: hidden; background: linear-gradient(155deg,#1c3141,#11131d 74%); }
+.saved-card__poster::before,.saved-card__poster::after { position: absolute; content: ''; }
+.saved-card__poster::before { width: 18%; aspect-ratio: 1; top: 18%; right: 20%; border-radius: 50%; background: #edce94; box-shadow: 0 0 3rem 1.3rem #d3a56577; }
+.saved-card__poster::after { inset: 52% -5% -15%; background: linear-gradient(155deg,#304545,#101a1a); clip-path: polygon(0 46%,18% 15%,33% 52%,52% 0,69% 43%,85% 19%,100% 54%,100% 100%,0 100%); }
+.saved-card__poster--city { background: linear-gradient(160deg,#363442,#a98773 54%,#17151d); }
+.saved-card__poster--city::after { inset: 35% 0 0; background: repeating-linear-gradient(90deg,#25272e 0 12%,transparent 12% 17%,#30313a 17% 29%,transparent 29% 33%); clip-path: none; }
+.saved-card__poster--coast { background: linear-gradient(#758e8d 0 48%,#31575a 49%,#162b30); }
+.saved-card__poster--coast::after { background: linear-gradient(160deg,#304e4a,#14282a); clip-path: polygon(0 48%,25% 26%,43% 44%,70% 18%,100% 47%,100% 100%,0 100%); }
+.saved-card__poster--forest { background: radial-gradient(circle at 50% 34%,#f0bd70,#687263 22%,#16343a 68%); }
+.saved-card__poster--forest::after { background: repeating-linear-gradient(90deg,#102727 0 6%,transparent 6% 17%,#19342d 17% 22%,transparent 22% 35%); clip-path: none; }
+.saved-card__poster--night { background: linear-gradient(155deg,#16132a,#312355 60%,#11151c); }
+.saved-card__poster--desert { background: linear-gradient(#e2b979,#8b5364 55%,#211c2b); }
+.saved-card__poster--desert::after { background: linear-gradient(165deg,#c78d62,#6b4654 58%,#292032); clip-path: polygon(0 55%,23% 27%,49% 51%,72% 20%,100% 44%,100% 100%,0 100%); }
+.saved-card__duration { position: absolute; z-index: 1; right: .65rem; bottom: .65rem; padding: .2rem .4rem; border-radius: .35rem; color: #fff; background: #090710bb; font-size: .7rem; }
+.saved-card__body { display: flex; align-items: center; justify-content: space-between; gap: .75rem; padding: .85rem; }
+.saved-card__body h2 { margin: 0; font-size: .9rem; font-weight: 550; }
+.saved-card__body p { margin: .35rem 0 0; color: var(--muted-foreground); font-size: .7rem; }
+.saved-card__body button,.saved-empty a { display: inline-flex; min-height: 2.35rem; flex: 0 0 auto; align-items: center; justify-content: center; gap: .35rem; padding: .45rem .7rem; border: 1px solid var(--border); border-radius: .7rem; color: var(--c-text-strong); background: var(--card); font: inherit; font-size: .72rem; cursor: pointer; text-decoration: none; }
+.saved-card__body button:hover,.saved-empty a:hover { border-color: var(--primary); color: var(--primary); }
+.saved-card__body button:disabled { opacity: .55; cursor: wait; }
+.saved-empty { display: grid; justify-items: center; gap: .7rem; padding: clamp(2rem,7vw,4.5rem) 1.25rem; border: 1px solid var(--border); border-radius: 1.1rem; text-align: center; background: color-mix(in oklch,var(--card) 88%,transparent); }
+.saved-empty > .material-symbols-outlined { color: var(--primary); font-size: 2.2rem; }
+.saved-empty h2 { margin: 0; font-family: var(--font-display, Georgia,serif); font-size: 1.4rem; font-weight: 500; }
+.saved-empty p { max-width: 28rem; margin: 0; color: var(--muted-foreground); font-size: .85rem; line-height: 1.55; }
+@media (max-width: 620px) { .saved-page { width: min(100% - 1.5rem,76rem); padding-top: 1.7rem; padding-bottom: 6rem; } }

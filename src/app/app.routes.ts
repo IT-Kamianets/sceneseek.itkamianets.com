@@ -45,7 +45,11 @@ export const routes: Routes = [
 			import('./pages/landing/landing.component').then((module) => module.LandingComponent),
 	},
 	sectionRoute('history', 'Історія'),
-	sectionRoute('saved', 'Збережене'),
+	{
+		...sectionRoute('saved', 'Збережене'),
+		loadComponent: () =>
+			import('./pages/saved/saved.component').then((module) => module.SavedComponent),
+	},
 	{
 		...sectionRoute('profile', 'Профіль'),
 		loadComponent: () =>

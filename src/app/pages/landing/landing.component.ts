@@ -1,6 +1,8 @@
 import { Component, DestroyRef, ElementRef, PLATFORM_ID, ViewChild, computed, inject, signal } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { AuthPromptService } from '../../feature/auth-prompt/auth-prompt.service';
+import { FirebaseAuthService } from '../../feature/firebase-auth/firebase-auth.service';
+import { SavedScene, SavedScenesService } from '../../feature/saved-scenes/saved-scenes.service';
 
 type CategoryId = 'for-you' | 'atmosphere' | 'cinematic' | 'nature' | 'city';
 type RecommendationTag = Exclude<CategoryId, 'for-you'>;
@@ -62,16 +64,8 @@ interface HomeCategory {
 	label: string;
 }
 
-interface Recommendation {
-	id: string;
-	title: string;
+interface Recommendation extends SavedScene {
 	tags: RecommendationTag[];
-	duration: number;
-	durationLabel: string;
-	orientation: Exclude<OrientationFilter, 'any'>;
-	quality: Exclude<QualityFilter, 'any'>;
-	searchText: string;
-	scene: 'mountains' | 'city' | 'coast' | 'forest' | 'night' | 'desert';
 }
 
 const HOME_CATEGORIES: HomeCategory[] = [
@@ -173,6 +167,8 @@ export class LandingComponent {
 	protected readonly previewScene = signal<Recommendation | null>(null);
 	protected readonly recommendationCountLabel = computed(() => sceneCountLabel(this.recommendations().length));
 	private readonly _authPrompt = inject(AuthPromptService);
+	private readonly _auth = inject(FirebaseAuthService);
+	protected readonly savedScenes = inject(SavedScenesService);
 	private readonly _destroyRef = inject(DestroyRef);
 	private _recognition: SpeechRecognitionLike | null = null;
 	@ViewChild('previewDialog') private _previewDialog?: ElementRef<HTMLDialogElement>;
@@ -184,6 +180,7 @@ export class LandingComponent {
 				this._recognition.abort();
 			}
 		});
+		void this.savedScenes.load().catch(() => undefined);
 	}
 	protected readonly recommendations = computed(() => {
 		const category = this.activeCategory();
@@ -430,7 +427,16 @@ export class LandingComponent {
 		input.value = '';
 	}
 
-	protected promptForSignIn() {
-		this._authPrompt.open('saved');
+	protected async toggleSavedScene(item: Recommendation) {
+		await this._auth.waitUntilReady();
+		if (!this._auth.user()) {
+			this._authPrompt.open('saved');
+			return;
+		}
+		try {
+			await this.savedScenes.toggle(item);
+		} catch {
+			// The service exposes a localized message for Firebase setup or permission errors.
+		}
 	}
 }

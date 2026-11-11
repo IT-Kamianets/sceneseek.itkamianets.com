@@ -1,0 +1,43 @@
+<section class="saved-page" aria-labelledby="saved-title">
+	<header class="saved-heading">
+		<p class="saved-eyebrow">ВАША ВІДЕОБІБЛІОТЕКА</p>
+		<h1 id="saved-title">Збережене</h1>
+		<p>Сцени, які ви хочете залишити під рукою.</p>
+	</header>
+
+	@if (!auth.user()) {
+		<div class="saved-empty" role="status">
+			<span class="material-symbols-outlined" aria-hidden="true">bookmark</span>
+			<h2>Увійдіть до свого акаунта</h2>
+			<p>Після входу тут будуть ваші збережені сцени.</p>
+			<a routerLink="/auth/login" [queryParams]="{ returnUrl: '/saved' }">Увійти</a>
+		</div>
+	} @else if (saved.message()) {
+		<div class="saved-empty" role="alert">
+			<span class="material-symbols-outlined" aria-hidden="true">cloud_off</span>
+			<h2>Не вдалося завантажити добірку</h2>
+			<p>{{ saved.message() }}</p>
+		</div>
+	} @else if (saved.scenes().length) {
+		<div class="saved-grid">
+			@for (item of saved.scenes(); track item.id) {
+				<article class="saved-card">
+					<div class="saved-card__poster" [class.saved-card__poster--mountains]="item.scene === 'mountains'" [class.saved-card__poster--city]="item.scene === 'city'" [class.saved-card__poster--coast]="item.scene === 'coast'" [class.saved-card__poster--forest]="item.scene === 'forest'" [class.saved-card__poster--night]="item.scene === 'night'" [class.saved-card__poster--desert]="item.scene === 'desert'">
+						<span class="saved-card__duration">{{ item.durationLabel }}</span>
+					</div>
+					<div class="saved-card__body">
+						<div><h2>{{ item.title }}</h2><p>{{ item.quality === '4k' ? '4K' : item.quality }} · {{ item.orientation === 'landscape' ? 'Горизонтальне' : 'Вертикальне' }}</p></div>
+						<button type="button" [disabled]="saved.busyIds().includes(item.id)" [attr.aria-label]="'Прибрати зі збереженого: ' + item.title" (click)="remove(item.id)"><span class="material-symbols-outlined" aria-hidden="true">bookmark_remove</span>Прибрати</button>
+					</div>
+				</article>
+			}
+		</div>
+	} @else {
+		<div class="saved-empty" role="status">
+			<span class="material-symbols-outlined" aria-hidden="true">video_library</span>
+			<h2>Тут поки порожньо</h2>
+			<p>Зберігайте цікаві сцени з головної — вони з’являться у вашій добірці.</p>
+			<a routerLink="/">Знайти сцени</a>
+		</div>
+	}
+</section>

@@ -62,13 +62,14 @@
 			<div class="home-categories" role="group" aria-label="Категорії рекомендацій">
 				@for (category of categories; track category.id) { <button class="home-category" type="button" [class.is-active]="activeCategory() === category.id" [attr.aria-pressed]="activeCategory() === category.id" (click)="setCategory(category.id)">{{ category.label }}</button> }
 			</div>
+			@if (savedScenes.message()) { <p class="home-search__message home-search__message--error" role="alert">{{ savedScenes.message() }}</p> }
 
 			@if (recommendations().length) {
 				<div class="home-video-grid" aria-live="polite">
 					@for (item of recommendations(); track item.id) {
 						<article class="home-video">
 							<div class="home-video__poster" [class.home-video__poster--mountains]="item.scene === 'mountains'" [class.home-video__poster--city]="item.scene === 'city'" [class.home-video__poster--coast]="item.scene === 'coast'" [class.home-video__poster--forest]="item.scene === 'forest'" [class.home-video__poster--night]="item.scene === 'night'" [class.home-video__poster--desert]="item.scene === 'desert'"><span class="home-video__scene-sun" aria-hidden="true"></span><span class="home-video__scene-ridge" aria-hidden="true"></span><span class="home-video__scene-front" aria-hidden="true"></span><span class="home-video__duration">{{ item.durationLabel }}</span><button class="home-video__preview" type="button" [attr.aria-label]="'Відкрити кадр: ' + item.title" (click)="openPreview(item)"><span class="material-symbols-outlined" aria-hidden="true">play_arrow</span><span>Переглянути кадр</span></button></div>
-							<div class="home-video__body"><h3>{{ item.title }}</h3><div class="home-video__meta"><span>{{ item.orientation === 'landscape' ? 'Горизонтальне' : 'Вертикальне' }} · {{ item.quality === '4k' ? '4K' : item.quality }}</span><button class="home-save" type="button" (click)="promptForSignIn()"><span class="material-symbols-outlined" aria-hidden="true">bookmark</span>Зберегти</button></div></div>
+							<div class="home-video__body"><h3>{{ item.title }}</h3><div class="home-video__meta"><span>{{ item.orientation === 'landscape' ? 'Горизонтальне' : 'Вертикальне' }} · {{ item.quality === '4k' ? '4K' : item.quality }}</span><button class="home-save" type="button" [disabled]="savedScenes.busyIds().includes(item.id)" [attr.aria-pressed]="savedScenes.isSaved(item.id)" (click)="toggleSavedScene(item)"><span class="material-symbols-outlined" aria-hidden="true">{{ savedScenes.isSaved(item.id) ? 'bookmark_added' : 'bookmark' }}</span>{{ savedScenes.isSaved(item.id) ? 'Збережено' : 'Зберегти' }}</button></div></div>
 						</article>
 					}
 				</div>
@@ -88,7 +89,7 @@
 						<p class="home-section-heading__eyebrow">SceneSeek · добірка</p><h2 id="preview-title">{{ item.title }}</h2>
 						<div class="home-preview-dialog__tags">@for (tag of item.tags; track tag) { <span>{{ categoryLabel(tag) }}</span> }</div>
 						<dl class="home-preview-dialog__metadata"><div><dt>Тривалість</dt><dd>{{ item.durationLabel }}</dd></div><div><dt>Якість</dt><dd>{{ item.quality === '4k' ? '4K' : item.quality }}</dd></div><div><dt>Орієнтація</dt><dd>{{ item.orientation === 'landscape' ? 'Горизонтальна' : 'Вертикальна' }}</dd></div></dl>
-						<button class="home-preview-dialog__save" type="button" (click)="promptForSignIn()"><span class="material-symbols-outlined" aria-hidden="true">bookmark_add</span>Зберегти у папки</button>
+						<button class="home-preview-dialog__save" type="button" [disabled]="savedScenes.busyIds().includes(item.id)" [attr.aria-pressed]="savedScenes.isSaved(item.id)" (click)="toggleSavedScene(item)"><span class="material-symbols-outlined" aria-hidden="true">{{ savedScenes.isSaved(item.id) ? 'bookmark_added' : 'bookmark_add' }}</span>{{ savedScenes.isSaved(item.id) ? 'Прибрати зі збереженого' : 'Зберегти у папки' }}</button>
 					</aside>
 				</div>
 			}
