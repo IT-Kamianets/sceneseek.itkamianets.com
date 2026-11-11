@@ -26,5 +26,6 @@ Never place service-account credentials or Admin SDK private keys in the browser
 - Friendly handling for common Firebase Auth errors
 
 History and Saved content are not persisted to Firestore yet. Their data model and access rules
-should be decided before adding database writes. Firebase config is intentionally blank until
-the project's Web App settings are supplied.
+should be decided before adding database writes. The production Firebase Web App configuration
+is now set; authentication still requires the Email/Password provider and authorized domains above
+to be enabled in the Firebase Console.

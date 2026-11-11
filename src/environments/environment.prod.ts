@@ -17,11 +17,10 @@ export const environment: {
 	production: true,
 	companyId: 'demo',
 	firebase: {
-		// Copy these public web-app values from Firebase Console > Project settings > Your apps.
-		apiKey: '',
-		authDomain: '',
-		projectId: '',
-		appId: '',
+		apiKey: 'AIzaSyCH9VU0W_Gxmul_8wBlOSyB0EVEFZOfTRg',
+		authDomain: 'sceneseek-8719f.firebaseapp.com',
+		projectId: 'sceneseek-8719f',
+		appId: '1:437369214201:web:791d02470c5172dfb17e28',
 	},
 	defaultLanguage: 'ua',
 	languages: [
