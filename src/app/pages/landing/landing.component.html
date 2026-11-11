@@ -56,7 +56,7 @@
 		<section class="home-recommendations home-results-stage" aria-labelledby="recommendations-title">
 			<div class="home-section-heading">
 				<div><p class="home-section-heading__eyebrow">Відеобібліотека · демонстраційна добірка</p><h2 id="recommendations-title">{{ submittedQuery() ? 'Результати пошуку' : 'Щоденні рекомендації' }}</h2><p class="home-section-heading__description">{{ submittedQuery() ? 'Сцени, що відповідають вашому опису.' : 'Нові візуальні ідеї для вашого наступного проєкту.' }}</p></div>
-				<div class="home-results-count"><span class="material-symbols-outlined" aria-hidden="true">movie</span>{{ recommendations().length }} сцен</div>
+				<div class="home-results-count" aria-live="polite"><span class="material-symbols-outlined" aria-hidden="true">movie</span>{{ recommendationCountLabel() }}</div>
 			</div>
 
 			<div class="home-categories" role="group" aria-label="Категорії рекомендацій">
@@ -73,7 +73,7 @@
 					}
 				</div>
 			} @else {
-				<div class="home-empty-state" role="status"><span class="material-symbols-outlined" aria-hidden="true">filter_alt_off</span><p>За цим описом і фільтрами сцен не знайдено.</p><button class="home-reset-action" type="button" (click)="resetSearch(photoInput)">Очистити пошук і фільтри</button></div>
+				<div class="home-empty-state" role="status"><span class="material-symbols-outlined" aria-hidden="true">filter_alt_off</span><p>{{ submittedQuery() ? 'За цим описом і вибраними фільтрами сцен не знайдено.' : 'За вибраними категоріями й фільтрами сцен не знайдено.' }}</p><button class="home-reset-action" type="button" (click)="resetSearch(photoInput)">Очистити пошук і фільтри</button></div>
 			}
 		</section>
 

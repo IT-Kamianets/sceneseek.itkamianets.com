@@ -40,6 +40,21 @@ function searchStem(value: string): string {
 	return value.toLocaleLowerCase('uk').replace(/(ями|ами|ого|ому|ими|ій|ий|ою|ею|ах|ях|ів|їв|ам|ям|ом|ем|ку|ок|а|я|у|ю|і|и)$/u, '');
 }
 
+function matchesSearchWord(word: string, term: string): boolean {
+	return word.startsWith(term) || term.startsWith(word);
+}
+
+function sceneCountLabel(count: number): string {
+	const lastDigit = count % 10;
+	const lastTwoDigits = count % 100;
+	const noun = lastDigit === 1 && lastTwoDigits !== 11
+		? 'сцена'
+		: lastDigit >= 2 && lastDigit <= 4 && (lastTwoDigits < 12 || lastTwoDigits > 14)
+			? 'сцени'
+			: 'сцен';
+	return `${count} ${noun}`;
+}
+
 const SEARCH_STOP_WORDS = new Set(['над', 'після', 'перед', 'крізь', 'для', 'або', 'але', 'який', 'яка', 'яке', 'на', 'у', 'в', 'з', 'зі', 'до']);
 
 interface HomeCategory {
@@ -156,6 +171,7 @@ export class LandingComponent {
 	protected readonly voiceSupported = signal(isPlatformBrowser(inject(PLATFORM_ID)) && !!getSpeechRecognitionConstructor());
 	protected readonly isListening = signal(false);
 	protected readonly previewScene = signal<Recommendation | null>(null);
+	protected readonly recommendationCountLabel = computed(() => sceneCountLabel(this.recommendations().length));
 	private readonly _authPrompt = inject(AuthPromptService);
 	private readonly _destroyRef = inject(DestroyRef);
 	private _recognition: SpeechRecognitionLike | null = null;
@@ -189,7 +205,7 @@ export class LandingComponent {
 				const searchableText = `${item.title} ${item.searchText}`
 					.split(/[^\p{L}\p{N}]+/u)
 					.map(searchStem);
-				return terms.every((term) => searchableText.some((word) => word.startsWith(term) || term.startsWith(word)));
+			return terms.every((term) => searchableText.some((word) => matchesSearchWord(word, term)));
 			});
 		}
 
@@ -210,7 +226,15 @@ export class LandingComponent {
 			matches = matches.filter((item) => (item.quality === '4k' ? 2160 : Number.parseInt(item.quality, 10)) >= minimumQuality);
 		}
 
-		if (this.sortOrder() === 'shortest') {
+		if (this.sortOrder() === 'relevance' && terms.length) {
+			const score = (item: Recommendation) => {
+				const searchableText = `${item.title} ${item.searchText}`
+					.split(/[^\p{L}\p{N}]+/u)
+					.map(searchStem);
+				return terms.reduce((total, term) => total + searchableText.filter((word) => matchesSearchWord(word, term)).length, 0);
+			};
+			matches = [...matches].sort((left, right) => score(right) - score(left));
+		} else if (this.sortOrder() === 'shortest') {
 			matches = [...matches].sort((left, right) => left.duration - right.duration);
 		} else if (this.sortOrder() === 'longest') {
 			matches = [...matches].sort((left, right) => right.duration - left.duration);
@@ -309,6 +333,9 @@ export class LandingComponent {
 		};
 		recognition.onend = () => {
 			this.isListening.set(false);
+			if (this.searchMessage() === 'Слухаю запит українською…') {
+				this.searchMessage.set('Запис зупинено без розпізнаного запиту.');
+			}
 			if (this._recognition === recognition) {
 				this._recognition = null;
 			}
