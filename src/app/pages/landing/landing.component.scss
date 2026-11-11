@@ -59,7 +59,7 @@
 .home-search__message { margin: .15rem .25rem; color: var(--muted-foreground); font-size: .78rem; }
 .home-search__message--error { color: var(--destructive); }
 .home-recommendations { margin-top: 2rem; }
-.home-results-stage { margin: 0 calc(clamp(1rem,3vw,2.25rem) * -1); padding: 2rem clamp(1rem,3vw,2.25rem) 3rem; border-top: 1px solid color-mix(in oklch,var(--primary) 30%,var(--border)); border-radius: 1.5rem 1.5rem 0 0; background: var(--background); }
+.home-results-stage { margin: 0 calc(clamp(1rem,3vw,2.25rem) * -1); padding: 2rem clamp(1rem,3vw,2.25rem) 3rem; border-radius: 1.5rem 1.5rem 0 0; background: var(--background); }
 .home-section-heading { display: flex; align-items: end; justify-content: space-between; gap: 1rem; margin-bottom: .9rem; }
 .home-section-heading__eyebrow { display: block; font-size: .62rem; }
 .home-section-heading h2 { margin: .3rem 0 0; color: var(--foreground); font-family: var(--font-serif,Georgia,'Times New Roman',serif); font-size: clamp(1.65rem,3vw,2.25rem); font-weight: 400; letter-spacing: -.04em; line-height: 1.15; }
