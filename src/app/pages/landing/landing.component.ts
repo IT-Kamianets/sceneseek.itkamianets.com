@@ -333,6 +333,16 @@ export class LandingComponent {
 		this._previewDialog?.nativeElement.showModal();
 	}
 
+	protected categoryLabel(tag: RecommendationTag): string {
+		const labels: Record<RecommendationTag, string> = {
+			atmosphere: 'Атмосфера',
+			cinematic: 'Кінематографічне',
+			nature: 'Природа',
+			city: 'Міська сцена',
+		};
+		return labels[tag];
+	}
+
 	protected closePreview() {
 		this._previewDialog?.nativeElement.close();
 		this.previewScene.set(null);

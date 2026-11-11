@@ -79,10 +79,17 @@
 
 		<dialog #previewDialog class="home-preview-dialog" aria-labelledby="preview-title" (click)="onPreviewDialogClick($event)" (close)="onPreviewDialogClose()">
 			@if (previewScene(); as item) {
-				<div class="home-preview-dialog__content">
-					<header class="home-preview-dialog__header"><div><p class="home-section-heading__eyebrow">Кадр сцени</p><h2 id="preview-title">{{ item.title }}</h2></div><button class="home-icon-action" type="button" aria-label="Закрити перегляд" (click)="closePreview()"><span class="material-symbols-outlined" aria-hidden="true">close</span></button></header>
-					<div class="home-video__poster home-preview-dialog__frame" [class.home-video__poster--mountains]="item.scene === 'mountains'" [class.home-video__poster--city]="item.scene === 'city'" [class.home-video__poster--coast]="item.scene === 'coast'" [class.home-video__poster--forest]="item.scene === 'forest'" [class.home-video__poster--night]="item.scene === 'night'" [class.home-video__poster--desert]="item.scene === 'desert'"><span class="home-video__scene-sun" aria-hidden="true"></span><span class="home-video__scene-ridge" aria-hidden="true"></span><span class="home-video__scene-front" aria-hidden="true"></span><span class="home-preview-dialog__play material-symbols-outlined" aria-hidden="true">play_arrow</span></div>
-					<div class="home-preview-dialog__details"><span><span class="material-symbols-outlined" aria-hidden="true">schedule</span>{{ item.durationLabel }}</span><span><span class="material-symbols-outlined" aria-hidden="true">crop</span>{{ item.orientation === 'landscape' ? 'Горизонтальне' : 'Вертикальне' }}</span><span><span class="material-symbols-outlined" aria-hidden="true">high_quality</span>{{ item.quality === '4k' ? '4K' : item.quality }}</span><button class="home-save" type="button" (click)="promptForSignIn()"><span class="material-symbols-outlined" aria-hidden="true">bookmark</span>Зберегти</button></div>
+				<div class="home-preview-dialog__layout">
+					<section class="home-preview-dialog__visual" aria-label="Попередній перегляд кадру">
+						<header class="home-preview-dialog__topline"><p class="home-section-heading__eyebrow"><span class="material-symbols-outlined" aria-hidden="true">movie</span>Попередній перегляд</p><button class="home-icon-action" type="button" aria-label="Закрити перегляд" (click)="closePreview()"><span class="material-symbols-outlined" aria-hidden="true">close</span></button></header>
+						<div class="home-video__poster home-preview-dialog__frame" [class.home-video__poster--mountains]="item.scene === 'mountains'" [class.home-video__poster--city]="item.scene === 'city'" [class.home-video__poster--coast]="item.scene === 'coast'" [class.home-video__poster--forest]="item.scene === 'forest'" [class.home-video__poster--night]="item.scene === 'night'" [class.home-video__poster--desert]="item.scene === 'desert'"><span class="home-video__scene-sun" aria-hidden="true"></span><span class="home-video__scene-ridge" aria-hidden="true"></span><span class="home-video__scene-front" aria-hidden="true"></span><span class="home-preview-dialog__frame-label"><span class="material-symbols-outlined" aria-hidden="true">image</span>Кадр сцени</span></div>
+					</section>
+					<aside class="home-preview-dialog__info" aria-label="Відомості про сцену">
+						<p class="home-section-heading__eyebrow">SceneSeek · добірка</p><h2 id="preview-title">{{ item.title }}</h2>
+						<div class="home-preview-dialog__tags">@for (tag of item.tags; track tag) { <span>{{ categoryLabel(tag) }}</span> }</div>
+						<dl class="home-preview-dialog__metadata"><div><dt>Тривалість</dt><dd>{{ item.durationLabel }}</dd></div><div><dt>Якість</dt><dd>{{ item.quality === '4k' ? '4K' : item.quality }}</dd></div><div><dt>Орієнтація</dt><dd>{{ item.orientation === 'landscape' ? 'Горизонтальна' : 'Вертикальна' }}</dd></div></dl>
+						<button class="home-preview-dialog__save" type="button" (click)="promptForSignIn()"><span class="material-symbols-outlined" aria-hidden="true">bookmark_add</span>Зберегти у папки</button>
+					</aside>
 				</div>
 			}
 		</dialog>
