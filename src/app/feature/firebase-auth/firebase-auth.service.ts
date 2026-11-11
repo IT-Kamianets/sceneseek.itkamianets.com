@@ -16,6 +16,10 @@ export class FirebaseAuthService {
 	private readonly _platformId = inject(PLATFORM_ID);
 	private readonly _firebaseConfig = environment.firebase;
 	private _authPromise: Promise<{ auth: Auth; sdk: FirebaseAuthSdk }> | null = null;
+	private _resolveAuthReady!: () => void;
+	private readonly _authReadyPromise = new Promise<void>((resolve) => {
+		this._resolveAuthReady = resolve;
+	});
 	readonly user = signal<SceneSeekUser | null>(null);
 	readonly authReady = signal(false);
 	readonly isConfigured = computed(() =>
@@ -29,14 +33,24 @@ export class FirebaseAuthService {
 
 	async initialize() {
 		if (!isPlatformBrowser(this._platformId) || !this.isConfigured()) {
-			this.authReady.set(true);
+			this._markAuthReady();
 			return;
 		}
 
 		try {
 			await this._getAuth();
 		} catch {
-			this.authReady.set(true);
+			this._markAuthReady();
+		}
+	}
+
+	async waitUntilReady() {
+		if (!isPlatformBrowser(this._platformId)) {
+			return;
+		}
+		if (!this.authReady()) {
+			await this.initialize();
+			await this._authReadyPromise;
 		}
 	}
 
@@ -110,9 +124,14 @@ export class FirebaseAuthService {
 		await sdk.setPersistence(auth, sdk.browserLocalPersistence);
 		sdk.onAuthStateChanged(auth, (user) => {
 			this.user.set(this._mapUser(user));
-			this.authReady.set(true);
+			this._markAuthReady();
 		});
 		return { auth, sdk };
+	}
+
+	private _markAuthReady() {
+		this.authReady.set(true);
+		this._resolveAuthReady();
 	}
 
 	private _mapUser(user: User | null): SceneSeekUser | null {
