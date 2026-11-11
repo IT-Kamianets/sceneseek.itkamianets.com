@@ -39,16 +39,16 @@
 				@if (mode() === 'login') {
 					<a class="auth-inline-link auth-forgot-link" routerLink="/auth/forgot-password">Забули пароль?</a>
 				}
-				@if (formMessage()) { <p class="auth-form-message" [class.auth-form-message--error]="formError()" role="status">{{ formMessage() }}</p> }
-				<button class="auth-submit" type="submit">{{ submitLabel() }}<span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></button>
+				@if (formMessage()) { <p class="auth-form-message" [class.auth-form-message--error]="formError()" [attr.role]="formError() ? 'alert' : 'status'">{{ formMessage() }}</p> }
+				<button class="auth-submit" type="submit" [disabled]="isSubmitting()">{{ isSubmitting() ? 'Зачекайте…' : submitLabel() }}<span class="material-symbols-outlined" aria-hidden="true">{{ isSubmitting() ? 'progress_activity' : 'arrow_forward' }}</span></button>
 			</form>
 
 			@if (mode() === 'login') {
-				<p class="auth-switch">Ще не маєте акаунта? <a class="auth-inline-link" routerLink="/auth/register">Зареєструватися</a></p>
+				<p class="auth-switch">Ще не маєте акаунта? <a class="auth-inline-link" routerLink="/auth/register" [queryParams]="returnUrlParams">Зареєструватися</a></p>
 			} @else if (mode() === 'register') {
 				<p class="auth-switch">Вже маєте акаунт? <a class="auth-inline-link" routerLink="/auth/login">Увійти</a></p>
 			} @else {
-				<p class="auth-switch"><a class="auth-inline-link" routerLink="/auth/login">Повернутися до входу</a></p>
+				<p class="auth-switch"><a class="auth-inline-link" routerLink="/auth/login" [queryParams]="returnUrlParams">Повернутися до входу</a></p>
 			}
 		</div>
 	</section>

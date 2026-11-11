@@ -32,10 +32,10 @@
 			</p>
 
 			<div class="auth-prompt__actions">
-				<a class="auth-prompt__button auth-prompt__button--primary" routerLink="/auth/login" (click)="prompt.close()">
+				<a class="auth-prompt__button auth-prompt__button--primary" routerLink="/auth/login" [queryParams]="{ returnUrl: prompt.reason() === 'history' ? '/history' : '/saved' }" (click)="prompt.close()">
 					Увійти
 				</a>
-				<a class="auth-prompt__button auth-prompt__button--secondary" routerLink="/auth/register" (click)="prompt.close()">
+				<a class="auth-prompt__button auth-prompt__button--secondary" routerLink="/auth/register" [queryParams]="{ returnUrl: prompt.reason() === 'history' ? '/history' : '/saved' }" (click)="prompt.close()">
 					Створити акаунт
 				</a>
 			</div>

@@ -1,5 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { FirebaseAuthService } from '../../feature/firebase-auth/firebase-auth.service';
 
 type AuthMode = 'login' | 'register' | 'reset';
 
@@ -11,6 +12,10 @@ type AuthMode = 'login' | 'register' | 'reset';
 })
 export class AuthComponent {
 	private readonly _route = inject(ActivatedRoute);
+	private readonly _router = inject(Router);
+	private readonly _auth = inject(FirebaseAuthService);
+	private readonly _returnUrl = this._route.snapshot.queryParamMap.get('returnUrl');
+	protected readonly returnUrlParams = this._returnUrl ? { returnUrl: this._returnUrl } : null;
 	protected readonly mode = signal<AuthMode>(this._route.snapshot.data['authMode'] as AuthMode);
 	protected readonly email = signal('');
 	protected readonly fullName = signal('');
@@ -19,6 +24,7 @@ export class AuthComponent {
 	protected readonly showPassword = signal(false);
 	protected readonly formMessage = signal('');
 	protected readonly formError = signal(false);
+	protected readonly isSubmitting = signal(false);
 	protected readonly heading = computed(() => {
 		switch (this.mode()) {
 			case 'login': return 'Раді вас бачити';
@@ -58,8 +64,11 @@ export class AuthComponent {
 		this.showPassword.update((visible) => !visible);
 	}
 
-	protected onSubmit(event: SubmitEvent) {
+	protected async onSubmit(event: SubmitEvent) {
 		event.preventDefault();
+		if (this.isSubmitting()) {
+			return;
+		}
 		const form = event.currentTarget as HTMLFormElement;
 		if (!form.reportValidity()) {
 			return;
@@ -71,10 +80,35 @@ export class AuthComponent {
 			return;
 		}
 
-		this.formError.set(false);
-		this.formMessage.set(this.mode() === 'reset'
-			? 'Надсилання листа поки недоступне. Вашу адресу не надіслано.'
-			: 'Авторизацію ще не підключено. Введені дані не надсилалися.');
+		this.isSubmitting.set(true);
+		this.clearMessage();
+		try {
+			switch (this.mode()) {
+				case 'login':
+					await this._auth.signIn(this.email(), this.password());
+					await this._router.navigateByUrl(this._safeReturnUrl());
+					break;
+				case 'register':
+					await this._auth.createAccount(this.email(), this.password(), this.fullName());
+					await this._router.navigateByUrl(this._safeReturnUrl());
+					break;
+				case 'reset':
+					await this._auth.sendPasswordReset(this.email());
+					this.formMessage.set('Якщо акаунт із цією адресою існує, на нього надіслано лист з інструкціями.');
+					break;
+			}
+		} catch (error) {
+			this.formError.set(true);
+			this.formMessage.set(error instanceof Error ? error.message : 'Не вдалося виконати дію. Спробуйте ще раз.');
+		} finally {
+			this.isSubmitting.set(false);
+		}
+	}
+
+	private _safeReturnUrl(): string {
+		return this._returnUrl?.startsWith('/') && !this._returnUrl.startsWith('//')
+			? this._returnUrl
+			: '/';
 	}
 
 	private clearMessage() {

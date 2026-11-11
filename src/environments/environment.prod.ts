@@ -3,6 +3,12 @@ export const environment: {
 	appVersion: string;
 	production: boolean;
 	companyId: string;
+	firebase: {
+		apiKey: string;
+		authDomain: string;
+		projectId: string;
+		appId: string;
+	};
 	defaultLanguage: string;
 	languages: AppLanguage[];
 } = {
@@ -10,6 +16,13 @@ export const environment: {
 	appVersion: '1.0.0',
 	production: true,
 	companyId: 'demo',
+	firebase: {
+		// Copy these public web-app values from Firebase Console > Project settings > Your apps.
+		apiKey: '',
+		authDomain: '',
+		projectId: '',
+		appId: '',
+	},
 	defaultLanguage: 'ua',
 	languages: [
 		{

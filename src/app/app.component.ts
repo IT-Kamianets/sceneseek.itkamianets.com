@@ -7,6 +7,7 @@ import { environment } from '../environments/environment';
 import { BottomNavComponent } from './layouts/bottom-nav/bottom-nav.component';
 import { AuthPromptComponent } from './layouts/auth-prompt/auth-prompt.component';
 import { TopbarComponent } from './layouts/topbar/topbar.component';
+import { FirebaseAuthService } from './feature/firebase-auth/firebase-auth.service';
 
 @Component({
 	selector: 'app-root',
@@ -28,9 +29,11 @@ export class App {
 	private readonly _canonicalService = inject(CanonicalService);
 	private readonly _document = inject(DOCUMENT);
 	private readonly _languageService = inject(LanguageService);
+	private readonly _firebaseAuth = inject(FirebaseAuthService);
 
 	constructor() {
 		this._canonicalService.initialize();
+		void this._firebaseAuth.initialize();
 
 		effect(() => {
 			const language = this._languageService.language();

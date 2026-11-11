@@ -39,6 +39,7 @@
 .auth-forgot-link { justify-self: end; margin-top: -.35rem; }
 .auth-submit { display: inline-flex; min-height: 3rem; align-items: center; justify-content: center; gap: .55rem; margin-top: .2rem; border: 1px solid color-mix(in oklch,var(--primary) 72%,white 8%); border-radius: var(--radius-btn); color: var(--primary-foreground); background: linear-gradient(135deg,color-mix(in oklch,var(--primary) 90%,white),var(--primary) 64%,color-mix(in oklch,var(--primary) 78%,black)); font: inherit; font-size: .84rem; font-weight: 600; cursor: pointer; box-shadow: var(--shadow-action); transition: transform var(--motion-fast) var(--easing),box-shadow var(--motion-fast) var(--easing); }
 .auth-submit:hover { transform: translateY(-1px); box-shadow: var(--shadow-action),0 0 1.25rem color-mix(in oklch,var(--primary) 24%,transparent); }
+.auth-submit:disabled { opacity: .7; cursor: wait; }
 .auth-submit .material-symbols-outlined { font-size: 1.1rem; }
 .auth-form-message { margin: 0; padding: .7rem .8rem; border: 1px solid color-mix(in oklch,var(--primary) 30%,var(--border)); border-radius: var(--radius-btn); color: var(--secondary-foreground); background: color-mix(in oklch,var(--primary) 8%,var(--card)); font-size: .75rem; line-height: 1.5; }
 .auth-form-message--error { border-color: color-mix(in oklch,var(--destructive) 42%,var(--border)); color: var(--destructive); background: color-mix(in oklch,var(--destructive) 8%,var(--card)); }

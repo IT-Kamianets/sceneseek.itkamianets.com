@@ -95,6 +95,8 @@
 	color: var(--c-text);
 	font: inherit;
 	font-size: 0.75rem;
+	text-decoration: none;
+	cursor: pointer;
 }
 
 .profile-identity__edit .material-symbols-outlined {
@@ -318,7 +320,8 @@
 	display: grid;
 }
 
-.profile-account-actions button {
+.profile-account-actions button,
+.profile-account-actions a {
 	display: flex;
 	min-height: 2.625rem;
 	align-items: center;
@@ -330,9 +333,11 @@
 	font: inherit;
 	font-size: 0.75rem;
 	text-align: left;
+	text-decoration: none;
 }
 
-.profile-account-actions button .material-symbols-outlined {
+.profile-account-actions button .material-symbols-outlined,
+.profile-account-actions a .material-symbols-outlined {
 	color: var(--c-text-muted);
 	font-size: 1rem;
 }
@@ -341,6 +346,8 @@
 .profile-account-actions .profile-account-actions__danger .material-symbols-outlined {
 	color: var(--destructive);
 }
+.profile-account-actions button:disabled { opacity: .55; cursor: not-allowed; }
+.profile-signout-message { margin: .5rem 0; color: var(--destructive); font-size: .78rem; }
 
 .profile-theme-options {
 	display: inline-flex;

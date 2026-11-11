@@ -7,16 +7,21 @@
 		</header>
 
 		<section class="profile-identity" aria-label="Дані профілю">
-			<div class="profile-identity__avatar" aria-hidden="true">ІП</div>
+			<div class="profile-identity__avatar" aria-hidden="true">{{ initials() }}</div>
 			<div class="profile-identity__details">
-				<p class="profile-identity__name">Ім’я користувача</p>
-				<p class="profile-identity__email">email@example.com</p>
+				<p class="profile-identity__name">{{ auth.user()?.displayName || 'Гостьовий режим' }}</p>
+				<p class="profile-identity__email">{{ auth.user()?.email || 'Увійдіть, щоб синхронізувати свої добірки' }}</p>
 			</div>
-			<button class="profile-identity__edit" type="button" aria-label="Редагувати профіль">
-				<span class="material-symbols-outlined" aria-hidden="true">edit</span>
-				<span>Редагувати профіль</span>
-			</button>
+			@if (auth.user()) {
+				<button class="profile-identity__edit" type="button" aria-label="Редагувати профіль">
+					<span class="material-symbols-outlined" aria-hidden="true">edit</span>
+					<span>Редагувати профіль</span>
+				</button>
+			} @else {
+				<a class="profile-identity__edit" routerLink="/auth/login"><span class="material-symbols-outlined" aria-hidden="true">login</span><span>Увійти</span></a>
+			}
 		</section>
+		@if (signOutMessage()) { <p class="profile-signout-message" role="alert">{{ signOutMessage() }}</p> }
 
 		<details class="profile-pro">
 			<summary>
@@ -44,8 +49,8 @@
 							<span class="profile-row__chevron material-symbols-outlined" aria-hidden="true">chevron_right</span>
 						</summary>
 						<div class="profile-row__details">
-							<div class="profile-setting"><span>Ім’я</span><span class="profile-setting__value">Ваше ім’я <span class="material-symbols-outlined" aria-hidden="true">edit</span></span></div>
-							<div class="profile-setting"><span>Електронна пошта</span><span class="profile-setting__value">email@example.com <span class="material-symbols-outlined" aria-hidden="true">edit</span></span></div>
+							<div class="profile-setting"><span>Ім’я</span><span class="profile-setting__value">{{ auth.user()?.displayName || 'Не вказано' }}</span></div>
+							<div class="profile-setting"><span>Електронна пошта</span><span class="profile-setting__value">{{ auth.user()?.email || 'Не вказано' }}</span></div>
 							<div class="profile-setting"><span>Фото профілю</span><span class="profile-setting__value">Змінити фото <span class="material-symbols-outlined" aria-hidden="true">chevron_right</span></span></div>
 						</div>
 					</details>
@@ -57,9 +62,13 @@
 							<span class="profile-row__chevron material-symbols-outlined" aria-hidden="true">chevron_right</span>
 						</summary>
 						<div class="profile-row__details profile-account-actions">
-							<button type="button"><span class="material-symbols-outlined" aria-hidden="true">key</span>Змінити пароль</button>
-							<button type="button"><span class="material-symbols-outlined" aria-hidden="true">logout</span>Вийти з акаунта</button>
-							<button class="profile-account-actions__danger" type="button"><span class="material-symbols-outlined" aria-hidden="true">delete</span>Видалити акаунт</button>
+							<a routerLink="/auth/forgot-password"><span class="material-symbols-outlined" aria-hidden="true">key</span>Змінити пароль</a>
+							@if (auth.user()) {
+								<button type="button" (click)="signOut()"><span class="material-symbols-outlined" aria-hidden="true">logout</span>Вийти з акаунта</button>
+							} @else {
+								<a routerLink="/auth/login"><span class="material-symbols-outlined" aria-hidden="true">login</span>Увійти в акаунт</a>
+							}
+							<button class="profile-account-actions__danger" type="button" disabled><span class="material-symbols-outlined" aria-hidden="true">delete</span>Видалення акаунта поки недоступне</button>
 						</div>
 					</details>
 				</div>
