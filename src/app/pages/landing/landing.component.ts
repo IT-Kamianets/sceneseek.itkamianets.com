@@ -20,7 +20,7 @@ interface Recommendation {
 	durationLabel: string;
 	orientation: Exclude<OrientationFilter, 'any'>;
 	searchText: string;
-	scene: 'mountains' | 'city' | 'coast';
+	scene: 'mountains' | 'city' | 'coast' | 'forest' | 'night' | 'desert';
 }
 
 const HOME_CATEGORIES: HomeCategory[] = [
@@ -61,6 +61,36 @@ const HOME_RECOMMENDATIONS: Recommendation[] = [
 		orientation: 'landscape',
 		searchText: 'хвилі море узбережжя берег вода природа спокій',
 		scene: 'coast',
+	},
+	{
+		id: 'forest',
+		title: 'Сонячне проміння крізь ліс',
+		tags: ['atmosphere', 'cinematic', 'nature'],
+		duration: 36,
+		durationLabel: '00:36',
+		orientation: 'landscape',
+		searchText: 'сонячне проміння ліс дерева туман природа світло',
+		scene: 'forest',
+	},
+	{
+		id: 'night',
+		title: 'Неоновий ритм нічного міста',
+		tags: ['cinematic', 'city'],
+		duration: 31,
+		durationLabel: '00:31',
+		orientation: 'portrait',
+		searchText: 'неон нічне місто вулиці дощ урбаністика',
+		scene: 'night',
+	},
+	{
+		id: 'desert',
+		title: 'Золоті дюни перед заходом сонця',
+		tags: ['cinematic', 'nature'],
+		duration: 9,
+		durationLabel: '00:09',
+		orientation: 'landscape',
+		searchText: 'золоті дюни пустеля пісок захід сонця природа',
+		scene: 'desert',
 	},
 ];
 
@@ -138,6 +168,7 @@ export class LandingComponent {
 		}
 
 		if (!query && this.selectedPhotoName()) {
+			this.submittedQuery.set('');
 			this.searchError.set(false);
 			this.searchMessage.set('Пошук за зображенням буде доступний пізніше.');
 			return;
@@ -180,6 +211,13 @@ export class LandingComponent {
 			return;
 		}
 
+		if (file.size > 10 * 1024 * 1024) {
+			this.searchError.set(true);
+			this.searchMessage.set('Зображення має бути менше 10 МБ.');
+			input.value = '';
+			return;
+		}
+
 		this.selectedPhotoName.set(file.name);
 		this.searchMessage.set('');
 		this.searchError.set(false);
@@ -188,6 +226,19 @@ export class LandingComponent {
 	protected removePhoto(input: HTMLInputElement) {
 		input.value = '';
 		this.selectedPhotoName.set('');
+	}
+
+	protected resetSearch(input: HTMLInputElement) {
+		this.query.set('');
+		this.submittedQuery.set('');
+		this.selectedPhotoName.set('');
+		this.searchMessage.set('');
+		this.searchError.set(false);
+		this.activeCategory.set('for-you');
+		this.durationFilter.set('any');
+		this.orientationFilter.set('any');
+		this.sortOrder.set('relevance');
+		input.value = '';
 	}
 
 	protected promptForSignIn() {
