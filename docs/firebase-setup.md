@@ -26,6 +26,7 @@ Never place service-account credentials or Admin SDK private keys in the browser
 - Sign-out and return to the originally requested History or Saved page
 - Friendly handling for common Firebase Auth errors
 - Per-account saved scenes in Cloud Firestore
+- Per-account folders for organizing saved scenes
 - Per-account text and voice search history, including the selected filters
 
 ## Enable saved scenes
@@ -36,8 +37,10 @@ Never place service-account credentials or Admin SDK private keys in the browser
 2. Open the database's **Rules** tab and publish the rules from [`../firestore.rules`](../firestore.rules).
    They allow each signed-in user to read and change only documents under their own UID.
 
-The app stores saved scenes at `users/{uid}/savedScenes/{sceneId}` and search history at
-`users/{uid}/searchHistory/{entryId}`. After changing `firestore.rules`, publish the updated rules in
+The app stores saved scenes at `users/{uid}/savedScenes/{sceneId}`, folders at
+`users/{uid}/savedFolders/{folderId}`, and search history at
+`users/{uid}/searchHistory/{entryId}`. Deleting a folder moves its scenes back to the unfiled list.
+After changing `firestore.rules`, publish the updated rules in
 the Firebase Console's **Rules** tab; GitHub Pages publishes the website but does not publish
 Firestore rules. Search history stores the query, input method, selected filters, and timestamp. The
 uploaded image itself is not stored.

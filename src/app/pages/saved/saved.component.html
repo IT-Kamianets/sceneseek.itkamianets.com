@@ -9,35 +9,209 @@
 		<div class="saved-empty" role="status">
 			<span class="material-symbols-outlined" aria-hidden="true">bookmark</span>
 			<h2>Увійдіть до свого акаунта</h2>
-			<p>Після входу тут будуть ваші збережені сцени.</p>
+			<p>Після входу тут будуть ваші збережені сцени та папки.</p>
 			<a routerLink="/auth/login" [queryParams]="{ returnUrl: '/saved' }">Увійти</a>
 		</div>
-	} @else if (saved.message()) {
+	} @else if (saved.message() && saved.loadedForUid() !== auth.user()?.uid) {
 		<div class="saved-empty" role="alert">
 			<span class="material-symbols-outlined" aria-hidden="true">cloud_off</span>
 			<h2>Не вдалося завантажити добірку</h2>
 			<p>{{ saved.message() }}</p>
 		</div>
-	} @else if (saved.scenes().length) {
-		<div class="saved-grid">
-			@for (item of saved.scenes(); track item.id) {
-				<article class="saved-card">
-					<div class="saved-card__poster" [class.saved-card__poster--mountains]="item.scene === 'mountains'" [class.saved-card__poster--city]="item.scene === 'city'" [class.saved-card__poster--coast]="item.scene === 'coast'" [class.saved-card__poster--forest]="item.scene === 'forest'" [class.saved-card__poster--night]="item.scene === 'night'" [class.saved-card__poster--desert]="item.scene === 'desert'">
-						<span class="saved-card__duration">{{ item.durationLabel }}</span>
-					</div>
-					<div class="saved-card__body">
-						<div><h2>{{ item.title }}</h2><p>{{ item.quality === '4k' ? '4K' : item.quality }} · {{ item.orientation === 'landscape' ? 'Горизонтальне' : 'Вертикальне' }}</p></div>
-						<button type="button" [disabled]="saved.busyIds().includes(item.id)" [attr.aria-label]="'Прибрати зі збереженого: ' + item.title" (click)="remove(item.id)"><span class="material-symbols-outlined" aria-hidden="true">bookmark_remove</span>Прибрати</button>
-					</div>
-				</article>
-			}
-		</div>
 	} @else {
-		<div class="saved-empty" role="status">
-			<span class="material-symbols-outlined" aria-hidden="true">video_library</span>
-			<h2>Тут поки порожньо</h2>
-			<p>Зберігайте цікаві сцени з головної — вони з’являться у вашій добірці.</p>
-			<a routerLink="/">Знайти сцени</a>
-		</div>
+		<section class="folder-tools" aria-label="Керування папками">
+			<form class="folder-create" (submit)="createFolder($event)">
+				<label class="sr-only" for="new-folder-name">Назва нової папки</label>
+				<input
+					id="new-folder-name"
+					maxlength="40"
+					placeholder="Назва нової папки"
+					[value]="newFolderName()"
+					(input)="setNewFolderName($event)"
+				/>
+				<button type="submit" [disabled]="!newFolderName().trim() || savingFolder()">
+					<span class="material-symbols-outlined" aria-hidden="true"
+						>create_new_folder</span
+					>
+					Створити папку
+				</button>
+			</form>
+			@if (folderError()) {
+				<p class="saved-notice" role="alert">{{ folderError() }}</p>
+			}
+
+			@if (saved.folders().length) {
+				<div class="folder-list" role="group" aria-label="Фільтр за папками">
+					<button
+						type="button"
+						[class.is-active]="activeFolder() === 'all'"
+						(click)="activeFolder.set('all')"
+					>
+						<span class="material-symbols-outlined" aria-hidden="true"
+							>video_library</span
+						>Усі сцени <span>{{ saved.scenes().length }}</span>
+					</button>
+					<button
+						type="button"
+						[class.is-active]="activeFolder() === 'unfiled'"
+						(click)="activeFolder.set('unfiled')"
+					>
+						<span class="material-symbols-outlined" aria-hidden="true">folder_open</span
+						>Без папки <span>{{ unfiledCount() }}</span>
+					</button>
+					@for (folder of saved.folders(); track folder.id) {
+						<div class="folder-item" [class.is-active]="activeFolder() === folder.id">
+							@if (editingFolderId() === folder.id) {
+								<form class="folder-rename" (submit)="renameFolder($event)">
+									<label class="sr-only" [for]="'rename-' + folder.id"
+										>Нова назва папки</label
+									>
+									<input
+										[id]="'rename-' + folder.id"
+										maxlength="40"
+										[value]="editingFolderName()"
+										(input)="setEditingFolderName($event)"
+									/>
+									<button
+										type="submit"
+										[attr.aria-label]="'Зберегти назву папки ' + folder.name"
+									>
+										<span class="material-symbols-outlined" aria-hidden="true"
+											>check</span
+										>
+									</button>
+									<button
+										type="button"
+										aria-label="Скасувати перейменування"
+										(click)="editingFolderId.set(null)"
+									>
+										<span class="material-symbols-outlined" aria-hidden="true"
+											>close</span
+										>
+									</button>
+								</form>
+							} @else {
+								<button
+									class="folder-select"
+									type="button"
+									[attr.aria-pressed]="activeFolder() === folder.id"
+									(click)="activeFolder.set(folder.id)"
+								>
+									<span class="material-symbols-outlined" aria-hidden="true"
+										>folder</span
+									>{{ folder.name }}
+									<span>{{ folderSceneCount(folder.id) }}</span>
+								</button>
+								<div class="folder-actions">
+									<button
+										type="button"
+										[attr.aria-label]="'Перейменувати папку ' + folder.name"
+										(click)="beginRename(folder.id, folder.name)"
+									>
+										<span class="material-symbols-outlined" aria-hidden="true"
+											>edit</span
+										>
+									</button>
+									<button
+										type="button"
+										[attr.aria-label]="'Видалити папку ' + folder.name"
+										(click)="deleteFolder(folder.id, folder.name)"
+									>
+										<span class="material-symbols-outlined" aria-hidden="true"
+											>delete</span
+										>
+									</button>
+								</div>
+							}
+						</div>
+					}
+				</div>
+			}
+		</section>
+
+		@if (saved.message()) {
+			<p class="saved-notice" role="alert">{{ saved.message() }}</p>
+		}
+
+		@if (visibleScenes().length) {
+			<div class="saved-grid">
+				@for (item of visibleScenes(); track item.id) {
+					<article class="saved-card">
+						<div
+							class="saved-card__poster"
+							[class.saved-card__poster--mountains]="item.scene === 'mountains'"
+							[class.saved-card__poster--city]="item.scene === 'city'"
+							[class.saved-card__poster--coast]="item.scene === 'coast'"
+							[class.saved-card__poster--forest]="item.scene === 'forest'"
+							[class.saved-card__poster--night]="item.scene === 'night'"
+							[class.saved-card__poster--desert]="item.scene === 'desert'"
+						>
+							<span class="saved-card__duration">{{ item.durationLabel }}</span>
+						</div>
+						<div class="saved-card__body">
+							<div class="saved-card__details">
+								<h2>{{ item.title }}</h2>
+								<p>
+									{{ item.quality === '4k' ? '4K' : item.quality }} ·
+									{{
+										item.orientation === 'landscape'
+											? 'Горизонтальне'
+											: 'Вертикальне'
+									}}
+								</p>
+								<label class="folder-move">
+									<span class="material-symbols-outlined" aria-hidden="true"
+										>drive_file_move</span
+									>
+									<span class="sr-only">Папка для {{ item.title }}</span>
+									<select
+										[value]="item.folderId ?? ''"
+										[disabled]="saved.busyIds().includes(item.id)"
+										(change)="moveScene(item.id, $event)"
+									>
+										<option value="">Без папки</option>
+										@for (folder of saved.folders(); track folder.id) {
+											<option [value]="folder.id">{{ folder.name }}</option>
+										}
+									</select>
+								</label>
+							</div>
+							<button
+								class="remove-scene"
+								type="button"
+								[disabled]="saved.busyIds().includes(item.id)"
+								[attr.aria-label]="'Прибрати зі збереженого: ' + item.title"
+								(click)="remove(item.id)"
+							>
+								<span class="material-symbols-outlined" aria-hidden="true"
+									>bookmark_remove</span
+								>Прибрати
+							</button>
+						</div>
+					</article>
+				}
+			</div>
+		} @else if (activeFolder() !== 'all') {
+			<div class="saved-empty saved-empty--compact" role="status">
+				<span class="material-symbols-outlined" aria-hidden="true">folder_open</span>
+				<h2>У цій папці поки порожньо</h2>
+				<p>Перемістіть сюди сцени зі списку «Усі сцени».</p>
+				<button type="button" (click)="activeFolder.set('all')">Показати всі сцени</button>
+			</div>
+		} @else if (saved.scenes().length === 0) {
+			<div class="saved-empty saved-empty--compact" role="status">
+				<span class="material-symbols-outlined" aria-hidden="true">video_library</span>
+				<h2>Тут поки порожньо</h2>
+				<p>Зберігайте цікаві сцени з огляду — вони з’являться у вашій добірці.</p>
+				<a routerLink="/">Знайти сцени</a>
+			</div>
+		} @else {
+			<div class="saved-empty saved-empty--compact" role="status">
+				<span class="material-symbols-outlined" aria-hidden="true">folder_off</span>
+				<h2>Усі сцени вже розкладені</h2>
+				<p>Тут з’являться сцени, які ще не додані до папок.</p>
+				<button type="button" (click)="activeFolder.set('all')">Показати всі сцени</button>
+			</div>
+		}
 	}
 </section>
