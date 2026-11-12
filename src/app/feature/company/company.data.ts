@@ -23,13 +23,13 @@ export const companyProfile: CompanyProfile = {
 	name: _stringOrFallback(rawCompanyProfile.name, 'Company'),
 	title: _stringOrFallback(rawCompanyProfile.title, rawCompanyProfile.name ?? 'Company'),
 	description: _stringOrFallback(rawCompanyProfile.description),
-	image: _stringOrFallback(rawCompanyProfile.image, rawCompanyProfile.logo ?? '/sceneseek-logo-dark.jpg'),
+	image: _stringOrFallback(rawCompanyProfile.image, rawCompanyProfile.logo ?? '/sceneseek-logo.jpg'),
 	siteUrl: _trimTrailingSlash(
 		_stringOrFallback(rawCompanyProfile.siteUrl, 'https://example.com'),
 	),
 	lang: _stringOrFallback(rawCompanyProfile.lang, 'en'),
 	locale: _stringOrFallback(rawCompanyProfile.locale, 'en_US'),
-	logo: _stringOrFallback(rawCompanyProfile.logo, rawCompanyProfile.image ?? '/sceneseek-logo-dark.jpg'),
+	logo: _stringOrFallback(rawCompanyProfile.logo, rawCompanyProfile.image ?? '/sceneseek-logo.jpg'),
 	phone: _stringOrFallback(rawCompanyProfile.phone),
 	email: _stringOrFallback(rawCompanyProfile.email),
 	address: _stringOrFallback(rawCompanyProfile.address),
@@ -54,7 +54,7 @@ function _normalizeSeoMetadata(profile: RawCompanyProfile): SeoMetadata {
 	const metadata = profile.defaultSeo;
 	const title = _stringOrFallback(metadata?.title, profile.title ?? profile.name ?? 'Company');
 	const description = _stringOrFallback(metadata?.description, profile.description);
-	const image = _stringOrFallback(metadata?.image, profile.image ?? profile.logo ?? '/sceneseek-logo-dark.jpg');
+	const image = _stringOrFallback(metadata?.image, profile.image ?? profile.logo ?? '/sceneseek-logo.jpg');
 
 	return {
 		title,
