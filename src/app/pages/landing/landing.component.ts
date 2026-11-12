@@ -1,5 +1,6 @@
 import { Component, DestroyRef, ElementRef, PLATFORM_ID, ViewChild, computed, inject, signal } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { AuthPromptService } from '../../feature/auth-prompt/auth-prompt.service';
 import { FirebaseAuthService } from '../../feature/firebase-auth/firebase-auth.service';
 import { SavedScene, SavedScenesService } from '../../feature/saved-scenes/saved-scenes.service';
@@ -147,10 +148,12 @@ const HOME_RECOMMENDATIONS: Recommendation[] = [
 
 @Component({
 	selector: 'app-landing',
+	imports: [RouterLink],
 	templateUrl: './landing.component.html',
 	styleUrl: './landing.component.scss',
 })
 export class LandingComponent {
+	protected readonly pageMode = inject(ActivatedRoute).snapshot.data['pageMode'] as 'explore' | 'search';
 	protected readonly categories = HOME_CATEGORIES;
 	protected readonly activeCategory = signal<CategoryId>('for-you');
 	protected readonly query = signal('');
@@ -172,6 +175,7 @@ export class LandingComponent {
 	private readonly _destroyRef = inject(DestroyRef);
 	private _recognition: SpeechRecognitionLike | null = null;
 	@ViewChild('previewDialog') private _previewDialog?: ElementRef<HTMLDialogElement>;
+	@ViewChild('photoInput') private _photoInput?: ElementRef<HTMLInputElement>;
 
 	constructor() {
 		this._destroyRef.onDestroy(() => {
@@ -413,7 +417,7 @@ export class LandingComponent {
 		this.selectedPhotoName.set('');
 	}
 
-	protected resetSearch(input: HTMLInputElement) {
+	protected resetSearch() {
 		this.query.set('');
 		this.submittedQuery.set('');
 		this.selectedPhotoName.set('');
@@ -424,7 +428,9 @@ export class LandingComponent {
 		this.orientationFilter.set('any');
 		this.qualityFilter.set('any');
 		this.sortOrder.set('relevance');
-		input.value = '';
+		if (this._photoInput) {
+			this._photoInput.nativeElement.value = '';
+		}
 	}
 
 	protected async toggleSavedScene(item: Recommendation) {

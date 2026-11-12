@@ -1,5 +1,6 @@
-<main class="home-page" aria-labelledby="home-title">
+<main class="home-page" [attr.aria-labelledby]="pageMode === 'explore' ? 'hero-title' : 'home-title'">
 	<div class="home-content">
+		@if (pageMode === 'explore') {
 		<section class="home-hero-track" aria-labelledby="hero-title">
 			<div class="home-hero-stage">
 				<div class="hero-orbit hero-orbit--outer" aria-hidden="true"></div>
@@ -9,14 +10,17 @@
 				<div class="hero-object hero-object--clapper" aria-hidden="true"><span class="clapper-top"></span><span class="clapper-body"><i>SS</i></span></div>
 				<div class="hero-object hero-object--frame" aria-hidden="true"><span class="material-symbols-outlined">movie</span></div>
 				<div class="hero-brand">
-					<p class="hero-brand__eyebrow">Візуальний пошук нового покоління</p>
+					<p class="hero-brand__eyebrow">ВІДКРИВАЙТЕ НОВІ СЦЕНИ</p>
 					<h1 id="hero-title">SceneSeek</h1>
 					<p class="hero-brand__tagline">FIND <i>·</i> SEARCH <i>·</i> CREATE</p>
+					<a class="hero-search-cta" routerLink="/search"><span class="material-symbols-outlined" aria-hidden="true">search</span>Знайти сцену</a>
 				</div>
-				<a class="hero-scroll-cue" href="#home-search"><span>Прокрутіть, щоб почати</span><span class="material-symbols-outlined" aria-hidden="true">south</span></a>
+				<a class="hero-scroll-cue" href="#explore-recommendations"><span>Прокрутіть, щоб відкрити добірки</span><span class="material-symbols-outlined" aria-hidden="true">south</span></a>
 			</div>
 		</section>
+		}
 
+		@if (pageMode === 'search') {
 		<section class="home-search-track" aria-label="Пошук відеосцен">
 			<div class="home-search-stage">
 		<header class="home-header">
@@ -52,16 +56,20 @@
 		</form>
 			</div>
 		</section>
+		}
 
-		<section class="home-recommendations home-results-stage" aria-labelledby="recommendations-title">
+		@if (pageMode === 'explore' || submittedQuery()) {
+		<section id="explore-recommendations" class="home-recommendations home-results-stage" aria-labelledby="recommendations-title">
 			<div class="home-section-heading">
-				<div><p class="home-section-heading__eyebrow">Відеобібліотека · демонстраційна добірка</p><h2 id="recommendations-title">{{ submittedQuery() ? 'Результати пошуку' : 'Щоденні рекомендації' }}</h2><p class="home-section-heading__description">{{ submittedQuery() ? 'Сцени, що відповідають вашому опису.' : 'Нові візуальні ідеї для вашого наступного проєкту.' }}</p></div>
+				<div><p class="home-section-heading__eyebrow">{{ pageMode === 'explore' ? 'ВІДКРИВАЙТЕ СВОЄ НОВЕ' : 'ПОШУК СЦЕН' }}</p><h2 id="recommendations-title">{{ pageMode === 'explore' ? 'Щоденні рекомендації' : 'Результати пошуку' }}</h2><p class="home-section-heading__description">{{ pageMode === 'explore' ? 'Добірка сцен для натхнення та наступного проєкту.' : 'Сцени, що відповідають вашому опису й фільтрам.' }}</p></div>
 				<div class="home-results-count" aria-live="polite"><span class="material-symbols-outlined" aria-hidden="true">movie</span>{{ recommendationCountLabel() }}</div>
 			</div>
 
+			@if (pageMode === 'explore') {
 			<div class="home-categories" role="group" aria-label="Категорії рекомендацій">
 				@for (category of categories; track category.id) { <button class="home-category" type="button" [class.is-active]="activeCategory() === category.id" [attr.aria-pressed]="activeCategory() === category.id" (click)="setCategory(category.id)">{{ category.label }}</button> }
 			</div>
+			}
 			@if (savedScenes.message()) { <p class="home-search__message home-search__message--error" role="alert">{{ savedScenes.message() }}</p> }
 
 			@if (recommendations().length) {
@@ -74,9 +82,10 @@
 					}
 				</div>
 			} @else {
-				<div class="home-empty-state" role="status"><span class="material-symbols-outlined" aria-hidden="true">filter_alt_off</span><p>{{ submittedQuery() ? 'За цим описом і вибраними фільтрами сцен не знайдено.' : 'За вибраними категоріями й фільтрами сцен не знайдено.' }}</p><button class="home-reset-action" type="button" (click)="resetSearch(photoInput)">Очистити пошук і фільтри</button></div>
+				<div class="home-empty-state" role="status"><span class="material-symbols-outlined" aria-hidden="true">filter_alt_off</span><p>{{ pageMode === 'search' ? 'За цим описом і вибраними фільтрами сцен не знайдено.' : 'За вибраними категоріями й фільтрами сцен не знайдено.' }}</p>@if (pageMode === 'search') { <button class="home-reset-action" type="button" (click)="resetSearch()">Очистити пошук і фільтри</button> }</div>
 			}
 		</section>
+		}
 
 		<dialog #previewDialog class="home-preview-dialog" aria-labelledby="preview-title" (click)="onPreviewDialogClick($event)" (close)="onPreviewDialogClose()">
 			@if (previewScene(); as item) {

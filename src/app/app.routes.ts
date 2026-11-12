@@ -16,6 +16,16 @@ const sectionRoute = (path: string, title: string) => ({
 		import('./pages/section/section.component').then((module) => module.SectionComponent),
 });
 
+const landingRoute = (path: string, title: string, pageMode: 'explore' | 'search') => {
+	const route = sectionRoute(path, title);
+	return {
+		...route,
+		data: { ...route.data, pageMode },
+		loadComponent: () =>
+			import('./pages/landing/landing.component').then((module) => module.LandingComponent),
+	};
+};
+
 const authRoute = (
 	path: string,
 	mode: 'login' | 'register' | 'reset',
@@ -39,11 +49,8 @@ const authRoute = (
 });
 
 export const routes: Routes = [
-	{
-		...sectionRoute('', 'Головна'),
-		loadComponent: () =>
-			import('./pages/landing/landing.component').then((module) => module.LandingComponent),
-	},
+	landingRoute('', 'Огляд', 'explore'),
+	landingRoute('search', 'Пошук', 'search'),
 	sectionRoute('history', 'Історія'),
 	{
 		...sectionRoute('saved', 'Збережене'),

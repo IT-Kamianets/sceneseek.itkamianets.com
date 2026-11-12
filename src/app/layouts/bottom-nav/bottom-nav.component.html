@@ -6,11 +6,23 @@
 			routerLinkActive="is-active"
 			[routerLinkActiveOptions]="{ exact: true }"
 			ariaCurrentWhenActive="page"
-			aria-label="Головна"
-			title="Головна"
+			aria-label="Огляд"
+			title="Огляд"
 		>
-			<span class="material-symbols-outlined" aria-hidden="true">home</span>
-			@if (expanded()) { <span>Головна</span> }
+			<span class="material-symbols-outlined" aria-hidden="true">explore</span>
+			@if (expanded()) { <span>Огляд</span> }
+		</a>
+
+		<a
+			class="sidebar__link"
+			routerLink="/search"
+			routerLinkActive="is-active"
+			ariaCurrentWhenActive="page"
+			aria-label="Пошук"
+			title="Пошук"
+		>
+			<span class="material-symbols-outlined" aria-hidden="true">search</span>
+			@if (expanded()) { <span>Пошук</span> }
 		</a>
 
 		<a
