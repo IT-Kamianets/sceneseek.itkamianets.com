@@ -47,6 +47,8 @@
 .home-photo-action,.home-voice-action,.home-primary-action,.home-filter,.home-save,.home-category,.home-icon-action { transition: background-color var(--motion-fast) var(--easing),color var(--motion-fast) var(--easing),border-color var(--motion-fast) var(--easing),box-shadow var(--motion-fast) var(--easing),transform var(--motion-fast) var(--easing); }
 .home-photo-action { display: inline-flex; min-height: 2.45rem; flex: 0 0 auto; align-items: center; justify-content: center; gap: .35rem; padding: 0 .65rem; border: 1px solid var(--border); border-radius: var(--radius-btn); color: var(--secondary-foreground); background: var(--card); font: inherit; font-size: .75rem; cursor: pointer; }
 .home-voice-action { display: inline-flex; min-height: 2.45rem; flex: 0 0 auto; align-items: center; justify-content: center; gap: .35rem; padding: 0 .65rem; border: 1px solid var(--border); border-radius: var(--radius-btn); color: var(--secondary-foreground); background: var(--card); font: inherit; font-size: .75rem; cursor: pointer; }
+.home-photo-action,.home-voice-action { width: 2.45rem; gap: 0; padding-inline: 0; }
+.home-photo-action > span:not(.material-symbols-outlined),.home-voice-action > span:not(.material-symbols-outlined) { display: none; }
 .home-voice-action:hover:not(:disabled),.home-photo-action:hover,.home-icon-action:hover { border-color: var(--ring); background: var(--accent); color: var(--accent-foreground); }
 .home-voice-action:disabled { opacity: .48; cursor: not-allowed; }
 .home-voice-action.is-listening { border-color: var(--primary); color: var(--primary-foreground); background: var(--primary); box-shadow: 0 0 1.25rem color-mix(in oklch,var(--primary) 45%,transparent); }
@@ -177,7 +179,7 @@
 	.home-search__row { flex-direction: column; }
 	.home-search__field { min-height: 3.15rem; gap: .45rem; padding-inline: .6rem; }
 	.home-search__field input { font-size: .8rem; }
-	.home-photo-action,.home-voice-action { min-height: 2.3rem; padding-inline: .45rem; font-size: .67rem; }
+	.home-photo-action,.home-voice-action { width: 2.3rem; min-height: 2.3rem; padding-inline: 0; font-size: .67rem; }
 	.home-primary-action { width: 100%; min-height: 2.85rem; }
 	.home-toolbar { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: .45rem; }
 	.home-filter { min-width: 0; min-height: 2.4rem; padding-inline: .5rem; }
