@@ -14,13 +14,13 @@ import { FirebaseAuthService } from './feature/firebase-auth/firebase-auth.servi
 	imports: [RouterOutlet, TopbarComponent, BottomNavComponent, AuthPromptComponent],
 	template: `
 		<div class="flex min-h-[100dvh]">
-			<app-bottom-nav />
 			<div class="flex min-w-0 flex-1 flex-col">
 				<app-topbar />
 				<main class="flex-1">
 					<router-outlet />
 				</main>
 			</div>
+			<app-bottom-nav />
 			<app-auth-prompt />
 		</div>
 	`,

@@ -1,19 +1,4 @@
 <aside class="sidebar" [class.sidebar--expanded]="expanded()">
-	<button
-		class="sidebar__toggle"
-		type="button"
-		[attr.aria-expanded]="expanded()"
-		[attr.aria-label]="expanded() ? 'Згорнути навігацію' : 'Розгорнути навігацію'"
-		(click)="toggleExpanded()"
-	>
-		<span class="material-symbols-outlined" aria-hidden="true">
-			{{ expanded() ? 'left_panel_close' : 'left_panel_open' }}
-		</span>
-		@if (expanded()) {
-			<span>Згорнути меню</span>
-		}
-	</button>
-
 	<nav class="sidebar__nav" aria-label="Основна навігація">
 		<a
 			class="sidebar__link"
@@ -67,4 +52,16 @@
 		</a>
 	</nav>
 
+	<button
+		class="sidebar__toggle"
+		type="button"
+		[attr.aria-expanded]="expanded()"
+		[attr.aria-label]="expanded() ? 'Згорнути меню' : 'Розгорнути меню'"
+		(click)="toggleExpanded()"
+	>
+		<span class="material-symbols-outlined" aria-hidden="true">
+			{{ expanded() ? 'left_panel_close' : 'left_panel_open' }}
+		</span>
+		@if (expanded()) { <span>Згорнути меню</span> }
+	</button>
 </aside>
