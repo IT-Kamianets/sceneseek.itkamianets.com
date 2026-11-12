@@ -51,7 +51,11 @@ const authRoute = (
 export const routes: Routes = [
 	landingRoute('', 'Огляд', 'explore'),
 	landingRoute('search', 'Пошук', 'search'),
-	sectionRoute('history', 'Історія'),
+	{
+		...sectionRoute('history', 'Історія'),
+		loadComponent: () =>
+			import('./pages/history/history.component').then((module) => module.HistoryComponent),
+	},
 	{
 		...sectionRoute('saved', 'Збережене'),
 		loadComponent: () =>
@@ -66,8 +70,18 @@ export const routes: Routes = [
 		path: 'auth',
 		children: [
 			authRoute('login', 'login', 'Вхід', 'Увійдіть до акаунта SceneSeek.'),
-			authRoute('register', 'register', 'Створення акаунта', 'Створіть акаунт SceneSeek для власних добірок відеосцен.'),
-			authRoute('forgot-password', 'reset', 'Відновлення пароля', 'Відновіть доступ до свого акаунта SceneSeek.'),
+			authRoute(
+				'register',
+				'register',
+				'Створення акаунта',
+				'Створіть акаунт SceneSeek для власних добірок відеосцен.',
+			),
+			authRoute(
+				'forgot-password',
+				'reset',
+				'Відновлення пароля',
+				'Відновіть доступ до свого акаунта SceneSeek.',
+			),
 		],
 	},
 	{

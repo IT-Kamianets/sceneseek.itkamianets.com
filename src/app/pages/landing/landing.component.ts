@@ -3,14 +3,34 @@ import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { AuthPromptService } from '../../feature/auth-prompt/auth-prompt.service';
 import { FirebaseAuthService } from '../../feature/firebase-auth/firebase-auth.service';
+import {
+	SearchHistoryCategory,
+	SearchHistoryDraft,
+	SearchHistoryDuration,
+	SearchHistoryInputMethod,
+	SearchHistoryOrientation,
+	SearchHistoryQuality,
+	SearchHistoryService,
+	SearchHistorySortOrder,
+} from '../../feature/search-history/search-history.service';
 import { SavedScene, SavedScenesService } from '../../feature/saved-scenes/saved-scenes.service';
 
-type CategoryId = 'for-you' | 'atmosphere' | 'cinematic' | 'nature' | 'city';
+type CategoryId = SearchHistoryCategory;
 type RecommendationTag = Exclude<CategoryId, 'for-you'>;
-type SortOrder = 'relevance' | 'shortest' | 'longest';
-type DurationFilter = 'any' | 'under-15' | '15-30' | 'over-30';
-type OrientationFilter = 'any' | 'landscape' | 'portrait';
-type QualityFilter = 'any' | '720p' | '1080p' | '4k';
+type SortOrder = SearchHistorySortOrder;
+type DurationFilter = SearchHistoryDuration;
+type OrientationFilter = SearchHistoryOrientation;
+type QualityFilter = SearchHistoryQuality;
+
+function readSearchParam<T extends string>(
+	route: ActivatedRoute,
+	key: string,
+	allowed: readonly T[],
+	fallback: T,
+): T {
+	const value = route.snapshot.queryParamMap.get(key);
+	return allowed.find((item) => item === value) ?? fallback;
+}
 
 interface SpeechRecognitionLike {
 	lang: string;
@@ -153,24 +173,27 @@ const HOME_RECOMMENDATIONS: Recommendation[] = [
 	styleUrl: './landing.component.scss',
 })
 export class LandingComponent {
-	protected readonly pageMode = inject(ActivatedRoute).snapshot.data['pageMode'] as 'explore' | 'search';
+	private readonly _route = inject(ActivatedRoute);
+	protected readonly pageMode = this._route.snapshot.data['pageMode'] as 'explore' | 'search';
 	protected readonly categories = HOME_CATEGORIES;
-	protected readonly activeCategory = signal<CategoryId>('for-you');
-	protected readonly query = signal('');
-	protected readonly submittedQuery = signal('');
+	protected readonly activeCategory = signal<CategoryId>(readSearchParam(this._route, 'category', ['for-you', 'atmosphere', 'cinematic', 'nature', 'city'], 'for-you'));
+	protected readonly query = signal(this._route.snapshot.queryParamMap.get('q') ?? '');
+	protected readonly submittedQuery = signal(this._route.snapshot.queryParamMap.get('q') ?? '');
 	protected readonly selectedPhotoName = signal('');
 	protected readonly searchMessage = signal('');
 	protected readonly searchError = signal(false);
-	protected readonly sortOrder = signal<SortOrder>('relevance');
-	protected readonly durationFilter = signal<DurationFilter>('any');
-	protected readonly orientationFilter = signal<OrientationFilter>('any');
-	protected readonly qualityFilter = signal<QualityFilter>('any');
+	protected readonly sortOrder = signal<SortOrder>(readSearchParam(this._route, 'sort', ['relevance', 'shortest', 'longest'], 'relevance'));
+	protected readonly durationFilter = signal<DurationFilter>(readSearchParam(this._route, 'duration', ['any', 'under-15', '15-30', 'over-30'], 'any'));
+	protected readonly orientationFilter = signal<OrientationFilter>(readSearchParam(this._route, 'orientation', ['any', 'landscape', 'portrait'], 'any'));
+	protected readonly qualityFilter = signal<QualityFilter>(readSearchParam(this._route, 'quality', ['any', '720p', '1080p', '4k'], 'any'));
+	private readonly _lastInputMethod = signal<SearchHistoryInputMethod>(readSearchParam(this._route, 'inputMethod', ['text', 'voice'], 'text'));
 	protected readonly voiceSupported = signal(isPlatformBrowser(inject(PLATFORM_ID)) && !!getSpeechRecognitionConstructor());
 	protected readonly isListening = signal(false);
 	protected readonly previewScene = signal<Recommendation | null>(null);
 	protected readonly recommendationCountLabel = computed(() => sceneCountLabel(this.recommendations().length));
 	private readonly _authPrompt = inject(AuthPromptService);
 	private readonly _auth = inject(FirebaseAuthService);
+	private readonly _searchHistory = inject(SearchHistoryService);
 	protected readonly savedScenes = inject(SavedScenesService);
 	private readonly _destroyRef = inject(DestroyRef);
 	private _recognition: SpeechRecognitionLike | null = null;
@@ -178,6 +201,9 @@ export class LandingComponent {
 	@ViewChild('photoInput') private _photoInput?: ElementRef<HTMLInputElement>;
 
 	constructor() {
+		if (this.submittedQuery().trim()) {
+			this._recordSearch('text');
+		}
 		this._destroyRef.onDestroy(() => {
 			if (this._recognition) {
 				this._recognition.onend = null;
@@ -267,31 +293,60 @@ export class LandingComponent {
 			return;
 		}
 
+		this._lastInputMethod.set('text');
 		this.submittedQuery.set(query);
 		this.searchError.set(false);
 		this.searchMessage.set(
 			this.selectedPhotoName() ? 'Пошук виконується за текстом; фото поки не впливає на результати.' : '',
 		);
+		this._recordSearch('text');
 	}
 
 	protected setCategory(category: CategoryId) {
 		this.activeCategory.set(category);
+		this._recordSearch(this._lastInputMethod());
 	}
 
 	protected setSortOrder(event: Event) {
 		this.sortOrder.set((event.target as HTMLSelectElement).value as SortOrder);
+		this._recordSearch(this._lastInputMethod());
 	}
 
 	protected setDurationFilter(event: Event) {
 		this.durationFilter.set((event.target as HTMLSelectElement).value as DurationFilter);
+		this._recordSearch(this._lastInputMethod());
 	}
 
 	protected setOrientationFilter(event: Event) {
 		this.orientationFilter.set((event.target as HTMLSelectElement).value as OrientationFilter);
+		this._recordSearch(this._lastInputMethod());
 	}
 
 	protected setQualityFilter(event: Event) {
 		this.qualityFilter.set((event.target as HTMLSelectElement).value as QualityFilter);
+		this._recordSearch(this._lastInputMethod());
+	}
+
+	private _recordSearch(inputMethod: SearchHistoryInputMethod) {
+		const query = this.submittedQuery().trim();
+		if (!query) {
+			return;
+		}
+
+		const entry: SearchHistoryDraft = {
+			query,
+			durationFilter: this.durationFilter(),
+			orientationFilter: this.orientationFilter(),
+			qualityFilter: this.qualityFilter(),
+			sortOrder: this.sortOrder(),
+			category: this.activeCategory(),
+			inputMethod,
+			hasImage: Boolean(this.selectedPhotoName()),
+		};
+		void this._searchHistory.record(entry).catch(() => {
+			this.searchError.set(false);
+			this.searchMessage.set(this._searchHistory.message());
+		});
 	}
 
 	protected onVoiceSearch() {
@@ -319,8 +374,10 @@ export class LandingComponent {
 
 			this.query.set(transcript);
 			this.submittedQuery.set(transcript);
+			this._lastInputMethod.set('voice');
 			this.searchMessage.set('');
 			this.searchError.set(false);
+			this._recordSearch('voice');
 		};
 		recognition.onerror = (event) => {
 			if (event.error === 'aborted') {

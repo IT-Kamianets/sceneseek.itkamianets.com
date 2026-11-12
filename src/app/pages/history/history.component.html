@@ -1,0 +1,92 @@
+<section class="history-page" aria-labelledby="history-title">
+	<header class="history-heading">
+		<div>
+			<p class="history-eyebrow">ВАШІ ПОШУКИ</p>
+			<h1 id="history-title">Історія</h1>
+			<p>Поверніться до сцен і запитів, які ви вже шукали.</p>
+		</div>
+		@if (auth.user() && history.entries().length) {
+			<button
+				class="history-clear"
+				type="button"
+				[disabled]="history.isUpdating()"
+				(click)="clear()"
+			>
+				<span class="material-symbols-outlined" aria-hidden="true">delete_sweep</span>
+				Очистити історію
+			</button>
+		}
+	</header>
+
+	@if (!auth.user()) {
+		<div class="history-empty" role="status">
+			<span class="material-symbols-outlined" aria-hidden="true">manage_search</span>
+			<h2>Увійдіть, щоб зберігати історію</h2>
+			<p>Ваші запити та вибрані фільтри зберігатимуться у вашому акаунті.</p>
+			<a routerLink="/auth/login" [queryParams]="{ returnUrl: '/history' }">Увійти</a>
+		</div>
+	} @else if (history.isLoading()) {
+		<div class="history-empty" role="status">
+			<span class="material-symbols-outlined history-loading" aria-hidden="true"
+				>progress_activity</span
+			>
+			<p>Завантажуємо історію пошуку…</p>
+		</div>
+	} @else if (history.message() && !history.entries().length) {
+		<div class="history-empty" role="alert">
+			<span class="material-symbols-outlined" aria-hidden="true">cloud_off</span>
+			<h2>Історія тимчасово недоступна</h2>
+			<p>{{ history.message() }}</p>
+		</div>
+	} @else if (history.entries().length) {
+		@if (history.message()) {
+			<p class="history-message" role="alert">{{ history.message() }}</p>
+		}
+		<div class="history-list">
+			@for (entry of history.entries(); track entry.id) {
+				<article class="history-entry">
+					<div class="history-entry__main">
+						<div class="history-entry__query-row">
+							<span class="material-symbols-outlined" aria-hidden="true">{{
+								entry.inputMethod === 'voice' ? 'mic' : 'search'
+							}}</span>
+							<h2>{{ entry.query }}</h2>
+						</div>
+						<p class="history-entry__date">{{ dateLabel(entry.createdAt) }}</p>
+						@if (filterLabels(entry).length) {
+							<div class="history-entry__filters" aria-label="Застосовані фільтри">
+								@for (label of filterLabels(entry); track label) {
+									<span>{{ label }}</span>
+								}
+							</div>
+						}
+					</div>
+					<div class="history-entry__actions">
+						<button class="history-repeat" type="button" (click)="repeat(entry)">
+							<span class="material-symbols-outlined" aria-hidden="true"
+								>refresh</span
+							>
+							Повторити
+						</button>
+						<button
+							class="history-remove"
+							type="button"
+							[disabled]="history.isUpdating()"
+							[attr.aria-label]="'Видалити запит: ' + entry.query"
+							(click)="remove(entry)"
+						>
+							<span class="material-symbols-outlined" aria-hidden="true">delete</span>
+						</button>
+					</div>
+				</article>
+			}
+		</div>
+	} @else {
+		<div class="history-empty" role="status">
+			<span class="material-symbols-outlined" aria-hidden="true">manage_search</span>
+			<h2>Тут поки порожньо</h2>
+			<p>Ваші текстові та голосові запити з вибраними фільтрами з’являться тут.</p>
+			<a routerLink="/search">Перейти до пошуку</a>
+		</div>
+	}
+</section>
