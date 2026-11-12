@@ -64,6 +64,23 @@ export class AuthComponent {
 		this.showPassword.update((visible) => !visible);
 	}
 
+	protected async signInWithGoogle() {
+		if (this.isSubmitting()) {
+			return;
+		}
+		this.isSubmitting.set(true);
+		this.clearMessage();
+		try {
+			await this._auth.signInWithGoogle();
+			await this._router.navigateByUrl(this._safeReturnUrl());
+		} catch (error) {
+			this.formError.set(true);
+			this.formMessage.set(error instanceof Error ? error.message : 'Не вдалося увійти через Google. Спробуйте ще раз.');
+		} finally {
+			this.isSubmitting.set(false);
+		}
+	}
+
 	protected async onSubmit(event: SubmitEvent) {
 		event.preventDefault();
 		if (this.isSubmitting()) {

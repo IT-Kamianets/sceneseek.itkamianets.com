@@ -1,12 +1,13 @@
 # Firebase setup
 
-SceneSeek uses Firebase Authentication for email and password accounts. The SDK is loaded only
+SceneSeek uses Firebase Authentication for email/password and Google accounts. The SDK is loaded only
 in the browser, so the prerendered pages do not need Firebase credentials at build time.
 
 ## Configure the Firebase project
 
 1. Create or select a Firebase project and register a Web App in Project settings.
-2. In Authentication, enable the **Email/Password** sign-in provider.
+2. In Authentication, enable the **Email/Password** and **Google** sign-in providers. Select a
+   support email when enabling Google.
 3. Add the production domain and any local development domain to Authentication's authorized
    domains (for example, `sceneseek.itkamianets.com` and `localhost`).
 4. Copy the Web App's `apiKey`, `authDomain`, `projectId`, and `appId` values into the

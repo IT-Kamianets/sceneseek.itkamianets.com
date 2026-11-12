@@ -64,6 +64,18 @@ export class FirebaseAuthService {
 		}
 	}
 
+	async signInWithGoogle() {
+		const { auth, sdk } = await this._getAuth();
+		try {
+			const provider = new sdk.GoogleAuthProvider();
+			provider.setCustomParameters({ prompt: 'select_account' });
+			const credential = await sdk.signInWithPopup(auth, provider);
+			this.user.set(this._mapUser(credential.user));
+		} catch (error) {
+			throw new Error(this._errorMessage(error));
+		}
+	}
+
 	async createAccount(email: string, password: string, displayName: string) {
 		const { auth, sdk } = await this._getAuth();
 		try {
@@ -150,8 +162,12 @@ export class FirebaseAuthService {
 			'auth/too-many-requests': 'Забагато спроб. Спробуйте пізніше.',
 			'auth/network-request-failed': 'Не вдалося з’єднатися. Перевірте інтернет і спробуйте ще раз.',
 			'auth/user-disabled': 'Цей акаунт тимчасово недоступний.',
-			'auth/operation-not-allowed': 'Вхід електронною поштою ще не активовано в Firebase.',
+			'auth/operation-not-allowed': 'Цей спосіб входу ще не активовано у Firebase.',
 			'auth/unauthorized-domain': 'Цей домен ще не доданий до дозволених у Firebase.',
+			'auth/popup-closed-by-user': 'Вхід через Google скасовано.',
+			'auth/popup-blocked': 'Браузер заблокував вікно Google. Дозвольте спливаючі вікна й спробуйте ще раз.',
+			'auth/cancelled-popup-request': 'Запит входу через Google скасовано. Спробуйте ще раз.',
+			'auth/account-exists-with-different-credential': 'Для цієї пошти вже є акаунт з іншим способом входу. Увійдіть ним.',
 		};
 		if (code) {
 			return messages[code] ?? 'Не вдалося виконати дію. Перевірте дані й спробуйте ще раз.';
