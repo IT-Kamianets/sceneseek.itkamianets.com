@@ -32,10 +32,9 @@
 		<form id="home-search" class="home-search" (submit)="onSearchSubmit($event)">
 			<div class="home-search__row">
 				<div class="home-search__field">
-					<span class="material-symbols-outlined" aria-hidden="true">image</span>
+					<button class="home-photo-action" type="button" aria-label="Додати фото до пошуку" title="Додати фото до пошуку" aria-controls="home-photo-input" (click)="photoInput.click()"><span class="material-symbols-outlined" aria-hidden="true">add_photo_alternate</span></button>
 					<label class="visually-hidden" for="home-query">Опис сцени</label>
 					<input id="home-query" type="search" [value]="query()" (input)="onQueryChange($event)" placeholder="Наприклад: туман над озером на світанку" />
-					<button class="home-photo-action" type="button" aria-label="Додати фото до пошуку" title="Додати фото до пошуку" aria-controls="home-photo-input" (click)="photoInput.click()"><span class="material-symbols-outlined" aria-hidden="true">add_photo_alternate</span><span>Фото</span></button>
 					<button class="home-voice-action" type="button" [class.is-listening]="isListening()" [disabled]="!voiceSupported()" [attr.aria-pressed]="isListening()" [attr.aria-label]="isListening() ? 'Зупинити голосовий пошук' : 'Шукати голосом'" [attr.title]="voiceSupported() ? 'Голосовий пошук українською' : 'Голосовий пошук недоступний у цьому браузері'" (click)="onVoiceSearch()"><span class="material-symbols-outlined" aria-hidden="true">{{ isListening() ? 'graphic_eq' : 'mic' }}</span><span>{{ isListening() ? 'Слухаю' : 'Голосом' }}</span></button>
 					<input #photoInput id="home-photo-input" class="visually-hidden" tabindex="-1" type="file" accept="image/*" (change)="onPhotoSelected($event)" />
 				</div>
