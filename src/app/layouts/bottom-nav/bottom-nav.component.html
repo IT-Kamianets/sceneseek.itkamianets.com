@@ -1,4 +1,4 @@
-<aside class="sidebar" [class.sidebar--expanded]="expanded()">
+<aside class="sidebar">
 	<nav class="sidebar__nav" aria-label="Основна навігація">
 		<a
 			class="sidebar__link"
@@ -7,10 +7,9 @@
 			[routerLinkActiveOptions]="{ exact: true }"
 			ariaCurrentWhenActive="page"
 			aria-label="Огляд"
-			title="Огляд"
 		>
 			<span class="material-symbols-outlined" aria-hidden="true">explore</span>
-			@if (expanded()) { <span>Огляд</span> }
+			<span class="sidebar__tooltip" role="tooltip">Огляд</span>
 		</a>
 
 		<a
@@ -19,10 +18,9 @@
 			routerLinkActive="is-active"
 			ariaCurrentWhenActive="page"
 			aria-label="Пошук"
-			title="Пошук"
 		>
 			<span class="material-symbols-outlined" aria-hidden="true">search</span>
-			@if (expanded()) { <span>Пошук</span> }
+			<span class="sidebar__tooltip" role="tooltip">Пошук</span>
 		</a>
 
 		<a
@@ -31,11 +29,10 @@
 			routerLinkActive="is-active"
 			ariaCurrentWhenActive="page"
 			aria-label="Історія"
-			title="Історія"
 			(click)="promptForSignIn('history')"
 		>
 			<span class="material-symbols-outlined" aria-hidden="true">history</span>
-			@if (expanded()) { <span>Історія</span> }
+			<span class="sidebar__tooltip" role="tooltip">Історія</span>
 		</a>
 
 		<a
@@ -44,11 +41,10 @@
 			routerLinkActive="is-active"
 			ariaCurrentWhenActive="page"
 			aria-label="Збережене"
-			title="Збережене"
 			(click)="promptForSignIn('saved')"
 		>
 			<span class="material-symbols-outlined" aria-hidden="true">bookmarks</span>
-			@if (expanded()) { <span>Збережене</span> }
+			<span class="sidebar__tooltip" role="tooltip">Збережене</span>
 		</a>
 
 		<a
@@ -57,23 +53,9 @@
 			routerLinkActive="is-active"
 			ariaCurrentWhenActive="page"
 			aria-label="Профіль"
-			title="Профіль"
 		>
 			<span class="material-symbols-outlined" aria-hidden="true">person</span>
-			@if (expanded()) { <span>Профіль</span> }
+			<span class="sidebar__tooltip" role="tooltip">Профіль</span>
 		</a>
 	</nav>
-
-	<button
-		class="sidebar__toggle"
-		type="button"
-		[attr.aria-expanded]="expanded()"
-		[attr.aria-label]="expanded() ? 'Згорнути меню' : 'Розгорнути меню'"
-		(click)="toggleExpanded()"
-	>
-		<span class="material-symbols-outlined" aria-hidden="true">
-			{{ expanded() ? 'left_panel_close' : 'left_panel_open' }}
-		</span>
-		@if (expanded()) { <span>Згорнути меню</span> }
-	</button>
 </aside>

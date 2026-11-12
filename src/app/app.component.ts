@@ -16,7 +16,7 @@ import { FirebaseAuthService } from './feature/firebase-auth/firebase-auth.servi
 		<div class="flex min-h-[100dvh]">
 			<div class="flex min-w-0 flex-1 flex-col">
 				<app-topbar />
-				<main class="flex-1">
+				<main class="flex-1 pb-28">
 					<router-outlet />
 				</main>
 			</div>
