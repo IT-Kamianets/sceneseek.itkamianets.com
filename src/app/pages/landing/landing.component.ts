@@ -23,6 +23,10 @@ import {
 	SearchHistorySortOrder,
 } from '../../feature/search-history/search-history.service';
 import { SavedScene, SavedScenesService } from '../../feature/saved-scenes/saved-scenes.service';
+import {
+	CommonsVideo,
+	WikimediaCommonsService,
+} from '../../feature/wikimedia-commons/wikimedia-commons.service';
 
 type CategoryId = SearchHistoryCategory;
 type RecommendationTag = Exclude<CategoryId, 'for-you'>;
@@ -241,21 +245,27 @@ export class LandingComponent {
 	);
 	protected readonly isListening = signal(false);
 	protected readonly previewScene = signal<Recommendation | null>(null);
+	protected readonly commonsLoading = signal(false);
+	protected readonly commonsError = signal('');
+	private readonly _commonsVideos = signal<Recommendation[]>([]);
 	protected readonly recommendationCountLabel = computed(() =>
 		sceneCountLabel(this.recommendations().length),
 	);
 	private readonly _authPrompt = inject(AuthPromptService);
 	private readonly _auth = inject(FirebaseAuthService);
 	private readonly _searchHistory = inject(SearchHistoryService);
+	private readonly _wikimediaCommons = inject(WikimediaCommonsService);
 	protected readonly savedScenes = inject(SavedScenesService);
 	private readonly _destroyRef = inject(DestroyRef);
 	private _recognition: SpeechRecognitionLike | null = null;
+	private _commonsRequest = 0;
 	@ViewChild('previewDialog') private _previewDialog?: ElementRef<HTMLDialogElement>;
 	@ViewChild('photoInput') private _photoInput?: ElementRef<HTMLInputElement>;
 
 	constructor() {
 		if (this.submittedQuery().trim()) {
 			this._recordSearch('text');
+			void this._loadCommonsVideos(this.submittedQuery());
 		}
 		this._destroyRef.onDestroy(() => {
 			if (this._recognition) {
@@ -276,11 +286,12 @@ export class LandingComponent {
 		const orientationFilter = this.orientationFilter();
 		const qualityFilter = this.qualityFilter();
 
-		let matches = HOME_RECOMMENDATIONS.filter(
+		const source = this.pageMode === 'search' ? this._commonsVideos() : HOME_RECOMMENDATIONS;
+		let matches = source.filter(
 			(item) => category === 'for-you' || item.tags.includes(category),
 		);
 
-		if (terms.length) {
+		if (terms.length && this.pageMode !== 'search') {
 			matches = matches.filter((item) => {
 				const searchableText = `${item.title} ${item.searchText}`
 					.split(/[^\p{L}\p{N}]+/u)
@@ -292,7 +303,7 @@ export class LandingComponent {
 		}
 
 		if (durationFilter === 'under-15') {
-			matches = matches.filter((item) => item.duration < 15);
+			matches = matches.filter((item) => item.duration > 0 && item.duration < 15);
 		} else if (durationFilter === '15-30') {
 			matches = matches.filter((item) => item.duration >= 15 && item.duration <= 30);
 		} else if (durationFilter === 'over-30') {
@@ -313,7 +324,7 @@ export class LandingComponent {
 			);
 		}
 
-		if (this.sortOrder() === 'relevance' && terms.length) {
+		if (this.sortOrder() === 'relevance' && terms.length && this.pageMode !== 'search') {
 			const score = (item: Recommendation) => {
 				const searchableText = `${item.title} ${item.searchText}`
 					.split(/[^\p{L}\p{N}]+/u)
@@ -327,9 +338,15 @@ export class LandingComponent {
 			};
 			matches = [...matches].sort((left, right) => score(right) - score(left));
 		} else if (this.sortOrder() === 'shortest') {
-			matches = [...matches].sort((left, right) => left.duration - right.duration);
+			matches = [...matches].sort(
+				(left, right) =>
+					(left.duration || Number.POSITIVE_INFINITY) -
+					(right.duration || Number.POSITIVE_INFINITY),
+			);
 		} else if (this.sortOrder() === 'longest') {
-			matches = [...matches].sort((left, right) => right.duration - left.duration);
+			matches = [...matches].sort(
+				(left, right) => (right.duration || 0) - (left.duration || 0),
+			);
 		}
 
 		return matches;
@@ -367,6 +384,7 @@ export class LandingComponent {
 				: '',
 		);
 		this._recordSearch('text');
+		void this._loadCommonsVideos(query);
 	}
 
 	protected setCategory(category: CategoryId) {
@@ -445,6 +463,7 @@ export class LandingComponent {
 			this.searchMessage.set('');
 			this.searchError.set(false);
 			this._recordSearch('voice');
+			void this._loadCommonsVideos(transcript);
 		};
 		recognition.onerror = (event) => {
 			if (event.error === 'aborted') {
@@ -480,6 +499,41 @@ export class LandingComponent {
 			this.searchError.set(true);
 			this.searchMessage.set('Не вдалося запустити мікрофон. Спробуйте ще раз.');
 		}
+	}
+
+	private async _loadCommonsVideos(query: string) {
+		const request = ++this._commonsRequest;
+		this._commonsVideos.set([]);
+		this.commonsError.set('');
+		this.commonsLoading.set(true);
+		try {
+			const videos = await this._wikimediaCommons.searchVideos(query);
+			if (request === this._commonsRequest) {
+				this._commonsVideos.set(videos.map((video) => this._toRecommendation(video)));
+			}
+		} catch {
+			if (request === this._commonsRequest) {
+				this.commonsError.set(
+					'Не вдалося отримати відео з Wikimedia Commons. Перевірте з’єднання й спробуйте ще раз.',
+				);
+			}
+		} finally {
+			if (request === this._commonsRequest) {
+				this.commonsLoading.set(false);
+			}
+		}
+	}
+
+	private _toRecommendation(video: CommonsVideo): Recommendation {
+		return {
+			...video,
+			tags: [],
+			searchText: `${video.title} ${video.searchText}`,
+		};
+	}
+
+	protected retryCommonsSearch() {
+		void this._loadCommonsVideos(this.submittedQuery());
 	}
 
 	protected openPreview(item: Recommendation) {

@@ -61,7 +61,7 @@
 		<section id="explore-recommendations" class="home-recommendations home-results-stage" aria-labelledby="recommendations-title">
 			<div class="home-section-heading">
 				<div><p class="home-section-heading__eyebrow">{{ pageMode === 'explore' ? 'ВІДКРИВАЙТЕ СВОЄ НОВЕ' : 'ПОШУК СЦЕН' }}</p><h2 id="recommendations-title">{{ pageMode === 'explore' ? 'Щоденні рекомендації' : 'Результати пошуку' }}</h2><p class="home-section-heading__description">{{ pageMode === 'explore' ? 'Добірка сцен для натхнення та наступного проєкту.' : 'Сцени, що відповідають вашому опису й фільтрам.' }}</p></div>
-				<div class="home-results-count" aria-live="polite"><span class="material-symbols-outlined" aria-hidden="true">movie</span>{{ recommendationCountLabel() }}</div>
+				<div class="home-results-count" aria-live="polite"><span class="material-symbols-outlined" aria-hidden="true">movie</span>@if (pageMode === 'search' && commonsLoading()) { Шукаємо… } @else { {{ recommendationCountLabel() }} }</div>
 			</div>
 
 			@if (pageMode === 'explore') {
@@ -71,12 +71,16 @@
 			}
 			@if (savedScenes.message()) { <p class="home-search__message home-search__message--error" role="alert">{{ savedScenes.message() }}</p> }
 
-			@if (recommendations().length) {
+			@if (pageMode === 'search' && commonsLoading()) {
+				<div class="home-empty-state" role="status"><span class="material-symbols-outlined" aria-hidden="true">progress_activity</span><p>Шукаємо відео у Wikimedia Commons…</p></div>
+			} @else if (pageMode === 'search' && commonsError()) {
+				<div class="home-empty-state" role="alert"><span class="material-symbols-outlined" aria-hidden="true">cloud_off</span><p>{{ commonsError() }}</p><button class="home-reset-action" type="button" (click)="retryCommonsSearch()">Спробувати ще раз</button></div>
+			} @else if (recommendations().length) {
 				<div class="home-video-grid" aria-live="polite">
 					@for (item of recommendations(); track item.id) {
 						<article class="home-video">
-							<div class="home-video__poster" [class.home-video__poster--mountains]="item.scene === 'mountains'" [class.home-video__poster--city]="item.scene === 'city'" [class.home-video__poster--coast]="item.scene === 'coast'" [class.home-video__poster--forest]="item.scene === 'forest'" [class.home-video__poster--night]="item.scene === 'night'" [class.home-video__poster--desert]="item.scene === 'desert'"><span class="home-video__scene-sun" aria-hidden="true"></span><span class="home-video__scene-ridge" aria-hidden="true"></span><span class="home-video__scene-front" aria-hidden="true"></span><span class="home-video__duration">{{ item.durationLabel }}</span><button class="home-video__preview" type="button" [attr.aria-label]="'Відкрити кадр: ' + item.title" (click)="openPreview(item)"><span class="material-symbols-outlined" aria-hidden="true">play_arrow</span><span>Переглянути кадр</span></button></div>
-							<div class="home-video__body"><h3>{{ item.title }}</h3><div class="home-video__meta"><span>{{ item.orientation === 'landscape' ? 'Горизонтальне' : 'Вертикальне' }} · {{ item.quality === '4k' ? '4K' : item.quality }}</span><button class="home-save" type="button" [disabled]="savedScenes.busyIds().includes(item.id)" [attr.aria-pressed]="savedScenes.isSaved(item.id)" (click)="toggleSavedScene(item)"><span class="material-symbols-outlined" aria-hidden="true">{{ savedScenes.isSaved(item.id) ? 'bookmark_added' : 'bookmark' }}</span>{{ savedScenes.isSaved(item.id) ? 'Збережено' : 'Зберегти' }}</button></div></div>
+							<div class="home-video__poster" [class.home-video__poster--mountains]="item.scene === 'mountains'" [class.home-video__poster--city]="item.scene === 'city'" [class.home-video__poster--coast]="item.scene === 'coast'" [class.home-video__poster--forest]="item.scene === 'forest'" [class.home-video__poster--night]="item.scene === 'night'" [class.home-video__poster--desert]="item.scene === 'desert'">@if (item.thumbnailUrl) { <img class="home-video__thumbnail" [src]="item.thumbnailUrl" [alt]="'Кадр відео: ' + item.title" loading="lazy" /> } @else { <span class="home-video__scene-sun" aria-hidden="true"></span><span class="home-video__scene-ridge" aria-hidden="true"></span><span class="home-video__scene-front" aria-hidden="true"></span> }<span class="home-video__duration">{{ item.durationLabel }}</span><button class="home-video__preview" type="button" [attr.aria-label]="(item.videoUrl ? 'Переглянути відео: ' : 'Відкрити кадр: ') + item.title" (click)="openPreview(item)"><span class="material-symbols-outlined" aria-hidden="true">play_arrow</span><span>{{ item.videoUrl ? 'Переглянути відео' : 'Переглянути кадр' }}</span></button></div>
+							<div class="home-video__body"><h3>{{ item.title }}</h3>@if (item.provider) { <p class="home-video__source">{{ item.provider }} · {{ item.authorName }}</p> }<div class="home-video__meta"><span>{{ item.orientation === 'landscape' ? 'Горизонтальне' : 'Вертикальне' }} · {{ item.quality === '4k' ? '4K' : item.quality }}</span><button class="home-save" type="button" [disabled]="savedScenes.busyIds().includes(item.id)" [attr.aria-pressed]="savedScenes.isSaved(item.id)" (click)="toggleSavedScene(item)"><span class="material-symbols-outlined" aria-hidden="true">{{ savedScenes.isSaved(item.id) ? 'bookmark_added' : 'bookmark' }}</span>{{ savedScenes.isSaved(item.id) ? 'Збережено' : 'Зберегти' }}</button></div></div>
 						</article>
 					}
 				</div>
@@ -91,12 +95,17 @@
 				<div class="home-preview-dialog__layout">
 					<section class="home-preview-dialog__visual" aria-label="Попередній перегляд кадру">
 						<header class="home-preview-dialog__topline"><p class="home-section-heading__eyebrow"><span class="material-symbols-outlined" aria-hidden="true">movie</span>Попередній перегляд</p><button class="home-icon-action" type="button" aria-label="Закрити перегляд" (click)="closePreview()"><span class="material-symbols-outlined" aria-hidden="true">close</span></button></header>
-						<div class="home-video__poster home-preview-dialog__frame" [class.home-video__poster--mountains]="item.scene === 'mountains'" [class.home-video__poster--city]="item.scene === 'city'" [class.home-video__poster--coast]="item.scene === 'coast'" [class.home-video__poster--forest]="item.scene === 'forest'" [class.home-video__poster--night]="item.scene === 'night'" [class.home-video__poster--desert]="item.scene === 'desert'"><span class="home-video__scene-sun" aria-hidden="true"></span><span class="home-video__scene-ridge" aria-hidden="true"></span><span class="home-video__scene-front" aria-hidden="true"></span><span class="home-preview-dialog__frame-label"><span class="material-symbols-outlined" aria-hidden="true">image</span>Кадр сцени</span></div>
+						@if (item.videoUrl) {
+							<video class="home-preview-dialog__video" controls playsinline preload="metadata" [poster]="item.thumbnailUrl || ''" [attr.aria-label]="'Відео: ' + item.title"><source [src]="item.videoUrl" [type]="item.videoMimeType || 'video/webm'" />Ваш браузер не підтримує відтворення цього відео.</video>
+						} @else {
+							<div class="home-video__poster home-preview-dialog__frame" [class.home-video__poster--mountains]="item.scene === 'mountains'" [class.home-video__poster--city]="item.scene === 'city'" [class.home-video__poster--coast]="item.scene === 'coast'" [class.home-video__poster--forest]="item.scene === 'forest'" [class.home-video__poster--night]="item.scene === 'night'" [class.home-video__poster--desert]="item.scene === 'desert'"><span class="home-video__scene-sun" aria-hidden="true"></span><span class="home-video__scene-ridge" aria-hidden="true"></span><span class="home-video__scene-front" aria-hidden="true"></span><span class="home-preview-dialog__frame-label"><span class="material-symbols-outlined" aria-hidden="true">image</span>Кадр сцени</span></div>
+						}
 					</section>
 					<aside class="home-preview-dialog__info" aria-label="Відомості про сцену">
 						<p class="home-section-heading__eyebrow">SceneSeek · добірка</p><h2 id="preview-title">{{ item.title }}</h2>
 						<div class="home-preview-dialog__tags">@for (tag of item.tags; track tag) { <span>{{ categoryLabel(tag) }}</span> }</div>
 						<dl class="home-preview-dialog__metadata"><div><dt>Тривалість</dt><dd>{{ item.durationLabel }}</dd></div><div><dt>Якість</dt><dd>{{ item.quality === '4k' ? '4K' : item.quality }}</dd></div><div><dt>Орієнтація</dt><dd>{{ item.orientation === 'landscape' ? 'Горизонтальна' : 'Вертикальна' }}</dd></div></dl>
+						@if (item.sourcePageUrl) { <p class="home-preview-dialog__attribution">Джерело: {{ item.provider }}<br />Автор: {{ item.authorName }}<br />Ліцензія: <a [href]="item.licenseUrl || item.sourcePageUrl" target="_blank" rel="noopener noreferrer">{{ item.licenseName }}</a></p><a class="home-preview-dialog__source-link" [href]="item.sourcePageUrl" target="_blank" rel="noopener noreferrer">Переглянути сторінку файлу <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span></a> }
 						<button class="home-preview-dialog__save" type="button" [disabled]="savedScenes.busyIds().includes(item.id)" [attr.aria-pressed]="savedScenes.isSaved(item.id)" (click)="toggleSavedScene(item)"><span class="material-symbols-outlined" aria-hidden="true">{{ savedScenes.isSaved(item.id) ? 'bookmark_added' : 'bookmark_add' }}</span>{{ savedScenes.isSaved(item.id) ? 'Прибрати зі збереженого' : 'Зберегти у папки' }}</button>
 					</aside>
 				</div>

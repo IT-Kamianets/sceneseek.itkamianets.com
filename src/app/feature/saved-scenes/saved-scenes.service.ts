@@ -11,9 +11,17 @@ export interface SavedScene {
 	duration: number;
 	durationLabel: string;
 	orientation: 'landscape' | 'portrait';
-	quality: '720p' | '1080p' | '4k';
+	quality: '480p' | '720p' | '1080p' | '4k';
 	searchText: string;
 	scene: 'mountains' | 'city' | 'coast' | 'forest' | 'night' | 'desert';
+	provider?: string;
+	thumbnailUrl?: string;
+	videoUrl?: string;
+	videoMimeType?: string;
+	sourcePageUrl?: string;
+	authorName?: string;
+	licenseName?: string;
+	licenseUrl?: string;
 	folderId?: string | null;
 	savedAt?: number;
 }

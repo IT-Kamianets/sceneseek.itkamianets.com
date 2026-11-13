@@ -182,6 +182,7 @@
 							[class.saved-card__poster--night]="item.scene === 'night'"
 							[class.saved-card__poster--desert]="item.scene === 'desert'"
 						>
+							@if (item.thumbnailUrl) { <img class="saved-card__thumbnail" [src]="item.thumbnailUrl" [alt]="'Кадр відео: ' + item.title" loading="lazy" /> }
 							<span class="saved-card__duration">{{ item.durationLabel }}</span>
 						</div>
 						<div class="saved-card__body">
@@ -196,6 +197,7 @@
 									}}
 								</p>
 								<p class="saved-card__date">{{ savedDateLabel(item.savedAt) }}</p>
+								@if (item.sourcePageUrl) { <p class="saved-card__attribution">{{ item.provider }} · {{ item.authorName }} · {{ item.licenseName }}</p><a class="saved-card__source" [href]="item.sourcePageUrl" target="_blank" rel="noopener noreferrer">Сторінка джерела</a> }
 								<label class="folder-move">
 									<span class="material-symbols-outlined" aria-hidden="true"
 										>drive_file_move</span

@@ -148,6 +148,7 @@
 									scene.scene === 'desert'
 								"
 							>
+								@if (scene.thumbnailUrl) { <img class="history-viewed-card__thumbnail" [src]="scene.thumbnailUrl" [alt]="'Кадр відео: ' + scene.title" loading="lazy" /> }
 								<span class="history-viewed-card__duration">{{
 									scene.durationLabel
 								}}</span>
@@ -219,6 +220,9 @@
 						<span class="material-symbols-outlined" aria-hidden="true">close</span>
 					</button>
 				</header>
+				@if (scene.videoUrl) {
+					<video class="history-view-dialog__video" controls playsinline preload="metadata" [poster]="scene.thumbnailUrl || ''" [attr.aria-label]="'Відео: ' + scene.title"><source [src]="scene.videoUrl" [type]="scene.videoMimeType || 'video/webm'" />Ваш браузер не підтримує відтворення цього відео.</video>
+				} @else {
 				<div
 					class="history-viewed-card__visual history-view-dialog__visual"
 					[class.history-viewed-card__visual--mountains]="scene.scene === 'mountains'"
@@ -235,6 +239,7 @@
 					>
 					<span class="history-viewed-card__duration">{{ scene.durationLabel }}</span>
 				</div>
+				}
 				<dl class="history-view-dialog__metadata">
 					<div>
 						<dt>Якість</dt>
@@ -253,6 +258,7 @@
 						<dd>{{ dateLabel(scene.viewedAt) }}</dd>
 					</div>
 				</dl>
+				@if (scene.sourcePageUrl) { <p class="history-view-dialog__attribution">Джерело: {{ scene.provider }}<br />Автор: {{ scene.authorName }}<br />Ліцензія: <a [href]="scene.licenseUrl || scene.sourcePageUrl" target="_blank" rel="noopener noreferrer">{{ scene.licenseName }}</a></p><a class="history-view-dialog__source" [href]="scene.sourcePageUrl" target="_blank" rel="noopener noreferrer">Переглянути сторінку файлу <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span></a> }
 			</div>
 		}
 	</dialog>

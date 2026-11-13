@@ -129,6 +129,14 @@ export class SearchHistoryService {
 			scene: scene.scene,
 			viewedAt: Date.now(),
 		};
+		if (scene.provider) viewedScene.provider = scene.provider;
+		if (scene.thumbnailUrl) viewedScene.thumbnailUrl = scene.thumbnailUrl;
+		if (scene.videoUrl) viewedScene.videoUrl = scene.videoUrl;
+		if (scene.videoMimeType) viewedScene.videoMimeType = scene.videoMimeType;
+		if (scene.sourcePageUrl) viewedScene.sourcePageUrl = scene.sourcePageUrl;
+		if (scene.authorName) viewedScene.authorName = scene.authorName;
+		if (scene.licenseName) viewedScene.licenseName = scene.licenseName;
+		if (scene.licenseUrl) viewedScene.licenseUrl = scene.licenseUrl;
 
 		try {
 			const { firestore, sdk } = await this._getFirestore();
