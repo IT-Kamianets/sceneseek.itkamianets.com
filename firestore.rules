@@ -13,5 +13,9 @@ service cloud.firestore {
 		match /users/{userId}/searchHistory/{entryId} {
 			allow read, write: if request.auth != null && request.auth.uid == userId;
 		}
+
+		match /users/{userId}/viewedScenes/{sceneId} {
+			allow read, write: if request.auth != null && request.auth.uid == userId;
+		}
 	}
 }

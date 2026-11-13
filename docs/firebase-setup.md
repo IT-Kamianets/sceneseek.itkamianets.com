@@ -28,6 +28,7 @@ Never place service-account credentials or Admin SDK private keys in the browser
 - Per-account saved scenes in Cloud Firestore
 - Per-account folders for organizing saved scenes
 - Per-account text and voice search history, including the selected filters
+- Per-account recently viewed scenes, with reopen, individual removal, and clear actions
 
 ## Enable saved scenes
 
@@ -39,7 +40,9 @@ Never place service-account credentials or Admin SDK private keys in the browser
 
 The app stores saved scenes at `users/{uid}/savedScenes/{sceneId}`, folders at
 `users/{uid}/savedFolders/{folderId}`, and search history at
-`users/{uid}/searchHistory/{entryId}`. Deleting a folder moves its scenes back to the unfiled list.
+`users/{uid}/searchHistory/{entryId}`. Recently viewed scenes are stored at
+`users/{uid}/viewedScenes/{sceneId}`; reopening a scene updates its last-viewed time. Deleting a
+folder moves its scenes back to the unfiled list.
 After changing `firestore.rules`, publish the updated rules in
 the Firebase Console's **Rules** tab; GitHub Pages publishes the website but does not publish
 Firestore rules. Search history stores the query, input method, selected filters, and timestamp. The

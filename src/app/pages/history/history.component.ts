@@ -1,9 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { Component, ElementRef, ViewChild, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FirebaseAuthService } from '../../feature/firebase-auth/firebase-auth.service';
 import {
 	SearchHistoryEntry,
 	SearchHistoryService,
+	ViewedScene,
 } from '../../feature/search-history/search-history.service';
 
 @Component({
@@ -14,7 +15,9 @@ import {
 export class HistoryComponent {
 	protected readonly auth = inject(FirebaseAuthService);
 	protected readonly history = inject(SearchHistoryService);
+	protected readonly selectedViewedScene = signal<ViewedScene | null>(null);
 	private readonly _router = inject(Router);
+	@ViewChild('viewDialog') private _viewDialog?: ElementRef<HTMLDialogElement>;
 
 	constructor() {
 		void this.history.load().catch(() => undefined);
@@ -103,6 +106,42 @@ export class HistoryComponent {
 		}
 		try {
 			await this.history.clear();
+		} catch {
+			// The service provides the user-facing error message.
+		}
+	}
+
+	protected openViewed(scene: ViewedScene) {
+		this.selectedViewedScene.set(scene);
+		this._viewDialog?.nativeElement.showModal();
+		void this.history.recordViewed(scene);
+	}
+
+	protected closeViewed() {
+		this._viewDialog?.nativeElement.close();
+		this.selectedViewedScene.set(null);
+	}
+
+	protected onViewDialogClick(event: MouseEvent) {
+		if (event.target === event.currentTarget) {
+			this.closeViewed();
+		}
+	}
+
+	protected async removeViewed(scene: ViewedScene) {
+		try {
+			await this.history.removeViewed(scene.id);
+		} catch {
+			// The service provides the user-facing error message.
+		}
+	}
+
+	protected async clearViewed() {
+		if (!globalThis.confirm('Очистити список переглянутих сцен? Цю дію не можна скасувати.')) {
+			return;
+		}
+		try {
+			await this.history.clearViewed();
 		} catch {
 			// The service provides the user-facing error message.
 		}

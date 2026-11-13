@@ -1,4 +1,13 @@
-import { Component, DestroyRef, ElementRef, PLATFORM_ID, ViewChild, computed, inject, signal } from '@angular/core';
+import {
+	Component,
+	DestroyRef,
+	ElementRef,
+	PLATFORM_ID,
+	ViewChild,
+	computed,
+	inject,
+	signal,
+} from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { AuthPromptService } from '../../feature/auth-prompt/auth-prompt.service';
@@ -60,7 +69,12 @@ function getSpeechRecognitionConstructor(): SpeechRecognitionConstructor | undef
 }
 
 function searchStem(value: string): string {
-	return value.toLocaleLowerCase('uk').replace(/(ями|ами|ого|ому|ими|ій|ий|ою|ею|ах|ях|ів|їв|ам|ям|ом|ем|ку|ок|а|я|у|ю|і|и)$/u, '');
+	return value
+		.toLocaleLowerCase('uk')
+		.replace(
+			/(ями|ами|ого|ому|ими|ій|ий|ою|ею|ах|ях|ів|їв|ам|ям|ом|ем|ку|ок|а|я|у|ю|і|и)$/u,
+			'',
+		);
 }
 
 function matchesSearchWord(word: string, term: string): boolean {
@@ -70,15 +84,33 @@ function matchesSearchWord(word: string, term: string): boolean {
 function sceneCountLabel(count: number): string {
 	const lastDigit = count % 10;
 	const lastTwoDigits = count % 100;
-	const noun = lastDigit === 1 && lastTwoDigits !== 11
-		? 'сцена'
-		: lastDigit >= 2 && lastDigit <= 4 && (lastTwoDigits < 12 || lastTwoDigits > 14)
-			? 'сцени'
-			: 'сцен';
+	const noun =
+		lastDigit === 1 && lastTwoDigits !== 11
+			? 'сцена'
+			: lastDigit >= 2 && lastDigit <= 4 && (lastTwoDigits < 12 || lastTwoDigits > 14)
+				? 'сцени'
+				: 'сцен';
 	return `${count} ${noun}`;
 }
 
-const SEARCH_STOP_WORDS = new Set(['над', 'після', 'перед', 'крізь', 'для', 'або', 'але', 'який', 'яка', 'яке', 'на', 'у', 'в', 'з', 'зі', 'до']);
+const SEARCH_STOP_WORDS = new Set([
+	'над',
+	'після',
+	'перед',
+	'крізь',
+	'для',
+	'або',
+	'але',
+	'який',
+	'яка',
+	'яке',
+	'на',
+	'у',
+	'в',
+	'з',
+	'зі',
+	'до',
+]);
 
 interface HomeCategory {
 	id: CategoryId;
@@ -176,21 +208,42 @@ export class LandingComponent {
 	private readonly _route = inject(ActivatedRoute);
 	protected readonly pageMode = this._route.snapshot.data['pageMode'] as 'explore' | 'search';
 	protected readonly categories = HOME_CATEGORIES;
-	protected readonly activeCategory = signal<CategoryId>(readSearchParam(this._route, 'category', ['for-you', 'atmosphere', 'cinematic', 'nature', 'city'], 'for-you'));
+	protected readonly activeCategory = signal<CategoryId>(
+		readSearchParam(
+			this._route,
+			'category',
+			['for-you', 'atmosphere', 'cinematic', 'nature', 'city'],
+			'for-you',
+		),
+	);
 	protected readonly query = signal(this._route.snapshot.queryParamMap.get('q') ?? '');
 	protected readonly submittedQuery = signal(this._route.snapshot.queryParamMap.get('q') ?? '');
 	protected readonly selectedPhotoName = signal('');
 	protected readonly searchMessage = signal('');
 	protected readonly searchError = signal(false);
-	protected readonly sortOrder = signal<SortOrder>(readSearchParam(this._route, 'sort', ['relevance', 'shortest', 'longest'], 'relevance'));
-	protected readonly durationFilter = signal<DurationFilter>(readSearchParam(this._route, 'duration', ['any', 'under-15', '15-30', 'over-30'], 'any'));
-	protected readonly orientationFilter = signal<OrientationFilter>(readSearchParam(this._route, 'orientation', ['any', 'landscape', 'portrait'], 'any'));
-	protected readonly qualityFilter = signal<QualityFilter>(readSearchParam(this._route, 'quality', ['any', '720p', '1080p', '4k'], 'any'));
-	private readonly _lastInputMethod = signal<SearchHistoryInputMethod>(readSearchParam(this._route, 'inputMethod', ['text', 'voice'], 'text'));
-	protected readonly voiceSupported = signal(isPlatformBrowser(inject(PLATFORM_ID)) && !!getSpeechRecognitionConstructor());
+	protected readonly sortOrder = signal<SortOrder>(
+		readSearchParam(this._route, 'sort', ['relevance', 'shortest', 'longest'], 'relevance'),
+	);
+	protected readonly durationFilter = signal<DurationFilter>(
+		readSearchParam(this._route, 'duration', ['any', 'under-15', '15-30', 'over-30'], 'any'),
+	);
+	protected readonly orientationFilter = signal<OrientationFilter>(
+		readSearchParam(this._route, 'orientation', ['any', 'landscape', 'portrait'], 'any'),
+	);
+	protected readonly qualityFilter = signal<QualityFilter>(
+		readSearchParam(this._route, 'quality', ['any', '720p', '1080p', '4k'], 'any'),
+	);
+	private readonly _lastInputMethod = signal<SearchHistoryInputMethod>(
+		readSearchParam(this._route, 'inputMethod', ['text', 'voice'], 'text'),
+	);
+	protected readonly voiceSupported = signal(
+		isPlatformBrowser(inject(PLATFORM_ID)) && !!getSpeechRecognitionConstructor(),
+	);
 	protected readonly isListening = signal(false);
 	protected readonly previewScene = signal<Recommendation | null>(null);
-	protected readonly recommendationCountLabel = computed(() => sceneCountLabel(this.recommendations().length));
+	protected readonly recommendationCountLabel = computed(() =>
+		sceneCountLabel(this.recommendations().length),
+	);
 	private readonly _authPrompt = inject(AuthPromptService);
 	private readonly _auth = inject(FirebaseAuthService);
 	private readonly _searchHistory = inject(SearchHistoryService);
@@ -232,7 +285,9 @@ export class LandingComponent {
 				const searchableText = `${item.title} ${item.searchText}`
 					.split(/[^\p{L}\p{N}]+/u)
 					.map(searchStem);
-			return terms.every((term) => searchableText.some((word) => matchesSearchWord(word, term)));
+				return terms.every((term) =>
+					searchableText.some((word) => matchesSearchWord(word, term)),
+				);
 			});
 		}
 
@@ -249,8 +304,13 @@ export class LandingComponent {
 		}
 
 		if (qualityFilter !== 'any') {
-			const minimumQuality = qualityFilter === '4k' ? 2160 : Number.parseInt(qualityFilter, 10);
-			matches = matches.filter((item) => (item.quality === '4k' ? 2160 : Number.parseInt(item.quality, 10)) >= minimumQuality);
+			const minimumQuality =
+				qualityFilter === '4k' ? 2160 : Number.parseInt(qualityFilter, 10);
+			matches = matches.filter(
+				(item) =>
+					(item.quality === '4k' ? 2160 : Number.parseInt(item.quality, 10)) >=
+					minimumQuality,
+			);
 		}
 
 		if (this.sortOrder() === 'relevance' && terms.length) {
@@ -258,7 +318,12 @@ export class LandingComponent {
 				const searchableText = `${item.title} ${item.searchText}`
 					.split(/[^\p{L}\p{N}]+/u)
 					.map(searchStem);
-				return terms.reduce((total, term) => total + searchableText.filter((word) => matchesSearchWord(word, term)).length, 0);
+				return terms.reduce(
+					(total, term) =>
+						total +
+						searchableText.filter((word) => matchesSearchWord(word, term)).length,
+					0,
+				);
 			};
 			matches = [...matches].sort((left, right) => score(right) - score(left));
 		} else if (this.sortOrder() === 'shortest') {
@@ -297,7 +362,9 @@ export class LandingComponent {
 		this.submittedQuery.set(query);
 		this.searchError.set(false);
 		this.searchMessage.set(
-			this.selectedPhotoName() ? 'Пошук виконується за текстом; фото поки не впливає на результати.' : '',
+			this.selectedPhotoName()
+				? 'Пошук виконується за текстом; фото поки не впливає на результати.'
+				: '',
 		);
 		this._recordSearch('text');
 	}
@@ -385,9 +452,11 @@ export class LandingComponent {
 			}
 
 			this.searchError.set(true);
-			this.searchMessage.set(event.error === 'not-allowed'
-				? 'Дозвольте доступ до мікрофона, щоб скористатися голосовим пошуком.'
-				: 'Не вдалося розпізнати запит. Спробуйте ще раз.');
+			this.searchMessage.set(
+				event.error === 'not-allowed'
+					? 'Дозвольте доступ до мікрофона, щоб скористатися голосовим пошуком.'
+					: 'Не вдалося розпізнати запит. Спробуйте ще раз.',
+			);
 		};
 		recognition.onend = () => {
 			this.isListening.set(false);
@@ -416,6 +485,7 @@ export class LandingComponent {
 	protected openPreview(item: Recommendation) {
 		this.previewScene.set(item);
 		this._previewDialog?.nativeElement.showModal();
+		void this._searchHistory.recordViewed(item);
 	}
 
 	protected categoryLabel(tag: RecommendationTag): string {
