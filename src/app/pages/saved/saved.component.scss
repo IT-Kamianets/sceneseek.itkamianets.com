@@ -216,6 +216,86 @@
 	gap: 0.9rem;
 	margin-bottom: 1.35rem;
 }
+.saved-controls {
+	display: flex;
+	align-items: center;
+	gap: 0.65rem;
+	margin: 1.1rem 0 1rem;
+}
+.saved-search,
+.saved-sort {
+	display: flex;
+	min-height: 2.7rem;
+	align-items: center;
+	gap: 0.55rem;
+	padding: 0 0.8rem;
+	border: 1px solid var(--border);
+	border-radius: 0.75rem;
+	color: var(--primary);
+	background: color-mix(in oklch, var(--card) 88%, transparent);
+}
+.saved-search {
+	min-width: min(100%, 16rem);
+	flex: 1;
+}
+.saved-search input,
+.saved-sort select {
+	width: 100%;
+	min-width: 0;
+	border: 0;
+	outline: 0;
+	color: var(--c-text-strong);
+	background: transparent;
+	font: inherit;
+	font-size: 0.78rem;
+}
+.saved-search input::placeholder {
+	color: var(--muted-foreground);
+}
+.saved-search input:focus-visible,
+.saved-sort select:focus-visible {
+	outline: 2px solid color-mix(in oklch, var(--primary) 58%, transparent);
+	outline-offset: 3px;
+}
+.saved-search > button {
+	display: grid;
+	width: 1.8rem;
+	height: 1.8rem;
+	flex: 0 0 auto;
+	place-items: center;
+	border: 0;
+	border-radius: 50%;
+	color: var(--muted-foreground);
+	background: transparent;
+	cursor: pointer;
+}
+.saved-search > button:hover {
+	color: var(--primary);
+	background: color-mix(in oklch, var(--primary) 10%, transparent);
+}
+.saved-search > button .material-symbols-outlined,
+.saved-search > .material-symbols-outlined,
+.saved-sort > .material-symbols-outlined {
+	font-size: 1.1rem;
+}
+.saved-sort {
+	flex: 0 0 auto;
+}
+.saved-sort select {
+	width: auto;
+	min-width: 8.5rem;
+	cursor: pointer;
+}
+.saved-sort option {
+	color: var(--c-text-strong);
+	background: var(--card);
+}
+.saved-result-count {
+	flex: 0 0 auto;
+	margin: 0 0.2rem 0 auto;
+	color: var(--muted-foreground);
+	font-size: 0.72rem;
+}
 .folder-create {
 	display: flex;
 	gap: 0.55rem;
@@ -399,6 +479,10 @@
 .saved-card__details {
 	min-width: 0;
 }
+.saved-card__date {
+	margin-top: 0.3rem !important;
+	font-size: 0.66rem !important;
+}
 .saved-notice {
 	margin: 0;
 	color: var(--primary);
@@ -420,6 +504,20 @@
 	clip-path: inset(50%);
 }
 @media (max-width: 520px) {
+	.saved-controls {
+		flex-wrap: wrap;
+		gap: 0.5rem;
+	}
+	.saved-search {
+		min-width: 100%;
+		flex-basis: 100%;
+	}
+	.saved-sort {
+		max-width: calc(100% - 5rem);
+	}
+	.saved-result-count {
+		margin-left: auto;
+	}
 	.folder-create {
 		align-items: stretch;
 	}

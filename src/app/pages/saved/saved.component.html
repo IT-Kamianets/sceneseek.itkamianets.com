@@ -129,13 +129,49 @@
 			}
 		</section>
 
+		@if (saved.scenes().length) {
+			<section class="saved-controls" aria-label="Пошук і сортування збережених сцен">
+				<label class="saved-search">
+					<span class="material-symbols-outlined" aria-hidden="true">search</span>
+					<span class="sr-only">Пошук у збережених сценах</span>
+					<input
+						type="search"
+						placeholder="Знайти сцену за назвою або тегом"
+						[value]="searchQuery()"
+						(input)="setSearchQuery($event)"
+					/>
+					@if (searchQuery()) {
+						<button
+							type="button"
+							aria-label="Очистити пошук"
+							(click)="searchQuery.set('')"
+						>
+							<span class="material-symbols-outlined" aria-hidden="true">close</span>
+						</button>
+					}
+				</label>
+				<label class="saved-sort">
+					<span class="material-symbols-outlined" aria-hidden="true">sort</span>
+					<span class="sr-only">Сортування збережених сцен</span>
+					<select [value]="sortOrder()" (change)="setSortOrder($event)">
+						<option value="newest">Спочатку нещодавні</option>
+						<option value="oldest">Спочатку давніші</option>
+						<option value="title">За назвою: А—Я</option>
+					</select>
+				</label>
+				<p class="saved-result-count" aria-live="polite">
+					{{ filteredScenes().length }} з {{ visibleScenes().length }}
+				</p>
+			</section>
+		}
+
 		@if (saved.message()) {
 			<p class="saved-notice" role="alert">{{ saved.message() }}</p>
 		}
 
-		@if (visibleScenes().length) {
+		@if (filteredScenes().length) {
 			<div class="saved-grid">
-				@for (item of visibleScenes(); track item.id) {
+				@for (item of filteredScenes(); track item.id) {
 					<article class="saved-card">
 						<div
 							class="saved-card__poster"
@@ -159,6 +195,7 @@
 											: 'Вертикальне'
 									}}
 								</p>
+								<p class="saved-card__date">{{ savedDateLabel(item.savedAt) }}</p>
 								<label class="folder-move">
 									<span class="material-symbols-outlined" aria-hidden="true"
 										>drive_file_move</span
@@ -190,6 +227,13 @@
 						</div>
 					</article>
 				}
+			</div>
+		} @else if (searchQuery().trim()) {
+			<div class="saved-empty saved-empty--compact" role="status">
+				<span class="material-symbols-outlined" aria-hidden="true">search_off</span>
+				<h2>Сцен не знайдено</h2>
+				<p>Спробуйте іншу назву або тег чи очистьте пошуковий запит.</p>
+				<button type="button" (click)="searchQuery.set('')">Очистити пошук</button>
 			</div>
 		} @else if (activeFolder() !== 'all') {
 			<div class="saved-empty saved-empty--compact" role="status">

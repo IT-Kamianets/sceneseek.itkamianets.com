@@ -15,6 +15,7 @@ export interface SavedScene {
 	searchText: string;
 	scene: 'mountains' | 'city' | 'coast' | 'forest' | 'night' | 'desert';
 	folderId?: string | null;
+	savedAt?: number;
 }
 
 export interface SavedFolder {
@@ -199,8 +200,9 @@ export class SavedScenesService {
 				await sdk.deleteDoc(sceneRef);
 				this.scenes.update((items) => items.filter((item) => item.id !== scene.id));
 			} else {
-				await sdk.setDoc(sceneRef, scene);
-				this.scenes.update((items) => [scene, ...items]);
+				const savedScene = { ...scene, savedAt: Date.now() };
+				await sdk.setDoc(sceneRef, savedScene);
+				this.scenes.update((items) => [savedScene, ...items]);
 			}
 			this.loadedForUid.set(user.uid);
 		} catch {

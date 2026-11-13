@@ -3,6 +3,12 @@ import { RouterLink } from '@angular/router';
 import { FirebaseAuthService } from '../../feature/firebase-auth/firebase-auth.service';
 import { SavedScenesService } from '../../feature/saved-scenes/saved-scenes.service';
 
+const normalizeSearchText = (value: string) =>
+	value
+		.normalize('NFD')
+		.replace(/\p{Diacritic}/gu, '')
+		.toLocaleLowerCase('uk-UA');
+
 @Component({
 	selector: 'app-saved',
 	imports: [RouterLink],
@@ -13,6 +19,8 @@ export class SavedComponent {
 	protected readonly auth = inject(FirebaseAuthService);
 	protected readonly saved = inject(SavedScenesService);
 	protected readonly activeFolder = signal('all');
+	protected readonly searchQuery = signal('');
+	protected readonly sortOrder = signal<'newest' | 'oldest' | 'title'>('newest');
 	protected readonly newFolderName = signal('');
 	protected readonly editingFolderId = signal<string | null>(null);
 	protected readonly editingFolderName = signal('');
@@ -30,6 +38,32 @@ export class SavedComponent {
 			return this.saved.scenes().filter((scene) => !scene.folderId);
 		}
 		return this.saved.scenes().filter((scene) => scene.folderId === folderId);
+	});
+	protected readonly filteredScenes = computed(() => {
+		const query = normalizeSearchText(this.searchQuery().trim());
+		const scenes = this.visibleScenes().filter((scene) => {
+			if (!query) {
+				return true;
+			}
+			const searchableText = normalizeSearchText(
+				[scene.title, scene.searchText, ...scene.tags].filter(Boolean).join(' '),
+			);
+			return searchableText.includes(query);
+		});
+		return [...scenes].sort((a, b) => {
+			const titleOrder = a.title.localeCompare(b.title, 'uk-UA', { sensitivity: 'base' });
+			if (this.sortOrder() === 'title') {
+				return titleOrder;
+			}
+			if (a.savedAt == null && b.savedAt != null) {
+				return 1;
+			}
+			if (a.savedAt != null && b.savedAt == null) {
+				return -1;
+			}
+			const timeOrder = (a.savedAt ?? 0) - (b.savedAt ?? 0);
+			return (this.sortOrder() === 'newest' ? -timeOrder : timeOrder) || titleOrder;
+		});
 	});
 
 	constructor() {
@@ -139,7 +173,29 @@ export class SavedComponent {
 		this.editingFolderName.set((event.target as HTMLInputElement).value);
 	}
 
+	protected setSearchQuery(event: Event) {
+		this.searchQuery.set((event.target as HTMLInputElement).value);
+	}
+
+	protected setSortOrder(event: Event) {
+		const value = (event.target as HTMLSelectElement).value;
+		if (value === 'newest' || value === 'oldest' || value === 'title') {
+			this.sortOrder.set(value);
+		}
+	}
+
 	protected folderSceneCount(folderId: string) {
 		return this.saved.scenes().filter((scene) => scene.folderId === folderId).length;
+	}
+
+	protected savedDateLabel(savedAt?: number) {
+		if (savedAt == null) {
+			return 'Дата додавання невідома';
+		}
+		return `Збережено ${new Intl.DateTimeFormat('uk-UA', {
+			day: 'numeric',
+			month: 'short',
+			year: 'numeric',
+		}).format(new Date(savedAt))}`;
 	}
 }
