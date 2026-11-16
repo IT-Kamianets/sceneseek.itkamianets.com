@@ -6,6 +6,9 @@
 
 # Node
 /node_modules
+/functions/node_modules
+firebase-debug.log
+firebase-debug.*.log
 npm-debug.log
 yarn-error.log
 pnpm-debug.log

@@ -1,5 +1,6 @@
 export const environment: {
 	apiUrl: string;
+	coverrApiUrl: string;
 	appVersion: string;
 	production: boolean;
 	companyId: string;
@@ -13,6 +14,7 @@ export const environment: {
 	languages: AppLanguage[];
 } = {
 	apiUrl: 'https://it.webart.work',
+	coverrApiUrl: 'https://europe-west1-sceneseek-8719f.cloudfunctions.net/coverrSearch',
 	appVersion: '1.0.0',
 	production: true,
 	companyId: 'demo',

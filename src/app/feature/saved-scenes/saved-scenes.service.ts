@@ -15,11 +15,13 @@ export interface SavedScene {
 	searchText: string;
 	scene: 'mountains' | 'city' | 'coast' | 'forest' | 'night' | 'desert';
 	provider?: string;
+	providerUrl?: string;
 	thumbnailUrl?: string;
 	videoUrl?: string;
 	videoMimeType?: string;
 	sourcePageUrl?: string;
 	authorName?: string;
+	authorUrl?: string;
 	licenseName?: string;
 	licenseUrl?: string;
 	folderId?: string | null;

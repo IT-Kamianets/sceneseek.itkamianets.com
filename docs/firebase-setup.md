@@ -50,3 +50,29 @@ uploaded image itself is not stored.
 
 The production Firebase Web App configuration is set; Email/Password and authorized domains must
 also be enabled in the Firebase Console.
+
+## Deploy the Coverr proxy
+
+The static GitHub Pages site cannot safely store or send the Coverr API key. A Firebase HTTP
+Function sends requests to Coverr and keeps the key in Secret Manager. The repository contains the
+function source in `functions/`; GitHub Pages deployment does not deploy this function.
+
+Firebase requires the project to use the Blaze plan to deploy Cloud Functions. Linking a billing
+account can incur charges, including for related Google Cloud services. Review Firebase pricing and
+set a budget alert before enabling billing. See [Firebase Functions billing requirements](https://firebase.google.com/docs/functions/faq-and-troubleshooting).
+
+After reviewing the billing setup, from the repository root:
+
+```powershell
+npm install --global firebase-tools
+firebase login
+firebase use sceneseek-8719f
+firebase functions:secrets:set COVERR_API_KEY
+firebase deploy --only functions:coverrSearch
+```
+
+When prompted, enter the **rotated Coverr API key** in the terminal. A key previously pasted into a
+chat should be considered exposed and revoked in the Coverr dashboard. Do not commit the new key or
+put it in a GitHub Actions variable. The function URL is configured in `src/environments/environment.prod.ts`;
+the website uses it after the static GitHub Pages build is published. The local dev server continues
+to use `tools/coverr-proxy.cjs` and the `COVERR_API_KEY` PowerShell environment variable.

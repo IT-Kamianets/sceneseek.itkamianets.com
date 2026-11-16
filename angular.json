@@ -100,7 +100,8 @@
 				"serve": {
 					"builder": "@angular/build:dev-server",
 					"options": {
-						"prebundle": false
+						"prebundle": false,
+						"proxyConfig": "tools/coverr-proxy.cjs"
 					},
 					"configurations": {
 						"production": {

@@ -23,8 +23,8 @@ import {
 	SearchHistorySortOrder,
 } from '../../feature/search-history/search-history.service';
 import { SavedScene, SavedScenesService } from '../../feature/saved-scenes/saved-scenes.service';
+import { CoverrVideoService } from '../../feature/coverr/coverr-video.service';
 import {
-	CommonsVideo,
 	WikimediaCommonsService,
 } from '../../feature/wikimedia-commons/wikimedia-commons.service';
 
@@ -247,6 +247,7 @@ export class LandingComponent {
 	protected readonly previewScene = signal<Recommendation | null>(null);
 	protected readonly commonsLoading = signal(false);
 	protected readonly commonsError = signal('');
+	protected readonly providerNotice = signal('');
 	private readonly _commonsVideos = signal<Recommendation[]>([]);
 	protected readonly recommendationCountLabel = computed(() =>
 		sceneCountLabel(this.recommendations().length),
@@ -254,18 +255,19 @@ export class LandingComponent {
 	private readonly _authPrompt = inject(AuthPromptService);
 	private readonly _auth = inject(FirebaseAuthService);
 	private readonly _searchHistory = inject(SearchHistoryService);
+	private readonly _coverr = inject(CoverrVideoService);
 	private readonly _wikimediaCommons = inject(WikimediaCommonsService);
 	protected readonly savedScenes = inject(SavedScenesService);
 	private readonly _destroyRef = inject(DestroyRef);
 	private _recognition: SpeechRecognitionLike | null = null;
-	private _commonsRequest = 0;
+	private _searchRequest = 0;
 	@ViewChild('previewDialog') private _previewDialog?: ElementRef<HTMLDialogElement>;
 	@ViewChild('photoInput') private _photoInput?: ElementRef<HTMLInputElement>;
 
 	constructor() {
 		if (this.submittedQuery().trim()) {
 			this._recordSearch('text');
-			void this._loadCommonsVideos(this.submittedQuery());
+			void this._loadVideos(this.submittedQuery());
 		}
 		this._destroyRef.onDestroy(() => {
 			if (this._recognition) {
@@ -384,7 +386,7 @@ export class LandingComponent {
 				: '',
 		);
 		this._recordSearch('text');
-		void this._loadCommonsVideos(query);
+		void this._loadVideos(query);
 	}
 
 	protected setCategory(category: CategoryId) {
@@ -463,7 +465,7 @@ export class LandingComponent {
 			this.searchMessage.set('');
 			this.searchError.set(false);
 			this._recordSearch('voice');
-			void this._loadCommonsVideos(transcript);
+			void this._loadVideos(transcript);
 		};
 		recognition.onerror = (event) => {
 			if (event.error === 'aborted') {
@@ -501,30 +503,44 @@ export class LandingComponent {
 		}
 	}
 
-	private async _loadCommonsVideos(query: string) {
-		const request = ++this._commonsRequest;
+	private async _loadVideos(query: string) {
+		const request = ++this._searchRequest;
 		this._commonsVideos.set([]);
 		this.commonsError.set('');
+		this.providerNotice.set('');
 		this.commonsLoading.set(true);
-		try {
-			const videos = await this._wikimediaCommons.searchVideos(query);
-			if (request === this._commonsRequest) {
-				this._commonsVideos.set(videos.map((video) => this._toRecommendation(video)));
-			}
-		} catch {
-			if (request === this._commonsRequest) {
-				this.commonsError.set(
-					'Не вдалося отримати відео з Wikimedia Commons. Перевірте з’єднання й спробуйте ще раз.',
-				);
-			}
-		} finally {
-			if (request === this._commonsRequest) {
-				this.commonsLoading.set(false);
-			}
+		const [coverrResult, commonsResult] = await Promise.allSettled([
+			this._coverr.search(query),
+			this._wikimediaCommons.searchVideos(query),
+		]);
+		if (request !== this._searchRequest) {
+			return;
 		}
+
+		const videos: SavedScene[] = [];
+		if (coverrResult.status === 'fulfilled') {
+			videos.push(...coverrResult.value);
+		}
+		if (commonsResult.status === 'fulfilled') {
+			videos.push(...commonsResult.value);
+		}
+		this._commonsVideos.set(videos.map((video) => this._toRecommendation(video)));
+
+		if (coverrResult.status === 'rejected' && commonsResult.status === 'fulfilled') {
+			this.providerNotice.set(
+				'Coverr тимчасово недоступний. Показано відео з Wikimedia Commons.',
+			);
+		} else if (commonsResult.status === 'rejected' && coverrResult.status === 'fulfilled') {
+			this.providerNotice.set('Wikimedia Commons тимчасово недоступний. Показано результати Coverr.');
+		} else if (coverrResult.status === 'rejected' && commonsResult.status === 'rejected') {
+			this.commonsError.set(
+				'Не вдалося отримати відео. Перевірте з’єднання та локальний API-ключ Coverr, а потім спробуйте ще раз.',
+			);
+		}
+		this.commonsLoading.set(false);
 	}
 
-	private _toRecommendation(video: CommonsVideo): Recommendation {
+	private _toRecommendation(video: SavedScene): Recommendation {
 		return {
 			...video,
 			tags: [],
@@ -533,7 +549,7 @@ export class LandingComponent {
 	}
 
 	protected retryCommonsSearch() {
-		void this._loadCommonsVideos(this.submittedQuery());
+		void this._loadVideos(this.submittedQuery());
 	}
 
 	protected openPreview(item: Recommendation) {

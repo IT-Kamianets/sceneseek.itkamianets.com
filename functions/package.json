@@ -1,0 +1,14 @@
+{
+	"name": "sceneseek-functions",
+	"private": true,
+	"main": "index.js",
+	"engines": {
+		"node": "22"
+	},
+	"scripts": {
+		"lint": "node --check index.js"
+	},
+	"dependencies": {
+		"firebase-functions": "^7.4.0"
+	}
+}
