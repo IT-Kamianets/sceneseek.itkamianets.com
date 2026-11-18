@@ -454,6 +454,22 @@
 	border-radius: 0.8rem;
 	background: #090710;
 }
+.history-view-dialog__quality {
+	display: grid;
+	max-width: 22rem;
+	gap: 0.35rem;
+	color: var(--muted-foreground);
+	font-size: 0.72rem;
+}
+.history-view-dialog__quality select {
+	min-height: 2.45rem;
+	padding: 0.4rem 0.65rem;
+	border: 1px solid var(--border);
+	border-radius: 0.65rem;
+	color: var(--foreground);
+	background: var(--card);
+	font: inherit;
+}
 .history-view-dialog__attribution {
 	margin: 1rem 0 0;
 	color: var(--muted-foreground);

@@ -23,7 +23,12 @@ import {
 	SearchHistorySortOrder,
 } from '../../feature/search-history/search-history.service';
 import { SavedScene, SavedScenesService } from '../../feature/saved-scenes/saved-scenes.service';
-import { CoverrVideoService, type CoverrVideo } from '../../feature/coverr/coverr-video.service';
+import {
+	CoverrVideoService,
+	videoPlaybackVariants,
+	type CoverrVideo,
+	type VideoPlaybackVariant,
+} from '../../feature/coverr/coverr-video.service';
 import {
 	WikimediaCommonsService,
 } from '../../feature/wikimedia-commons/wikimedia-commons.service';
@@ -276,6 +281,7 @@ export class LandingComponent {
 	);
 	protected readonly isListening = signal(false);
 	protected readonly previewScene = signal<Recommendation | null>(null);
+	protected readonly playbackQuality = signal<VideoPlaybackVariant['key']>('max');
 	protected readonly commonsLoading = signal(false);
 	protected readonly commonsError = signal('');
 	protected readonly providerNotice = signal('');
@@ -653,8 +659,24 @@ export class LandingComponent {
 
 	protected openPreview(item: Recommendation) {
 		this.previewScene.set(item);
+		this.playbackQuality.set('max');
 		this._previewDialog?.nativeElement.showModal();
 		void this._searchHistory.recordViewed(item);
+	}
+
+	protected videoVariants(item: Recommendation) {
+		return videoPlaybackVariants(item);
+	}
+
+	protected selectedVideoUrl(item: Recommendation) {
+		const variants = this.videoVariants(item);
+		return variants.find((variant) => variant.key === this.playbackQuality())?.url ?? item.videoUrl;
+	}
+
+	protected setPlaybackQuality(event: Event) {
+		this.playbackQuality.set(
+			(event.target as HTMLSelectElement).value === 'preview' ? 'preview' : 'max',
+		);
 	}
 
 	protected onRecommendationKeydown(event: KeyboardEvent, item: Recommendation) {

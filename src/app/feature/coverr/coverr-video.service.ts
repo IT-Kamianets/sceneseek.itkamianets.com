@@ -88,6 +88,47 @@ function qualityFor(width: number, height: number): SavedScene['quality'] {
 				: '480p';
 }
 
+export interface VideoPlaybackVariant {
+	key: 'max' | 'preview';
+	label: string;
+	url: string;
+}
+
+export function videoPlaybackVariants(scene: SavedScene): VideoPlaybackVariant[] {
+	let maxUrl = scene.videoUrl;
+	let previewUrl = scene.videoPreviewUrl;
+	let previewQuality = scene.videoPreviewQuality;
+
+	// Older saved Coverr scenes stored only the 360p preview URL.
+	if (!previewUrl && scene.provider === 'Coverr' && maxUrl) {
+		const match = maxUrl.match(/\/(\d{3,4})p\.mp4(?=[?#]|$)/iu);
+		if (match?.[1] === '360') {
+			previewUrl = maxUrl;
+			previewQuality = '360p';
+			const targetResolution = scene.quality === '4k' ? '2160p' : scene.quality;
+			maxUrl = maxUrl.replace(/\/\d{3,4}p\.mp4(?=[?#]|$)/iu, `/${targetResolution}.mp4`);
+		}
+	}
+
+	if (!maxUrl) {
+		return [];
+	}
+
+	const maxQuality = scene.quality === '4k' ? '4K' : scene.quality;
+	const variants: VideoPlaybackVariant[] = [
+		{ key: 'max', label: `${maxQuality} · максимальна`, url: maxUrl },
+	];
+	if (previewUrl && previewUrl !== maxUrl) {
+		const inferredPreviewQuality = previewUrl.match(/\/(\d{3,4}p)\.mp4(?=[?#]|$)/iu)?.[1];
+		variants.push({
+			key: 'preview',
+			label: `${previewQuality ?? inferredPreviewQuality ?? 'Знижена'} · швидше завантаження`,
+			url: previewUrl,
+		});
+	}
+	return variants;
+}
+
 @Service()
 export class CoverrVideoService {
 	private readonly _platformId = inject(PLATFORM_ID);
@@ -158,10 +199,12 @@ export class CoverrVideoService {
 
 	private _mapVideos(data: CoverrSearchResponse): CoverrVideo[] {
 		return (data.hits ?? []).flatMap((video) => {
-			const videoUrl = video.urls?.mp4_preview || video.urls?.mp4 || video.urls?.mp4_download;
+			const videoUrl = video.urls?.mp4 || video.urls?.mp4_download || video.urls?.mp4_preview;
 			if (!video.id || !videoUrl) {
 				return [];
 			}
+			const videoPreviewUrl = video.urls?.mp4_preview;
+			const videoPreviewQuality = videoPreviewUrl?.match(/\/(\d{3,4}p)\.mp4(?=[?#]|$)/iu)?.[1];
 			const title = video.title?.trim() || 'Відеосцена Coverr';
 			const duration = Math.max(0, Math.round(video.duration ?? 0));
 			const width = video.max_width ?? 0;
@@ -187,6 +230,12 @@ export class CoverrVideoService {
 					providerUrl: 'https://coverr.co' as const,
 					thumbnailUrl: video.thumbnail || video.poster,
 					videoUrl,
+					...(videoPreviewUrl && videoPreviewUrl !== videoUrl
+						? {
+							videoPreviewUrl,
+							...(videoPreviewQuality ? { videoPreviewQuality } : {}),
+						}
+						: {}),
 					videoMimeType: 'video/mp4' as const,
 					sourcePageUrl,
 					authorName: creatorName(video),

@@ -2,6 +2,10 @@ import { Component, ElementRef, ViewChild, inject, signal } from '@angular/core'
 import { Router, RouterLink } from '@angular/router';
 import { FirebaseAuthService } from '../../feature/firebase-auth/firebase-auth.service';
 import {
+	videoPlaybackVariants,
+	type VideoPlaybackVariant,
+} from '../../feature/coverr/coverr-video.service';
+import {
 	SearchHistoryEntry,
 	SearchHistoryService,
 	ViewedScene,
@@ -16,6 +20,7 @@ export class HistoryComponent {
 	protected readonly auth = inject(FirebaseAuthService);
 	protected readonly history = inject(SearchHistoryService);
 	protected readonly selectedViewedScene = signal<ViewedScene | null>(null);
+	protected readonly playbackQuality = signal<VideoPlaybackVariant['key']>('max');
 	private readonly _router = inject(Router);
 	@ViewChild('viewDialog') private _viewDialog?: ElementRef<HTMLDialogElement>;
 
@@ -113,8 +118,24 @@ export class HistoryComponent {
 
 	protected openViewed(scene: ViewedScene) {
 		this.selectedViewedScene.set(scene);
+		this.playbackQuality.set('max');
 		this._viewDialog?.nativeElement.showModal();
 		void this.history.recordViewed(scene);
+	}
+
+	protected videoVariants(scene: ViewedScene) {
+		return videoPlaybackVariants(scene);
+	}
+
+	protected selectedVideoUrl(scene: ViewedScene) {
+		const variants = this.videoVariants(scene);
+		return variants.find((variant) => variant.key === this.playbackQuality())?.url ?? scene.videoUrl;
+	}
+
+	protected setPlaybackQuality(event: Event) {
+		this.playbackQuality.set(
+			(event.target as HTMLSelectElement).value === 'preview' ? 'preview' : 'max',
+		);
 	}
 
 	protected closeViewed() {

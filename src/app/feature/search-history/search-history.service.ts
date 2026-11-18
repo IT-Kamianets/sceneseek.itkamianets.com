@@ -133,6 +133,8 @@ export class SearchHistoryService {
 		if (scene.providerUrl) viewedScene.providerUrl = scene.providerUrl;
 		if (scene.thumbnailUrl) viewedScene.thumbnailUrl = scene.thumbnailUrl;
 		if (scene.videoUrl) viewedScene.videoUrl = scene.videoUrl;
+		if (scene.videoPreviewUrl) viewedScene.videoPreviewUrl = scene.videoPreviewUrl;
+		if (scene.videoPreviewQuality) viewedScene.videoPreviewQuality = scene.videoPreviewQuality;
 		if (scene.videoMimeType) viewedScene.videoMimeType = scene.videoMimeType;
 		if (scene.sourcePageUrl) viewedScene.sourcePageUrl = scene.sourcePageUrl;
 		if (scene.authorName) viewedScene.authorName = scene.authorName;

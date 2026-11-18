@@ -18,6 +18,8 @@ export interface SavedScene {
 	providerUrl?: string;
 	thumbnailUrl?: string;
 	videoUrl?: string;
+	videoPreviewUrl?: string;
+	videoPreviewQuality?: string;
 	videoMimeType?: string;
 	sourcePageUrl?: string;
 	authorName?: string;

@@ -221,7 +221,8 @@
 					</button>
 				</header>
 				@if (scene.videoUrl) {
-					<video class="history-view-dialog__video" controls playsinline preload="metadata" [poster]="scene.thumbnailUrl || ''" [attr.aria-label]="'Відео: ' + scene.title"><source [src]="scene.videoUrl" [type]="scene.videoMimeType || 'video/webm'" />Ваш браузер не підтримує відтворення цього відео.</video>
+					@if (videoVariants(scene).length > 1) { <label class="history-view-dialog__quality"><span>Якість відтворення</span><select [value]="playbackQuality()" (change)="setPlaybackQuality($event)">@for (variant of videoVariants(scene); track variant.key) { <option [value]="variant.key">{{ variant.label }}</option> }</select></label> }
+					<video class="history-view-dialog__video" controls playsinline preload="metadata" [src]="selectedVideoUrl(scene)" [poster]="scene.thumbnailUrl || ''" [attr.aria-label]="'Відео: ' + scene.title">Ваш браузер не підтримує відтворення цього відео.</video>
 				} @else {
 				<div
 					class="history-viewed-card__visual history-view-dialog__visual"
