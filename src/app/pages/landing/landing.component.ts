@@ -657,14 +657,12 @@ export class LandingComponent {
 		void this._searchHistory.recordViewed(item);
 	}
 
-	protected categoryLabel(tag: RecommendationTag): string {
-		const labels: Record<RecommendationTag, string> = {
-			atmosphere: 'Атмосфера',
-			cinematic: 'Кінематографічне',
-			nature: 'Природа',
-			city: 'Міська сцена',
-		};
-		return labels[tag];
+	protected onRecommendationKeydown(event: KeyboardEvent, item: Recommendation) {
+		if (event.target !== event.currentTarget || (event.key !== 'Enter' && event.key !== ' ')) {
+			return;
+		}
+		event.preventDefault();
+		this.openPreview(item);
 	}
 
 	protected closePreview() {
