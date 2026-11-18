@@ -188,7 +188,7 @@
 						<div class="saved-card__body">
 							<div class="saved-card__details">
 								<h2>{{ item.title }}</h2>
-								<p>
+								<p class="saved-card__format">
 									{{ item.quality === '4k' ? '4K' : item.quality }} ·
 									{{
 										item.orientation === 'landscape'
@@ -197,35 +197,19 @@
 									}}
 								</p>
 								<p class="saved-card__date">{{ savedDateLabel(item.savedAt) }}</p>
-								@if (item.sourcePageUrl) { <p class="saved-card__attribution">{{ item.provider }} · {{ item.authorName }} · {{ item.licenseName }}</p><a class="saved-card__source" [href]="item.sourcePageUrl" target="_blank" rel="noopener noreferrer">Сторінка джерела</a> }
+								@if (item.sourcePageUrl) { <a class="saved-card__source" [href]="item.sourcePageUrl" target="_blank" rel="noopener noreferrer">Сторінка джерела</a> } @else { <span class="saved-card__source-placeholder" aria-hidden="true"></span> }
+							</div>
+							<div class="saved-card__actions">
 								<label class="folder-move">
-									<span class="material-symbols-outlined" aria-hidden="true"
-										>drive_file_move</span
-									>
+									<span class="material-symbols-outlined" aria-hidden="true">drive_file_move</span>
 									<span class="sr-only">Папка для {{ item.title }}</span>
-									<select
-										[value]="item.folderId ?? ''"
-										[disabled]="saved.busyIds().includes(item.id)"
-										(change)="moveScene(item.id, $event)"
-									>
+									<select [value]="item.folderId ?? ''" [disabled]="saved.busyIds().includes(item.id)" (change)="moveScene(item.id, $event)">
 										<option value="">Без папки</option>
-										@for (folder of saved.folders(); track folder.id) {
-											<option [value]="folder.id">{{ folder.name }}</option>
-										}
+										@for (folder of saved.folders(); track folder.id) { <option [value]="folder.id">{{ folder.name }}</option> }
 									</select>
 								</label>
+								<button class="remove-scene" type="button" [disabled]="saved.busyIds().includes(item.id)" [attr.aria-label]="'Прибрати зі збереженого: ' + item.title" (click)="remove(item.id)"><span class="material-symbols-outlined" aria-hidden="true">bookmark_remove</span>Прибрати</button>
 							</div>
-							<button
-								class="remove-scene"
-								type="button"
-								[disabled]="saved.busyIds().includes(item.id)"
-								[attr.aria-label]="'Прибрати зі збереженого: ' + item.title"
-								(click)="remove(item.id)"
-							>
-								<span class="material-symbols-outlined" aria-hidden="true"
-									>bookmark_remove</span
-								>Прибрати
-							</button>
 						</div>
 					</article>
 				}

@@ -613,12 +613,12 @@ export class LandingComponent {
 			return;
 		}
 		this.currentPage.set(1);
+		this.providerNotice.set('');
 		this.recommendationsLoading.set(true);
 		try {
 			const videos = await this._coverr.popularVideos();
 			if (videos.length) {
 				this._coverrRecommendations.set(videos.map((video) => this._toCoverrRecommendation(video)));
-				this.providerNotice.set('Популярні відео Coverr, впорядковані за популярністю.');
 			} else {
 				this._coverrRecommendations.set([]);
 				this.providerNotice.set('Не вдалося завантажити добірку Coverr. Показані приклади сцен.');

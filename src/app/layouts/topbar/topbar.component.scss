@@ -8,3 +8,8 @@
 .topbar-surface {
 	background-color: color-mix(in oklch, var(--background) 88%, var(--primary) 12%);
 }
+
+.topbar-content {
+	width: min(calc(100% - clamp(2rem, 6vw, 4.5rem)), 76rem);
+	margin-inline: auto;
+}
