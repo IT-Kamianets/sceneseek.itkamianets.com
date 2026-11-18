@@ -11,7 +11,7 @@
 				<span class="auth-prompt__icon" aria-hidden="true">
 					<span class="material-symbols-outlined">lock</span>
 				</span>
-				<button
+				<button [translate]="{ ariaLabel: 'Close sign-in dialog' }"
 					class="auth-prompt__close"
 					type="button"
 					aria-label="Close sign-in dialog"
@@ -22,26 +22,26 @@
 			</div>
 
 			<p class="auth-prompt__eyebrow">SceneSeek</p>
-			<h2 id="auth-prompt-title">Sign in to SceneSeek</h2>
+			<h2 id="auth-prompt-title"><span translate>Sign in to SceneSeek</span></h2>
 			<p class="auth-prompt__description" id="auth-prompt-description">
 				@if (prompt.reason() === 'history') {
-					Sign in or create an account to view your search history.
+					<span translate>Sign in or create an account to view your search history.</span>
 				} @else {
-					Sign in or create an account to save scenes to your collection.
+					<span translate>Sign in or create an account to save scenes to your collection.</span>
 				}
 			</p>
 
 			<div class="auth-prompt__actions">
 				<a class="auth-prompt__button auth-prompt__button--primary" routerLink="/auth/login" [queryParams]="{ returnUrl: prompt.reason() === 'history' ? '/history' : '/saved' }" (click)="prompt.close()">
-					Sign in
+					<span translate>Sign in</span>
 				</a>
 				<a class="auth-prompt__button auth-prompt__button--secondary" routerLink="/auth/register" [queryParams]="{ returnUrl: prompt.reason() === 'history' ? '/history' : '/saved' }" (click)="prompt.close()">
-					Create account
+					<span translate>Create account</span>
 				</a>
 			</div>
 
 			<button class="auth-prompt__dismiss" type="button" (click)="prompt.close()">
-				Continue without an account
+				<span translate>Continue without an account</span>
 			</button>
 		</section>
 	</div>

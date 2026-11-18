@@ -1,6 +1,6 @@
 <aside class="sidebar">
-	<nav class="sidebar__nav" aria-label="Main navigation">
-		<a
+	<nav [translate]="{ ariaLabel: 'Main navigation' }" class="sidebar__nav" aria-label="Main navigation">
+		<a [translate]="{ ariaLabel: 'Explore' }"
 			class="sidebar__link"
 			routerLink="/"
 			routerLinkActive="is-active"
@@ -9,10 +9,10 @@
 			aria-label="Explore"
 		>
 			<span class="material-symbols-outlined" aria-hidden="true">explore</span>
-			<span class="sidebar__tooltip" role="tooltip">Explore</span>
+			<span class="sidebar__tooltip" role="tooltip"><span translate>Explore</span></span>
 		</a>
 
-		<a
+		<a [translate]="{ ariaLabel: 'Search' }"
 			class="sidebar__link"
 			routerLink="/search"
 			routerLinkActive="is-active"
@@ -20,10 +20,10 @@
 			aria-label="Search"
 		>
 			<span class="material-symbols-outlined" aria-hidden="true">search</span>
-			<span class="sidebar__tooltip" role="tooltip">Search</span>
+			<span class="sidebar__tooltip" role="tooltip"><span translate>Search</span></span>
 		</a>
 
-		<a
+		<a [translate]="{ ariaLabel: 'History' }"
 			class="sidebar__link"
 			routerLink="/history"
 			routerLinkActive="is-active"
@@ -32,10 +32,10 @@
 			(click)="promptForSignIn('history')"
 		>
 			<span class="material-symbols-outlined" aria-hidden="true">history</span>
-			<span class="sidebar__tooltip" role="tooltip">History</span>
+			<span class="sidebar__tooltip" role="tooltip"><span translate>History</span></span>
 		</a>
 
-		<a
+		<a [translate]="{ ariaLabel: 'Saved' }"
 			class="sidebar__link"
 			routerLink="/saved"
 			routerLinkActive="is-active"
@@ -44,10 +44,10 @@
 			(click)="promptForSignIn('saved')"
 		>
 			<span class="material-symbols-outlined" aria-hidden="true">bookmarks</span>
-			<span class="sidebar__tooltip" role="tooltip">Saved</span>
+			<span class="sidebar__tooltip" role="tooltip"><span translate>Saved</span></span>
 		</a>
 
-		<a
+		<a [translate]="{ ariaLabel: 'Profile' }"
 			class="sidebar__link"
 			routerLink="/profile"
 			routerLinkActive="is-active"
@@ -55,7 +55,7 @@
 			aria-label="Profile"
 		>
 			<span class="material-symbols-outlined" aria-hidden="true">person</span>
-			<span class="sidebar__tooltip" role="tooltip">Profile</span>
+			<span class="sidebar__tooltip" role="tooltip"><span translate>Profile</span></span>
 		</a>
 	</nav>
 </aside>

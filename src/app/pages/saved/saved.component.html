@@ -1,28 +1,28 @@
 <section class="saved-page" aria-labelledby="saved-title">
 	<header class="saved-heading">
-		<p class="saved-eyebrow">YOUR VIDEO LIBRARY</p>
-		<h1 id="saved-title">Saved</h1>
-		<p>Scenes you want to keep close at hand.</p>
+		<p class="saved-eyebrow"><span translate>YOUR VIDEO LIBRARY</span></p>
+		<h1 id="saved-title"><span translate>Saved</span></h1>
+		<p><span translate>Scenes you want to keep close at hand.</span></p>
 	</header>
 
 	@if (!auth.user()) {
 		<div class="saved-empty" role="status">
 			<span class="material-symbols-outlined" aria-hidden="true">bookmark</span>
-			<h2>Sign in to your account</h2>
-			<p>Your saved scenes and folders will appear here after you sign in.</p>
-			<a routerLink="/auth/login" [queryParams]="{ returnUrl: '/saved' }">Sign in</a>
+			<h2><span translate>Sign in to your account</span></h2>
+			<p><span translate>Your saved scenes and folders will appear here after you sign in.</span></p>
+			<a routerLink="/auth/login" [queryParams]="{ returnUrl: '/saved' }"><span translate>Sign in</span></a>
 		</div>
 	} @else if (saved.message() && saved.loadedForUid() !== auth.user()?.uid) {
 		<div class="saved-empty" role="alert">
 			<span class="material-symbols-outlined" aria-hidden="true">cloud_off</span>
-			<h2>Couldn’t load your collection</h2>
-			<p>{{ saved.message() }}</p>
+			<h2><span translate>Couldn’t load your collection</span></h2>
+			<p>{{ translateText(saved.message()) }}</p>
 		</div>
 	} @else {
-		<section class="folder-tools" aria-label="Manage folders">
+		<section [translate]="{ ariaLabel: 'Manage folders' }" class="folder-tools" aria-label="Manage folders">
 			<form class="folder-create" (submit)="createFolder($event)">
-				<label class="sr-only" for="new-folder-name">New folder name</label>
-				<input
+				<label class="sr-only" for="new-folder-name"><span translate>New folder name</span></label>
+				<input [translate]="{ placeholder: 'New folder name' }"
 					id="new-folder-name"
 					maxlength="40"
 					placeholder="New folder name"
@@ -33,15 +33,15 @@
 					<span class="material-symbols-outlined" aria-hidden="true"
 						>create_new_folder</span
 					>
-					Create folder
+					<span translate>Create folder</span>
 				</button>
 			</form>
 			@if (folderError()) {
-				<p class="saved-notice" role="alert">{{ folderError() }}</p>
+				<p class="saved-notice" role="alert">{{ translateText(folderError()) }}</p>
 			}
 
 			@if (saved.folders().length) {
-				<div class="folder-list" role="group" aria-label="Filter by folder">
+				<div [translate]="{ ariaLabel: 'Filter by folder' }" class="folder-list" role="group" aria-label="Filter by folder">
 					<button
 						type="button"
 						[class.is-active]="activeFolder() === 'all'"
@@ -49,7 +49,7 @@
 					>
 						<span class="material-symbols-outlined" aria-hidden="true"
 							>video_library</span
-						>All scenes <span>{{ saved.scenes().length }}</span>
+						><span translate>All scenes</span> <span>{{ saved.scenes().length }}</span>
 					</button>
 					<button
 						type="button"
@@ -57,14 +57,14 @@
 						(click)="activeFolder.set('unfiled')"
 					>
 						<span class="material-symbols-outlined" aria-hidden="true">folder_open</span
-						>Unfiled <span>{{ unfiledCount() }}</span>
+						><span translate>Unfiled</span> <span>{{ unfiledCount() }}</span>
 					</button>
 					@for (folder of saved.folders(); track folder.id) {
 						<div class="folder-item" [class.is-active]="activeFolder() === folder.id">
 							@if (editingFolderId() === folder.id) {
 								<form class="folder-rename" (submit)="renameFolder($event)">
 									<label class="sr-only" [for]="'rename-' + folder.id"
-										>New folder name</label
+										><span translate>New folder name</span></label
 									>
 									<input
 										[id]="'rename-' + folder.id"
@@ -74,13 +74,13 @@
 									/>
 									<button
 										type="submit"
-										[attr.aria-label]="'Save folder name ' + folder.name"
+										[attr.aria-label]="translateText('Save folder name ') + folder.name"
 									>
 										<span class="material-symbols-outlined" aria-hidden="true"
 											>check</span
 										>
 									</button>
-									<button
+									<button [translate]="{ ariaLabel: 'Cancel rename' }"
 										type="button"
 										aria-label="Cancel rename"
 										(click)="editingFolderId.set(null)"
@@ -105,7 +105,7 @@
 								<div class="folder-actions">
 									<button
 										type="button"
-										[attr.aria-label]="'Rename folder ' + folder.name"
+										[attr.aria-label]="translateText('Rename folder ') + folder.name"
 										(click)="beginRename(folder.id, folder.name)"
 									>
 										<span class="material-symbols-outlined" aria-hidden="true"
@@ -114,7 +114,7 @@
 									</button>
 									<button
 										type="button"
-										[attr.aria-label]="'Delete folder ' + folder.name"
+										[attr.aria-label]="translateText('Delete folder ') + folder.name"
 										(click)="deleteFolder(folder.id, folder.name)"
 									>
 										<span class="material-symbols-outlined" aria-hidden="true"
@@ -130,18 +130,18 @@
 		</section>
 
 		@if (saved.scenes().length) {
-			<section class="saved-controls" aria-label="Search and sort saved scenes">
+			<section [translate]="{ ariaLabel: 'Search and sort saved scenes' }" class="saved-controls" aria-label="Search and sort saved scenes">
 				<label class="saved-search">
 					<span class="material-symbols-outlined" aria-hidden="true">search</span>
-					<span class="sr-only">Search saved scenes</span>
-					<input
+					<span class="sr-only"><span translate>Search saved scenes</span></span>
+					<input [translate]="{ placeholder: 'Find a scene by title or tag' }"
 						type="search"
 						placeholder="Find a scene by title or tag"
 						[value]="searchQuery()"
 						(input)="setSearchQuery($event)"
 					/>
 					@if (searchQuery()) {
-						<button
+						<button [translate]="{ ariaLabel: 'Clear search' }"
 							type="button"
 							aria-label="Clear search"
 							(click)="searchQuery.set('')"
@@ -152,21 +152,21 @@
 				</label>
 				<label class="saved-sort">
 					<span class="material-symbols-outlined" aria-hidden="true">sort</span>
-					<span class="sr-only">Sort saved scenes</span>
+					<span class="sr-only"><span translate>Sort saved scenes</span></span>
 					<select [value]="sortOrder()" (change)="setSortOrder($event)">
-						<option value="newest">Newest first</option>
-						<option value="oldest">Oldest first</option>
-						<option value="title">Title: A–Z</option>
+						<option translate value="newest">Newest first</option>
+						<option translate value="oldest">Oldest first</option>
+						<option translate value="title">Title: A–Z</option>
 					</select>
 				</label>
 				<p class="saved-result-count" aria-live="polite">
-					{{ filteredScenes().length }} of {{ visibleScenes().length }}
+					{{ filteredScenes().length }} {{ translateText('of') }} {{ visibleScenes().length }}
 				</p>
 			</section>
 		}
 
 		@if (saved.message()) {
-			<p class="saved-notice" role="alert">{{ saved.message() }}</p>
+			<p class="saved-notice" role="alert">{{ translateText(saved.message()) }}</p>
 		}
 
 		@if (filteredScenes().length) {
@@ -187,28 +187,24 @@
 						</div>
 						<div class="saved-card__body">
 							<div class="saved-card__details">
-								<h2>{{ item.title }}</h2>
+								<h2>{{ translateText(item.title) }}</h2>
 								<p class="saved-card__format">
 									{{ item.quality === '4k' ? '4K' : item.quality }} ·
-									{{
-										item.orientation === 'landscape'
-											? 'Landscape'
-											: 'Portrait'
-									}}
+									{{ translateText(item.orientation === 'landscape' ? 'Landscape' : 'Portrait') }}
 								</p>
 								<p class="saved-card__date">{{ savedDateLabel(item.savedAt) }}</p>
-								@if (item.sourcePageUrl) { <a class="saved-card__source" [href]="item.sourcePageUrl" target="_blank" rel="noopener noreferrer">Source page</a> } @else { <span class="saved-card__source-placeholder" aria-hidden="true"></span> }
+								@if (item.sourcePageUrl) { <a class="saved-card__source" [href]="item.sourcePageUrl" target="_blank" rel="noopener noreferrer"><span translate>Source page</span></a> } @else { <span class="saved-card__source-placeholder" aria-hidden="true"></span> }
 							</div>
 							<div class="saved-card__actions">
 								<label class="folder-move">
 									<span class="material-symbols-outlined" aria-hidden="true">drive_file_move</span>
-									<span class="sr-only">Folder for {{ item.title }}</span>
+									<span class="sr-only">{{ translateText('Folder for ') + translateText(item.title) }}</span>
 									<select [value]="item.folderId ?? ''" [disabled]="saved.busyIds().includes(item.id)" (change)="moveScene(item.id, $event)">
-										<option value="">Unfiled</option>
+										<option translate value="">Unfiled</option>
 										@for (folder of saved.folders(); track folder.id) { <option [value]="folder.id">{{ folder.name }}</option> }
 									</select>
 								</label>
-								<button class="remove-scene" type="button" [disabled]="saved.busyIds().includes(item.id)" [attr.aria-label]="'Remove from saved: ' + item.title" (click)="remove(item.id)"><span class="material-symbols-outlined" aria-hidden="true">bookmark_remove</span>Remove</button>
+								<button class="remove-scene" type="button" [disabled]="saved.busyIds().includes(item.id)" [attr.aria-label]="translateText('Remove from saved: ') + translateText(item.title)" (click)="remove(item.id)"><span class="material-symbols-outlined" aria-hidden="true">bookmark_remove</span><span translate>Remove</span></button>
 							</div>
 						</div>
 					</article>
@@ -217,30 +213,30 @@
 		} @else if (searchQuery().trim()) {
 			<div class="saved-empty saved-empty--compact" role="status">
 				<span class="material-symbols-outlined" aria-hidden="true">search_off</span>
-				<h2>No scenes found</h2>
-				<p>Try another title or tag, or clear your search.</p>
-				<button type="button" (click)="searchQuery.set('')">Clear search</button>
+				<h2><span translate>No scenes found</span></h2>
+				<p><span translate>Try another title or tag, or clear your search.</span></p>
+				<button type="button" (click)="searchQuery.set('')"><span translate>Clear search</span></button>
 			</div>
 		} @else if (activeFolder() !== 'all') {
 			<div class="saved-empty saved-empty--compact" role="status">
 				<span class="material-symbols-outlined" aria-hidden="true">folder_open</span>
-				<h2>This folder is empty</h2>
-				<p>Move scenes here from All scenes.</p>
-				<button type="button" (click)="activeFolder.set('all')">Show all scenes</button>
+				<h2><span translate>This folder is empty</span></h2>
+				<p><span translate>Move scenes here from All scenes.</span></p>
+				<button type="button" (click)="activeFolder.set('all')"><span translate>Show all scenes</span></button>
 			</div>
 		} @else if (saved.scenes().length === 0) {
 			<div class="saved-empty saved-empty--compact" role="status">
 				<span class="material-symbols-outlined" aria-hidden="true">video_library</span>
-				<h2>Nothing here yet</h2>
-				<p>Save interesting scenes from Explore and they’ll appear in your collection.</p>
-				<a routerLink="/">Explore scenes</a>
+				<h2><span translate>Nothing here yet</span></h2>
+				<p><span translate>Save interesting scenes from Explore and they’ll appear in your collection.</span></p>
+				<a routerLink="/"><span translate>Explore scenes</span></a>
 			</div>
 		} @else {
 			<div class="saved-empty saved-empty--compact" role="status">
 				<span class="material-symbols-outlined" aria-hidden="true">folder_off</span>
-				<h2>All scenes are organized</h2>
-				<p>Scenes that haven’t been added to a folder will appear here.</p>
-				<button type="button" (click)="activeFolder.set('all')">Show all scenes</button>
+				<h2><span translate>All scenes are organized</span></h2>
+				<p><span translate>Scenes that haven’t been added to a folder will appear here.</span></p>
+				<button type="button" (click)="activeFolder.set('all')"><span translate>Show all scenes</span></button>
 			</div>
 		}
 	}

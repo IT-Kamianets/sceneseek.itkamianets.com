@@ -1,9 +1,9 @@
 <section class="history-page" aria-labelledby="history-title">
 	<header class="history-heading">
 		<div>
-			<p class="history-eyebrow">YOUR ACTIVITY LIBRARY</p>
-			<h1 id="history-title">History</h1>
-			<p>Your searches and recently viewed scenes.</p>
+			<p class="history-eyebrow"><span translate>YOUR ACTIVITY LIBRARY</span></p>
+			<h1 id="history-title"><span translate>History</span></h1>
+			<p><span translate>Your searches and recently viewed scenes.</span></p>
 		</div>
 		<div class="history-heading__actions">
 			@if (auth.user() && history.entries().length) {
@@ -14,7 +14,7 @@
 					(click)="clear()"
 				>
 					<span class="material-symbols-outlined" aria-hidden="true">delete_sweep</span>
-					Clear searches
+					<span translate>Clear searches</span>
 				</button>
 			}
 			@if (auth.user() && history.viewedScenes().length) {
@@ -25,7 +25,7 @@
 					(click)="clearViewed()"
 				>
 					<span class="material-symbols-outlined" aria-hidden="true">remove_done</span>
-					Clear viewed
+					<span translate>Clear viewed</span>
 				</button>
 			}
 		</div>
@@ -34,33 +34,33 @@
 	@if (!auth.user()) {
 		<div class="history-empty" role="status">
 			<span class="material-symbols-outlined" aria-hidden="true">manage_search</span>
-			<h2>Sign in to keep your history</h2>
-			<p>Your searches and viewed scenes will be saved to your account.</p>
-			<a routerLink="/auth/login" [queryParams]="{ returnUrl: '/history' }">Sign in</a>
+			<h2><span translate>Sign in to keep your history</span></h2>
+			<p><span translate>Your searches and viewed scenes will be saved to your account.</span></p>
+			<a routerLink="/auth/login" [queryParams]="{ returnUrl: '/history' }"><span translate>Sign in</span></a>
 		</div>
 	} @else if (history.isLoading()) {
 		<div class="history-empty" role="status">
 			<span class="material-symbols-outlined history-loading" aria-hidden="true"
 				>progress_activity</span
 			>
-			<p>Loading history…</p>
+			<p><span translate>Loading history…</span></p>
 		</div>
 	} @else if (history.message() && history.loadedForUid() !== auth.user()?.uid) {
 		<div class="history-empty" role="alert">
 			<span class="material-symbols-outlined" aria-hidden="true">cloud_off</span>
-			<h2>History is temporarily unavailable</h2>
-			<p>{{ history.message() }}</p>
+			<h2><span translate>History is temporarily unavailable</span></h2>
+			<p>{{ translateText(history.message()) }}</p>
 		</div>
 	} @else {
 		@if (history.message()) {
-			<p class="history-message" role="alert">{{ history.message() }}</p>
+			<p class="history-message" role="alert">{{ translateText(history.message()) }}</p>
 		}
 
 		<section class="history-section" aria-labelledby="search-history-title">
 			<header class="history-section__heading">
 				<div>
-					<p class="history-eyebrow">YOUR SEARCHES</p>
-					<h2 id="search-history-title">Searches</h2>
+					<p class="history-eyebrow"><span translate>YOUR SEARCHES</span></p>
+					<h2 id="search-history-title"><span translate>Searches</span></h2>
 				</div>
 				<span class="history-section__count">{{ history.entries().length }}</span>
 			</header>
@@ -77,12 +77,12 @@
 								</div>
 								<p class="history-entry__date">{{ dateLabel(entry.createdAt) }}</p>
 								@if (filterLabels(entry).length) {
-									<div
+									<div [translate]="{ ariaLabel: 'Applied filters' }"
 										class="history-entry__filters"
 										aria-label="Applied filters"
 									>
 										@for (label of filterLabels(entry); track label) {
-											<span>{{ label }}</span>
+											<span>{{ translateText(label) }}</span>
 										}
 									</div>
 								}
@@ -96,13 +96,13 @@
 									<span class="material-symbols-outlined" aria-hidden="true"
 										>refresh</span
 									>
-									Search again
+									<span translate>Search again</span>
 								</button>
 								<button
 									class="history-remove"
 									type="button"
 									[disabled]="history.isUpdating()"
-									[attr.aria-label]="'Delete search: ' + entry.query"
+									[attr.aria-label]="translateText('Delete search: ') + entry.query"
 									(click)="remove(entry)"
 								>
 									<span class="material-symbols-outlined" aria-hidden="true"
@@ -114,20 +114,20 @@
 					}
 				</div>
 			} @else {
-				<p class="history-section__empty">Your searches will appear here.</p>
+				<p class="history-section__empty"><span translate>Your searches will appear here.</span></p>
 			}
 		</section>
 
 		<section class="history-section" aria-labelledby="viewed-history-title">
 			<header class="history-section__heading">
 				<div>
-					<p class="history-eyebrow">PICK UP WHERE YOU LEFT OFF</p>
-					<h2 id="viewed-history-title">Recently viewed</h2>
+					<p class="history-eyebrow"><span translate>PICK UP WHERE YOU LEFT OFF</span></p>
+					<h2 id="viewed-history-title"><span translate>Recently viewed</span></h2>
 				</div>
 				<span class="history-section__count">{{ history.viewedScenes().length }}</span>
 			</header>
 			@if (history.viewedMessage()) {
-				<p class="history-message" role="alert">{{ history.viewedMessage() }}</p>
+				<p class="history-message" role="alert">{{ translateText(history.viewedMessage()) }}</p>
 			}
 			@if (history.viewedScenes().length) {
 				<div class="history-viewed-grid">
@@ -154,14 +154,12 @@
 								}}</span>
 							</div>
 							<div class="history-viewed-card__body">
-								<h3>{{ scene.title }}</h3>
+								<h3>{{ translateText(scene.title) }}</h3>
 								<p>{{ dateLabel(scene.viewedAt) }}</p>
 								<div class="history-viewed-card__meta">
 									<span>{{ scene.quality === '4k' ? '4K' : scene.quality }}</span>
 									<span>{{
-										scene.orientation === 'landscape'
-											? 'Landscape'
-											: 'Portrait'
+											translateText(scene.orientation === 'landscape' ? 'Landscape' : 'Portrait')
 									}}</span>
 								</div>
 								<div class="history-viewed-card__actions">
@@ -173,13 +171,13 @@
 										<span class="material-symbols-outlined" aria-hidden="true"
 											>play_arrow</span
 										>
-										Open scene
+										<span translate>Open scene</span>
 									</button>
 									<button
 										class="history-remove"
 										type="button"
 										[disabled]="history.isUpdatingViewed()"
-										[attr.aria-label]="'Remove from history: ' + scene.title"
+										[attr.aria-label]="translateText('Remove from history: ') + scene.title"
 										(click)="removeViewed(scene)"
 									>
 										<span class="material-symbols-outlined" aria-hidden="true"
@@ -192,7 +190,7 @@
 					}
 				</div>
 			} @else {
-				<p class="history-section__empty">Scenes you view will appear here.</p>
+				<p class="history-section__empty"><span translate>Scenes you view will appear here.</span></p>
 			}
 		</section>
 	}
@@ -208,10 +206,10 @@
 			<div class="history-view-dialog__content">
 				<header>
 					<div>
-						<p class="history-eyebrow">SCENE PREVIEW</p>
-						<h2 id="viewed-scene-title">{{ scene.title }}</h2>
+						<p class="history-eyebrow"><span translate>SCENE PREVIEW</span></p>
+						<h2 id="viewed-scene-title">{{ translateText(scene.title) }}</h2>
 					</div>
-					<button
+					<button [translate]="{ ariaLabel: 'Close preview' }"
 						class="history-remove"
 						type="button"
 						aria-label="Close preview"
@@ -221,8 +219,8 @@
 					</button>
 				</header>
 				@if (scene.videoUrl) {
-					@if (videoVariants(scene).length > 1) { <label class="history-view-dialog__quality"><span>Playback quality</span><select [value]="playbackQuality()" (change)="setPlaybackQuality($event)">@for (variant of videoVariants(scene); track variant.key) { <option [value]="variant.key">{{ variant.label }}</option> }</select></label> }
-					<video class="history-view-dialog__video" controls playsinline preload="metadata" [src]="selectedVideoUrl(scene)" [poster]="scene.thumbnailUrl || ''" [attr.aria-label]="'Video: ' + scene.title">Your browser does not support video playback.</video>
+					@if (videoVariants(scene).length > 1) { <label class="history-view-dialog__quality"><span><span translate>Playback quality</span></span><select [value]="playbackQuality()" (change)="setPlaybackQuality($event)">@for (variant of videoVariants(scene); track variant.key) { <option [value]="variant.key">{{ translateText(variant.label) }}</option> }</select></label> }
+					<video class="history-view-dialog__video" controls playsinline preload="metadata" [src]="selectedVideoUrl(scene)" [poster]="scene.thumbnailUrl || ''" [attr.aria-label]="translateText('Video: ') + scene.title"><span translate>Your browser does not support video playback.</span></video>
 				} @else {
 				<div
 					class="history-viewed-card__visual history-view-dialog__visual"
@@ -243,23 +241,23 @@
 				}
 				<dl class="history-view-dialog__metadata">
 					<div>
-						<dt>Quality</dt>
+						<dt><span translate>Quality</span></dt>
 						<dd>{{ scene.quality === '4k' ? '4K' : scene.quality }}</dd>
 					</div>
 					<div>
-						<dt>Orientation</dt>
+						<dt><span translate>Orientation</span></dt>
 						<dd>
 							{{
-								scene.orientation === 'landscape' ? 'Landscape' : 'Portrait'
+								translateText(scene.orientation === 'landscape' ? 'Landscape' : 'Portrait')
 							}}
 						</dd>
 					</div>
 					<div>
-						<dt>Viewed</dt>
+						<dt><span translate>Viewed</span></dt>
 						<dd>{{ dateLabel(scene.viewedAt) }}</dd>
 					</div>
 				</dl>
-				@if (scene.sourcePageUrl) { <p class="history-view-dialog__attribution">Source: {{ scene.provider }}<br />Creator: {{ scene.authorName }}<br />License: <a [href]="scene.licenseUrl || scene.sourcePageUrl" target="_blank" rel="noopener noreferrer">{{ scene.licenseName }}</a></p><a class="history-view-dialog__source" [href]="scene.sourcePageUrl" target="_blank" rel="noopener noreferrer">View source page <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span></a> }
+				@if (scene.sourcePageUrl) { <p class="history-view-dialog__attribution"><span translate>Source:</span> {{ scene.provider }}<br /><span translate>Creator:</span> {{ scene.authorName }}<br /><span translate>License:</span> <a [href]="scene.licenseUrl || scene.sourcePageUrl" target="_blank" rel="noopener noreferrer">{{ scene.licenseName }}</a></p><a class="history-view-dialog__source" [href]="scene.sourcePageUrl" target="_blank" rel="noopener noreferrer"><span translate>View source page</span> <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span></a> }
 			</div>
 		}
 	</dialog>

@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { LanguageService } from '@wawjs/ngx-translate';
+import { LanguageService, TranslateDirective, TranslateService } from '@wawjs/ngx-translate';
 import { AuthPromptService } from '../../feature/auth-prompt/auth-prompt.service';
 import { FirebaseAuthService } from '../../feature/firebase-auth/firebase-auth.service';
 import {
@@ -84,10 +84,6 @@ function searchStem(value: string): string {
 
 function matchesSearchWord(word: string, term: string): boolean {
 	return word.startsWith(term) || term.startsWith(word);
-}
-
-function sceneCountLabel(count: number): string {
-	return `${count} ${count === 1 ? 'scene' : 'scenes'}`;
 }
 
 const SEARCH_STOP_WORDS = new Set([
@@ -228,13 +224,14 @@ const HOME_RECOMMENDATIONS: Recommendation[] = [
 
 @Component({
 	selector: 'app-landing',
-	imports: [RouterLink],
+	imports: [RouterLink, TranslateDirective],
 	templateUrl: './landing.component.html',
 	styleUrl: './landing.component.scss',
 })
 export class LandingComponent {
 	private readonly _route = inject(ActivatedRoute);
 	private readonly _language = inject(LanguageService);
+	private readonly _translate = inject(TranslateService);
 	private readonly _platformId = inject(PLATFORM_ID);
 	protected readonly pageMode = this._route.snapshot.data['pageMode'] as 'explore' | 'search';
 	protected readonly categories = HOME_CATEGORIES;
@@ -290,9 +287,20 @@ export class LandingComponent {
 		const start = (this.currentPage() - 1) * this.pageSize;
 		return this.recommendations().slice(start, start + this.pageSize);
 	});
-	protected readonly recommendationCountLabel = computed(() =>
-		sceneCountLabel(this.recommendations().length),
-	);
+	protected readonly recommendationCountLabel = computed(() => {
+		const count = this.recommendations().length;
+		const template = this.translateText(count === 1 ? '{{count}} scene' : '{{count}} scenes');
+		return this._translate.interpolate(template, { count });
+	});
+	protected translateText(text: string): string {
+		return this._translate.translate(text)();
+	}
+	protected displayTitle(item: Recommendation): string {
+		return item.provider ? item.title : this.translateText(item.title);
+	}
+	protected pageAriaLabel(page: number): string {
+		return this._translate.interpolate(this.translateText('Page {{page}}'), { page });
+	}
 	private readonly _authPrompt = inject(AuthPromptService);
 	private readonly _auth = inject(FirebaseAuthService);
 	private readonly _searchHistory = inject(SearchHistoryService);

@@ -1,6 +1,6 @@
 import { Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { TranslateDirective } from '@wawjs/ngx-translate';
+import { TranslateDirective, TranslateService } from '@wawjs/ngx-translate';
 import { CompanyService } from '../../feature/company/company.service';
 
 interface FooterPageLink {
@@ -15,6 +15,7 @@ interface FooterPageLink {
 })
 export class FooterComponent {
 	private readonly _companyService = inject(CompanyService);
+	private readonly _translate = inject(TranslateService);
 
 	protected readonly company = this._companyService.company;
 	protected readonly currentYear = new Date().getFullYear();
@@ -28,4 +29,7 @@ export class FooterComponent {
 	protected readonly companyImageAlt = computed(() =>
 		this.company().name ? this.company().name : 'Company image',
 	);
+	protected translateText(text: string): string {
+		return this._translate.translate(text)();
+	}
 }

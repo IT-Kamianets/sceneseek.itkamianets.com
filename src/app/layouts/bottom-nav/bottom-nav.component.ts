@@ -1,11 +1,12 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { TranslateDirective } from '@wawjs/ngx-translate';
 import { AuthPromptService } from '../../feature/auth-prompt/auth-prompt.service';
 import { FirebaseAuthService } from '../../feature/firebase-auth/firebase-auth.service';
 
 @Component({
 	selector: 'app-bottom-nav',
-	imports: [RouterLink, RouterLinkActive],
+	imports: [RouterLink, RouterLinkActive, TranslateDirective],
 	templateUrl: './bottom-nav.component.html',
 	styleUrl: './bottom-nav.component.scss',
 })

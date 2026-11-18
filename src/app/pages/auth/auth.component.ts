@@ -1,12 +1,13 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FirebaseAuthService } from '../../feature/firebase-auth/firebase-auth.service';
+import { TranslateDirective, TranslateService } from '@wawjs/ngx-translate';
 
 type AuthMode = 'login' | 'register' | 'reset';
 
 @Component({
 	selector: 'app-auth',
-	imports: [RouterLink],
+	imports: [RouterLink, TranslateDirective],
 	templateUrl: './auth.component.html',
 	styleUrl: './auth.component.scss',
 })
@@ -14,6 +15,10 @@ export class AuthComponent {
 	private readonly _route = inject(ActivatedRoute);
 	private readonly _router = inject(Router);
 	private readonly _auth = inject(FirebaseAuthService);
+	private readonly _translate = inject(TranslateService);
+	protected translateText(text: string): string {
+		return this._translate.translate(text)();
+	}
 	private readonly _returnUrl = this._route.snapshot.queryParamMap.get('returnUrl');
 	protected readonly returnUrlParams = this._returnUrl ? { returnUrl: this._returnUrl } : null;
 	protected readonly mode = signal<AuthMode>(this._route.snapshot.data['authMode'] as AuthMode);

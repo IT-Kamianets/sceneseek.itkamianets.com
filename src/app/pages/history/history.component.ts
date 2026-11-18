@@ -1,5 +1,6 @@
 import { Component, ElementRef, ViewChild, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
+import { LanguageService, TranslateDirective, TranslateService } from '@wawjs/ngx-translate';
 import { FirebaseAuthService } from '../../feature/firebase-auth/firebase-auth.service';
 import {
 	videoPlaybackVariants,
@@ -12,7 +13,7 @@ import {
 } from '../../feature/search-history/search-history.service';
 
 @Component({
-	imports: [RouterLink],
+	imports: [RouterLink, TranslateDirective],
 	templateUrl: './history.component.html',
 	styleUrl: './history.component.scss',
 })
@@ -22,6 +23,11 @@ export class HistoryComponent {
 	protected readonly selectedViewedScene = signal<ViewedScene | null>(null);
 	protected readonly playbackQuality = signal<VideoPlaybackVariant['key']>('max');
 	private readonly _router = inject(Router);
+	private readonly _language = inject(LanguageService);
+	private readonly _translate = inject(TranslateService);
+	protected translateText(text: string): string {
+		return this._translate.translate(text)();
+	}
 	@ViewChild('viewDialog') private _viewDialog?: ElementRef<HTMLDialogElement>;
 
 	constructor() {
@@ -29,7 +35,7 @@ export class HistoryComponent {
 	}
 
 	protected dateLabel(timestamp: number): string {
-		return new Intl.DateTimeFormat('en-US', {
+		return new Intl.DateTimeFormat(this._language.language() === 'ua' ? 'uk-UA' : 'en-US', {
 			dateStyle: 'medium',
 			timeStyle: 'short',
 		}).format(new Date(timestamp));
@@ -106,7 +112,7 @@ export class HistoryComponent {
 	}
 
 	protected async clear() {
-		if (!globalThis.confirm('Clear your entire search history? This can’t be undone.')) {
+		if (!globalThis.confirm(this.translateText('Clear your entire search history? This can’t be undone.'))) {
 			return;
 		}
 		try {
@@ -158,7 +164,7 @@ export class HistoryComponent {
 	}
 
 	protected async clearViewed() {
-		if (!globalThis.confirm('Clear your viewed scenes? This can’t be undone.')) {
+		if (!globalThis.confirm(this.translateText('Clear your viewed scenes? This can’t be undone.'))) {
 			return;
 		}
 		try {

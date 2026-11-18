@@ -1,5 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { LanguageService, TranslateDirective, TranslateService } from '@wawjs/ngx-translate';
 import { FirebaseAuthService } from '../../feature/firebase-auth/firebase-auth.service';
 import { SavedScenesService } from '../../feature/saved-scenes/saved-scenes.service';
 
@@ -11,11 +12,13 @@ const normalizeSearchText = (value: string) =>
 
 @Component({
 	selector: 'app-saved',
-	imports: [RouterLink],
+	imports: [RouterLink, TranslateDirective],
 	templateUrl: './saved.component.html',
 	styleUrl: './saved.component.scss',
 })
 export class SavedComponent {
+	private readonly _language = inject(LanguageService);
+	private readonly _translate = inject(TranslateService);
 	protected readonly auth = inject(FirebaseAuthService);
 	protected readonly saved = inject(SavedScenesService);
 	protected readonly activeFolder = signal('all');
@@ -65,6 +68,10 @@ export class SavedComponent {
 			return (this.sortOrder() === 'newest' ? -timeOrder : timeOrder) || titleOrder;
 		});
 	});
+
+	protected translateText(text: string): string {
+		return this._translate.translate(text)();
+	}
 
 	constructor() {
 		void this.saved.load().catch(() => undefined);
@@ -133,7 +140,7 @@ export class SavedComponent {
 	}
 
 	protected async deleteFolder(id: string, name: string) {
-		if (!globalThis.confirm(`Delete folder «${name}»? Scenes will remain in Unfiled.`)) {
+		if (!globalThis.confirm(this._translate.interpolate(this.translateText('Delete folder «{{name}}»? Scenes will remain in Unfiled.'), { name }))) {
 			return;
 		}
 		this.folderError.set('');
@@ -192,10 +199,10 @@ export class SavedComponent {
 		if (savedAt == null) {
 			return 'Date added unknown';
 		}
-		return `Saved ${new Intl.DateTimeFormat('en-US', {
+		return this._translate.interpolate(this.translateText('Saved {{date}}'), { date: new Intl.DateTimeFormat(this._language.language() === 'ua' ? 'uk-UA' : 'en-US', {
 			day: 'numeric',
 			month: 'short',
 			year: 'numeric',
-		}).format(new Date(savedAt))}`;
+		}).format(new Date(savedAt)) });
 	}
 }
