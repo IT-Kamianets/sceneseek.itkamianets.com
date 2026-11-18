@@ -27,16 +27,16 @@ export class AuthComponent {
 	protected readonly isSubmitting = signal(false);
 	protected readonly heading = computed(() => {
 		switch (this.mode()) {
-			case 'login': return 'Раді вас бачити';
-			case 'register': return 'Створіть свій акаунт';
-			case 'reset': return 'Відновіть доступ';
+			case 'login': return 'Welcome back';
+			case 'register': return 'Create your account';
+			case 'reset': return 'Reset your password';
 		}
 	});
 	protected readonly submitLabel = computed(() => {
 		switch (this.mode()) {
-			case 'login': return 'Увійти';
-			case 'register': return 'Створити акаунт';
-			case 'reset': return 'Надіслати інструкцію';
+			case 'login': return 'Sign in';
+			case 'register': return 'Create account';
+			case 'reset': return 'Send instructions';
 		}
 	});
 
@@ -75,7 +75,7 @@ export class AuthComponent {
 			await this._router.navigateByUrl(this._safeReturnUrl());
 		} catch (error) {
 			this.formError.set(true);
-			this.formMessage.set(error instanceof Error ? error.message : 'Не вдалося увійти через Google. Спробуйте ще раз.');
+			this.formMessage.set(error instanceof Error ? error.message : 'Could not sign in with Google. Please try again.');
 		} finally {
 			this.isSubmitting.set(false);
 		}
@@ -93,7 +93,7 @@ export class AuthComponent {
 
 		if (this.mode() === 'register' && this.password() !== this.confirmPassword()) {
 			this.formError.set(true);
-			this.formMessage.set('Паролі не збігаються. Перевірте введені дані.');
+			this.formMessage.set('Passwords do not match. Please check your entries.');
 			return;
 		}
 
@@ -111,12 +111,12 @@ export class AuthComponent {
 					break;
 				case 'reset':
 					await this._auth.sendPasswordReset(this.email());
-					this.formMessage.set('Якщо акаунт із цією адресою існує, на нього надіслано лист з інструкціями.');
+					this.formMessage.set('If an account exists for this email address, we’ve sent a message with instructions.');
 					break;
 			}
 		} catch (error) {
 			this.formError.set(true);
-			this.formMessage.set(error instanceof Error ? error.message : 'Не вдалося виконати дію. Спробуйте ще раз.');
+			this.formMessage.set(error instanceof Error ? error.message : 'Something went wrong. Please try again.');
 		} finally {
 			this.isSubmitting.set(false);
 		}

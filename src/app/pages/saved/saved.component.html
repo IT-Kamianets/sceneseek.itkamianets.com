@@ -1,31 +1,31 @@
 <section class="saved-page" aria-labelledby="saved-title">
 	<header class="saved-heading">
-		<p class="saved-eyebrow">ВАША ВІДЕОБІБЛІОТЕКА</p>
-		<h1 id="saved-title">Збережене</h1>
-		<p>Сцени, які ви хочете залишити під рукою.</p>
+		<p class="saved-eyebrow">YOUR VIDEO LIBRARY</p>
+		<h1 id="saved-title">Saved</h1>
+		<p>Scenes you want to keep close at hand.</p>
 	</header>
 
 	@if (!auth.user()) {
 		<div class="saved-empty" role="status">
 			<span class="material-symbols-outlined" aria-hidden="true">bookmark</span>
-			<h2>Увійдіть до свого акаунта</h2>
-			<p>Після входу тут будуть ваші збережені сцени та папки.</p>
-			<a routerLink="/auth/login" [queryParams]="{ returnUrl: '/saved' }">Увійти</a>
+			<h2>Sign in to your account</h2>
+			<p>Your saved scenes and folders will appear here after you sign in.</p>
+			<a routerLink="/auth/login" [queryParams]="{ returnUrl: '/saved' }">Sign in</a>
 		</div>
 	} @else if (saved.message() && saved.loadedForUid() !== auth.user()?.uid) {
 		<div class="saved-empty" role="alert">
 			<span class="material-symbols-outlined" aria-hidden="true">cloud_off</span>
-			<h2>Не вдалося завантажити добірку</h2>
+			<h2>Couldn’t load your collection</h2>
 			<p>{{ saved.message() }}</p>
 		</div>
 	} @else {
-		<section class="folder-tools" aria-label="Керування папками">
+		<section class="folder-tools" aria-label="Manage folders">
 			<form class="folder-create" (submit)="createFolder($event)">
-				<label class="sr-only" for="new-folder-name">Назва нової папки</label>
+				<label class="sr-only" for="new-folder-name">New folder name</label>
 				<input
 					id="new-folder-name"
 					maxlength="40"
-					placeholder="Назва нової папки"
+					placeholder="New folder name"
 					[value]="newFolderName()"
 					(input)="setNewFolderName($event)"
 				/>
@@ -33,7 +33,7 @@
 					<span class="material-symbols-outlined" aria-hidden="true"
 						>create_new_folder</span
 					>
-					Створити папку
+					Create folder
 				</button>
 			</form>
 			@if (folderError()) {
@@ -41,7 +41,7 @@
 			}
 
 			@if (saved.folders().length) {
-				<div class="folder-list" role="group" aria-label="Фільтр за папками">
+				<div class="folder-list" role="group" aria-label="Filter by folder">
 					<button
 						type="button"
 						[class.is-active]="activeFolder() === 'all'"
@@ -49,7 +49,7 @@
 					>
 						<span class="material-symbols-outlined" aria-hidden="true"
 							>video_library</span
-						>Усі сцени <span>{{ saved.scenes().length }}</span>
+						>All scenes <span>{{ saved.scenes().length }}</span>
 					</button>
 					<button
 						type="button"
@@ -57,14 +57,14 @@
 						(click)="activeFolder.set('unfiled')"
 					>
 						<span class="material-symbols-outlined" aria-hidden="true">folder_open</span
-						>Без папки <span>{{ unfiledCount() }}</span>
+						>Unfiled <span>{{ unfiledCount() }}</span>
 					</button>
 					@for (folder of saved.folders(); track folder.id) {
 						<div class="folder-item" [class.is-active]="activeFolder() === folder.id">
 							@if (editingFolderId() === folder.id) {
 								<form class="folder-rename" (submit)="renameFolder($event)">
 									<label class="sr-only" [for]="'rename-' + folder.id"
-										>Нова назва папки</label
+										>New folder name</label
 									>
 									<input
 										[id]="'rename-' + folder.id"
@@ -74,7 +74,7 @@
 									/>
 									<button
 										type="submit"
-										[attr.aria-label]="'Зберегти назву папки ' + folder.name"
+										[attr.aria-label]="'Save folder name ' + folder.name"
 									>
 										<span class="material-symbols-outlined" aria-hidden="true"
 											>check</span
@@ -82,7 +82,7 @@
 									</button>
 									<button
 										type="button"
-										aria-label="Скасувати перейменування"
+										aria-label="Cancel rename"
 										(click)="editingFolderId.set(null)"
 									>
 										<span class="material-symbols-outlined" aria-hidden="true"
@@ -105,7 +105,7 @@
 								<div class="folder-actions">
 									<button
 										type="button"
-										[attr.aria-label]="'Перейменувати папку ' + folder.name"
+										[attr.aria-label]="'Rename folder ' + folder.name"
 										(click)="beginRename(folder.id, folder.name)"
 									>
 										<span class="material-symbols-outlined" aria-hidden="true"
@@ -114,7 +114,7 @@
 									</button>
 									<button
 										type="button"
-										[attr.aria-label]="'Видалити папку ' + folder.name"
+										[attr.aria-label]="'Delete folder ' + folder.name"
 										(click)="deleteFolder(folder.id, folder.name)"
 									>
 										<span class="material-symbols-outlined" aria-hidden="true"
@@ -130,20 +130,20 @@
 		</section>
 
 		@if (saved.scenes().length) {
-			<section class="saved-controls" aria-label="Пошук і сортування збережених сцен">
+			<section class="saved-controls" aria-label="Search and sort saved scenes">
 				<label class="saved-search">
 					<span class="material-symbols-outlined" aria-hidden="true">search</span>
-					<span class="sr-only">Пошук у збережених сценах</span>
+					<span class="sr-only">Search saved scenes</span>
 					<input
 						type="search"
-						placeholder="Знайти сцену за назвою або тегом"
+						placeholder="Find a scene by title or tag"
 						[value]="searchQuery()"
 						(input)="setSearchQuery($event)"
 					/>
 					@if (searchQuery()) {
 						<button
 							type="button"
-							aria-label="Очистити пошук"
+							aria-label="Clear search"
 							(click)="searchQuery.set('')"
 						>
 							<span class="material-symbols-outlined" aria-hidden="true">close</span>
@@ -152,15 +152,15 @@
 				</label>
 				<label class="saved-sort">
 					<span class="material-symbols-outlined" aria-hidden="true">sort</span>
-					<span class="sr-only">Сортування збережених сцен</span>
+					<span class="sr-only">Sort saved scenes</span>
 					<select [value]="sortOrder()" (change)="setSortOrder($event)">
-						<option value="newest">Спочатку нещодавні</option>
-						<option value="oldest">Спочатку давніші</option>
-						<option value="title">За назвою: А—Я</option>
+						<option value="newest">Newest first</option>
+						<option value="oldest">Oldest first</option>
+						<option value="title">Title: A–Z</option>
 					</select>
 				</label>
 				<p class="saved-result-count" aria-live="polite">
-					{{ filteredScenes().length }} з {{ visibleScenes().length }}
+					{{ filteredScenes().length }} of {{ visibleScenes().length }}
 				</p>
 			</section>
 		}
@@ -182,7 +182,7 @@
 							[class.saved-card__poster--night]="item.scene === 'night'"
 							[class.saved-card__poster--desert]="item.scene === 'desert'"
 						>
-							@if (item.thumbnailUrl) { <img class="saved-card__thumbnail" [src]="item.thumbnailUrl" [alt]="'Кадр відео: ' + item.title" loading="lazy" /> }
+							@if (item.thumbnailUrl) { <img class="saved-card__thumbnail" [src]="item.thumbnailUrl" [alt]="'Video frame: ' + item.title" loading="lazy" /> }
 							<span class="saved-card__duration">{{ item.durationLabel }}</span>
 						</div>
 						<div class="saved-card__body">
@@ -192,23 +192,23 @@
 									{{ item.quality === '4k' ? '4K' : item.quality }} ·
 									{{
 										item.orientation === 'landscape'
-											? 'Горизонтальне'
-											: 'Вертикальне'
+											? 'Landscape'
+											: 'Portrait'
 									}}
 								</p>
 								<p class="saved-card__date">{{ savedDateLabel(item.savedAt) }}</p>
-								@if (item.sourcePageUrl) { <a class="saved-card__source" [href]="item.sourcePageUrl" target="_blank" rel="noopener noreferrer">Сторінка джерела</a> } @else { <span class="saved-card__source-placeholder" aria-hidden="true"></span> }
+								@if (item.sourcePageUrl) { <a class="saved-card__source" [href]="item.sourcePageUrl" target="_blank" rel="noopener noreferrer">Source page</a> } @else { <span class="saved-card__source-placeholder" aria-hidden="true"></span> }
 							</div>
 							<div class="saved-card__actions">
 								<label class="folder-move">
 									<span class="material-symbols-outlined" aria-hidden="true">drive_file_move</span>
-									<span class="sr-only">Папка для {{ item.title }}</span>
+									<span class="sr-only">Folder for {{ item.title }}</span>
 									<select [value]="item.folderId ?? ''" [disabled]="saved.busyIds().includes(item.id)" (change)="moveScene(item.id, $event)">
-										<option value="">Без папки</option>
+										<option value="">Unfiled</option>
 										@for (folder of saved.folders(); track folder.id) { <option [value]="folder.id">{{ folder.name }}</option> }
 									</select>
 								</label>
-								<button class="remove-scene" type="button" [disabled]="saved.busyIds().includes(item.id)" [attr.aria-label]="'Прибрати зі збереженого: ' + item.title" (click)="remove(item.id)"><span class="material-symbols-outlined" aria-hidden="true">bookmark_remove</span>Прибрати</button>
+								<button class="remove-scene" type="button" [disabled]="saved.busyIds().includes(item.id)" [attr.aria-label]="'Remove from saved: ' + item.title" (click)="remove(item.id)"><span class="material-symbols-outlined" aria-hidden="true">bookmark_remove</span>Remove</button>
 							</div>
 						</div>
 					</article>
@@ -217,30 +217,30 @@
 		} @else if (searchQuery().trim()) {
 			<div class="saved-empty saved-empty--compact" role="status">
 				<span class="material-symbols-outlined" aria-hidden="true">search_off</span>
-				<h2>Сцен не знайдено</h2>
-				<p>Спробуйте іншу назву або тег чи очистьте пошуковий запит.</p>
-				<button type="button" (click)="searchQuery.set('')">Очистити пошук</button>
+				<h2>No scenes found</h2>
+				<p>Try another title or tag, or clear your search.</p>
+				<button type="button" (click)="searchQuery.set('')">Clear search</button>
 			</div>
 		} @else if (activeFolder() !== 'all') {
 			<div class="saved-empty saved-empty--compact" role="status">
 				<span class="material-symbols-outlined" aria-hidden="true">folder_open</span>
-				<h2>У цій папці поки порожньо</h2>
-				<p>Перемістіть сюди сцени зі списку «Усі сцени».</p>
-				<button type="button" (click)="activeFolder.set('all')">Показати всі сцени</button>
+				<h2>This folder is empty</h2>
+				<p>Move scenes here from All scenes.</p>
+				<button type="button" (click)="activeFolder.set('all')">Show all scenes</button>
 			</div>
 		} @else if (saved.scenes().length === 0) {
 			<div class="saved-empty saved-empty--compact" role="status">
 				<span class="material-symbols-outlined" aria-hidden="true">video_library</span>
-				<h2>Тут поки порожньо</h2>
-				<p>Зберігайте цікаві сцени з огляду — вони з’являться у вашій добірці.</p>
-				<a routerLink="/">Знайти сцени</a>
+				<h2>Nothing here yet</h2>
+				<p>Save interesting scenes from Explore and they’ll appear in your collection.</p>
+				<a routerLink="/">Explore scenes</a>
 			</div>
 		} @else {
 			<div class="saved-empty saved-empty--compact" role="status">
 				<span class="material-symbols-outlined" aria-hidden="true">folder_off</span>
-				<h2>Усі сцени вже розкладені</h2>
-				<p>Тут з’являться сцени, які ще не додані до папок.</p>
-				<button type="button" (click)="activeFolder.set('all')">Показати всі сцени</button>
+				<h2>All scenes are organized</h2>
+				<p>Scenes that haven’t been added to a folder will appear here.</p>
+				<button type="button" (click)="activeFolder.set('all')">Show all scenes</button>
 			</div>
 		}
 	}

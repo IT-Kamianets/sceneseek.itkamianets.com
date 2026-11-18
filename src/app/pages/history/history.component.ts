@@ -29,7 +29,7 @@ export class HistoryComponent {
 	}
 
 	protected dateLabel(timestamp: number): string {
-		return new Intl.DateTimeFormat('uk-UA', {
+		return new Intl.DateTimeFormat('en-US', {
 			dateStyle: 'medium',
 			timeStyle: 'short',
 		}).format(new Date(timestamp));
@@ -39,14 +39,14 @@ export class HistoryComponent {
 		const labels: string[] = [];
 		const durations: Record<SearchHistoryEntry['durationFilter'], string> = {
 			any: '',
-			'under-15': 'До 15 с',
-			'15-30': '15–30 с',
-			'over-30': 'Понад 30 с',
+			'under-15': 'Under 15 sec',
+			'15-30': '15–30 sec',
+			'over-30': 'Over 30 sec',
 		};
 		const orientations: Record<SearchHistoryEntry['orientationFilter'], string> = {
 			any: '',
-			landscape: 'Горизонтальне',
-			portrait: 'Вертикальне',
+			landscape: 'Landscape',
+			portrait: 'Portrait',
 		};
 		const qualities: Record<SearchHistoryEntry['qualityFilter'], string> = {
 			any: '',
@@ -56,15 +56,15 @@ export class HistoryComponent {
 		};
 		const categories: Record<SearchHistoryEntry['category'], string> = {
 			'for-you': '',
-			atmosphere: 'Атмосфера',
-			cinematic: 'Кінематографічне',
-			nature: 'Природа',
-			city: 'Міські сцени',
+			atmosphere: 'Atmosphere',
+			cinematic: 'Cinematic',
+			nature: 'Nature',
+			city: 'City scenes',
 		};
 		const sortOrders: Record<SearchHistoryEntry['sortOrder'], string> = {
 			relevance: '',
-			shortest: 'Спочатку коротші',
-			longest: 'Спочатку довші',
+			shortest: 'Shortest first',
+			longest: 'Longest first',
 		};
 		const selected = [
 			durations[entry.durationFilter],
@@ -72,8 +72,8 @@ export class HistoryComponent {
 			qualities[entry.qualityFilter],
 			categories[entry.category],
 			sortOrders[entry.sortOrder],
-			entry.hasImage ? 'Фото додавали' : '',
-			entry.inputMethod === 'voice' ? 'Голосом' : '',
+			entry.hasImage ? 'Image added' : '',
+			entry.inputMethod === 'voice' ? 'Voice' : '',
 		];
 		for (const label of selected) {
 			if (label) {
@@ -106,7 +106,7 @@ export class HistoryComponent {
 	}
 
 	protected async clear() {
-		if (!globalThis.confirm('Очистити всю історію пошуку? Цю дію не можна скасувати.')) {
+		if (!globalThis.confirm('Clear your entire search history? This can’t be undone.')) {
 			return;
 		}
 		try {
@@ -158,7 +158,7 @@ export class HistoryComponent {
 	}
 
 	protected async clearViewed() {
-		if (!globalThis.confirm('Очистити список переглянутих сцен? Цю дію не можна скасувати.')) {
+		if (!globalThis.confirm('Clear your viewed scenes? This can’t be undone.')) {
 			return;
 		}
 		try {

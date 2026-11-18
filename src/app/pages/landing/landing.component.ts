@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { LanguageService } from '@wawjs/ngx-translate';
 import { AuthPromptService } from '../../feature/auth-prompt/auth-prompt.service';
 import { FirebaseAuthService } from '../../feature/firebase-auth/firebase-auth.service';
 import {
@@ -78,12 +79,7 @@ function getSpeechRecognitionConstructor(): SpeechRecognitionConstructor | undef
 }
 
 function searchStem(value: string): string {
-	return value
-		.toLocaleLowerCase('uk')
-		.replace(
-			/(ями|ами|ого|ому|ими|ій|ий|ою|ею|ах|ях|ів|їв|ам|ям|ом|ем|ку|ок|а|я|у|ю|і|и)$/u,
-			'',
-		);
+	return value.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLocaleLowerCase('en');
 }
 
 function matchesSearchWord(word: string, term: string): boolean {
@@ -91,34 +87,27 @@ function matchesSearchWord(word: string, term: string): boolean {
 }
 
 function sceneCountLabel(count: number): string {
-	const lastDigit = count % 10;
-	const lastTwoDigits = count % 100;
-	const noun =
-		lastDigit === 1 && lastTwoDigits !== 11
-			? 'сцена'
-			: lastDigit >= 2 && lastDigit <= 4 && (lastTwoDigits < 12 || lastTwoDigits > 14)
-				? 'сцени'
-				: 'сцен';
-	return `${count} ${noun}`;
+	return `${count} ${count === 1 ? 'scene' : 'scenes'}`;
 }
 
 const SEARCH_STOP_WORDS = new Set([
-	'над',
-	'після',
-	'перед',
-	'крізь',
-	'для',
-	'або',
-	'але',
-	'який',
-	'яка',
-	'яке',
-	'на',
-	'у',
-	'в',
-	'з',
-	'зі',
-	'до',
+	'over',
+	'after',
+	'before',
+	'through',
+	'for',
+	'or',
+	'but',
+	'which',
+	'the',
+	'a',
+	'an',
+	'on',
+	'in',
+	'at',
+	'with',
+	'from',
+	'to',
 ]);
 
 interface HomeCategory {
@@ -161,78 +150,78 @@ const RECOMMENDATION_TAGS: Record<RecommendationTag, string[]> = {
 };
 
 const HOME_CATEGORIES: HomeCategory[] = [
-	{ id: 'for-you', label: 'Для вас' },
-	{ id: 'atmosphere', label: 'Атмосфера' },
-	{ id: 'cinematic', label: 'Кінематографічні' },
-	{ id: 'nature', label: 'Природа' },
-	{ id: 'city', label: 'Міські сцени' },
+	{ id: 'for-you', label: 'For you' },
+	{ id: 'atmosphere', label: 'Atmosphere' },
+	{ id: 'cinematic', label: 'Cinematic' },
+	{ id: 'nature', label: 'Nature' },
+	{ id: 'city', label: 'City scenes' },
 ];
 
 const HOME_RECOMMENDATIONS: Recommendation[] = [
 	{
 		id: 'mountains',
-		title: 'Світанок над гірським озером',
+		title: 'Sunrise over a mountain lake',
 		tags: ['atmosphere', 'cinematic', 'nature'],
 		duration: 18,
 		durationLabel: '00:18',
 		orientation: 'landscape',
 		quality: '4k',
-		searchText: 'світанок світанку гори гірське озеро туман вода природа ранок',
+		searchText: 'sunrise mountain lake fog water nature morning',
 		scene: 'mountains',
 	},
 	{
 		id: 'city',
-		title: 'Міські вулиці після дощу',
+		title: 'City streets after rain',
 		tags: ['atmosphere', 'cinematic', 'city'],
 		duration: 12,
 		durationLabel: '00:12',
 		orientation: 'portrait',
 		quality: '1080p',
-		searchText: 'місто вулиця дощ вечір неон транспорт урбаністика',
+		searchText: 'city street rain evening neon traffic urban',
 		scene: 'city',
 	},
 	{
 		id: 'coast',
-		title: 'Хвилі на тихому узбережжі',
+		title: 'Waves on a quiet coast',
 		tags: ['atmosphere', 'nature'],
 		duration: 24,
 		durationLabel: '00:24',
 		orientation: 'landscape',
 		quality: '1080p',
-		searchText: 'хвилі море узбережжя берег вода природа спокій',
+		searchText: 'waves sea coast shore water nature calm',
 		scene: 'coast',
 	},
 	{
 		id: 'forest',
-		title: 'Сонячне проміння крізь ліс',
+		title: 'Sunlight streaming through a forest',
 		tags: ['atmosphere', 'cinematic', 'nature'],
 		duration: 36,
 		durationLabel: '00:36',
 		orientation: 'landscape',
 		quality: '4k',
-		searchText: 'сонячне проміння ліс дерева туман природа світло',
+		searchText: 'sunlight forest trees fog nature light',
 		scene: 'forest',
 	},
 	{
 		id: 'night',
-		title: 'Неоновий ритм нічного міста',
+		title: 'Neon rhythm of the city at night',
 		tags: ['cinematic', 'city'],
 		duration: 31,
 		durationLabel: '00:31',
 		orientation: 'portrait',
 		quality: '720p',
-		searchText: 'неон нічне місто вулиці дощ урбаністика',
+		searchText: 'neon night city streets rain urban',
 		scene: 'night',
 	},
 	{
 		id: 'desert',
-		title: 'Золоті дюни перед заходом сонця',
+		title: 'Golden dunes before sunset',
 		tags: ['cinematic', 'nature'],
 		duration: 9,
 		durationLabel: '00:09',
 		orientation: 'landscape',
 		quality: '720p',
-		searchText: 'золоті дюни пустеля пісок захід сонця природа',
+		searchText: 'golden dunes desert sand sunset nature',
 		scene: 'desert',
 	},
 ];
@@ -245,6 +234,7 @@ const HOME_RECOMMENDATIONS: Recommendation[] = [
 })
 export class LandingComponent {
 	private readonly _route = inject(ActivatedRoute);
+	private readonly _language = inject(LanguageService);
 	private readonly _platformId = inject(PLATFORM_ID);
 	protected readonly pageMode = this._route.snapshot.data['pageMode'] as 'explore' | 'search';
 	protected readonly categories = HOME_CATEGORIES;
@@ -334,7 +324,7 @@ export class LandingComponent {
 		const category = this.activeCategory();
 		const terms = this.submittedQuery()
 			.split(/[^\p{L}\p{N}]+/u)
-			.map((term) => term.toLocaleLowerCase('uk'))
+			.map((term) => term.toLocaleLowerCase('en'))
 			.filter((term) => term.length > 1 && !SEARCH_STOP_WORDS.has(term))
 			.map(searchStem);
 		const durationFilter = this.durationFilter();
@@ -424,14 +414,14 @@ export class LandingComponent {
 
 		if (!query && !this.selectedPhotoName()) {
 			this.searchError.set(true);
-			this.searchMessage.set('Введіть опис сцени або додайте фото.');
+			this.searchMessage.set('Enter a scene description or add an image.');
 			return;
 		}
 
 		if (!query && this.selectedPhotoName()) {
 			this.submittedQuery.set('');
 			this.searchError.set(false);
-			this.searchMessage.set('Пошук за зображенням буде доступний пізніше.');
+			this.searchMessage.set('Image search will be available soon.');
 			return;
 		}
 
@@ -441,7 +431,7 @@ export class LandingComponent {
 		this.searchError.set(false);
 		this.searchMessage.set(
 			this.selectedPhotoName()
-				? 'Пошук виконується за текстом; фото поки не впливає на результати.'
+				? 'Your search uses text only; the image does not affect results yet.'
 				: '',
 		);
 		this._recordSearch('text');
@@ -509,12 +499,12 @@ export class LandingComponent {
 		const SpeechRecognition = getSpeechRecognitionConstructor();
 		if (!SpeechRecognition) {
 			this.searchError.set(true);
-			this.searchMessage.set('Голосовий пошук недоступний у цьому браузері.');
+			this.searchMessage.set('Voice search is unavailable in this browser.');
 			return;
 		}
 
 		const recognition = new SpeechRecognition();
-		recognition.lang = 'uk-UA';
+		recognition.lang = this._language.language() === 'ua' ? 'uk-UA' : 'en-US';
 		recognition.interimResults = false;
 		recognition.maxAlternatives = 1;
 		recognition.onresult = (event) => {
@@ -540,14 +530,14 @@ export class LandingComponent {
 			this.searchError.set(true);
 			this.searchMessage.set(
 				event.error === 'not-allowed'
-					? 'Дозвольте доступ до мікрофона, щоб скористатися голосовим пошуком.'
-					: 'Не вдалося розпізнати запит. Спробуйте ще раз.',
+					? 'Allow microphone access to use voice search.'
+					: 'Could not recognize your search. Please try again.',
 			);
 		};
 		recognition.onend = () => {
 			this.isListening.set(false);
-			if (this.searchMessage() === 'Слухаю запит українською…') {
-				this.searchMessage.set('Запис зупинено без розпізнаного запиту.');
+			if (this.searchMessage() === 'Listening to your search…') {
+				this.searchMessage.set('Recording stopped without a recognized search.');
 			}
 			if (this._recognition === recognition) {
 				this._recognition = null;
@@ -557,14 +547,14 @@ export class LandingComponent {
 		this._recognition = recognition;
 		this.isListening.set(true);
 		this.searchError.set(false);
-		this.searchMessage.set('Слухаю запит українською…');
+		this.searchMessage.set('Listening to your search…');
 		try {
 			recognition.start();
 		} catch {
 			this.isListening.set(false);
 			this._recognition = null;
 			this.searchError.set(true);
-			this.searchMessage.set('Не вдалося запустити мікрофон. Спробуйте ще раз.');
+			this.searchMessage.set('Could not start the microphone. Please try again.');
 		}
 	}
 
@@ -594,13 +584,13 @@ export class LandingComponent {
 
 		if (coverrResult.status === 'rejected' && commonsResult.status === 'fulfilled') {
 			this.providerNotice.set(
-				'Coverr тимчасово недоступний. Показано відео з Wikimedia Commons.',
+				'Coverr is temporarily unavailable. Showing videos from Wikimedia Commons.',
 			);
 		} else if (commonsResult.status === 'rejected' && coverrResult.status === 'fulfilled') {
-			this.providerNotice.set('Wikimedia Commons тимчасово недоступний. Показано результати Coverr.');
+			this.providerNotice.set('Wikimedia Commons is temporarily unavailable. Showing Coverr results.');
 		} else if (coverrResult.status === 'rejected' && commonsResult.status === 'rejected') {
 			this.commonsError.set(
-				'Не вдалося отримати відео. Перевірте з’єднання та локальний API-ключ Coverr, а потім спробуйте ще раз.',
+				'Could not load videos. Check your connection and local Coverr API key, then try again.',
 			);
 		}
 		this.commonsLoading.set(false);
@@ -627,11 +617,11 @@ export class LandingComponent {
 				this._coverrRecommendations.set(videos.map((video) => this._toCoverrRecommendation(video)));
 			} else {
 				this._coverrRecommendations.set([]);
-				this.providerNotice.set('Не вдалося завантажити добірку Coverr. Показані приклади сцен.');
+				this.providerNotice.set('Could not load recommendations from Coverr. Showing sample scenes instead.');
 			}
 		} catch {
 			this._coverrRecommendations.set([]);
-			this.providerNotice.set('Coverr недоступний. Показані приклади сцен.');
+			this.providerNotice.set('Coverr is unavailable. Showing sample scenes instead.');
 		} finally {
 			this.recommendationsLoading.set(false);
 		}
@@ -712,13 +702,13 @@ export class LandingComponent {
 
 		if (!file.type.startsWith('image/')) {
 			this.searchError.set(true);
-			this.searchMessage.set('Оберіть файл зображення.');
+			this.searchMessage.set('Choose an image file.');
 			return;
 		}
 
 		if (file.size > 10 * 1024 * 1024) {
 			this.searchError.set(true);
-			this.searchMessage.set('Зображення має бути менше 10 МБ.');
+			this.searchMessage.set('Image must be smaller than 10 MB.');
 			input.value = '';
 			return;
 		}

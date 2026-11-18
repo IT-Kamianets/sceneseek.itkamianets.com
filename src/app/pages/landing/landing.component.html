@@ -10,47 +10,47 @@
 				<div class="hero-object hero-object--clapper" aria-hidden="true"><span class="clapper-top"></span><span class="clapper-body"><i>SS</i></span></div>
 				<div class="hero-object hero-object--frame" aria-hidden="true"><span class="material-symbols-outlined">movie</span></div>
 				<div class="hero-brand">
-					<p class="hero-brand__eyebrow">ВІДКРИВАЙТЕ НОВІ СЦЕНИ</p>
+					<p class="hero-brand__eyebrow">DISCOVER NEW SCENES</p>
 					<h1 id="hero-title">SceneSeek</h1>
 					<p class="hero-brand__tagline">FIND <i>·</i> SEARCH <i>·</i> CREATE</p>
-					<a class="hero-search-cta" routerLink="/search"><span class="material-symbols-outlined" aria-hidden="true">search</span>Знайти сцену</a>
+					<a class="hero-search-cta" routerLink="/search"><span class="material-symbols-outlined" aria-hidden="true">search</span>Find a scene</a>
 				</div>
-				<a class="hero-scroll-cue" href="#explore-recommendations"><span>Прокрутіть, щоб відкрити добірки</span><span class="material-symbols-outlined" aria-hidden="true">south</span></a>
+				<a class="hero-scroll-cue" href="#explore-recommendations"><span>Scroll to explore collections</span><span class="material-symbols-outlined" aria-hidden="true">south</span></a>
 			</div>
 		</section>
 		}
 
 		@if (pageMode === 'search') {
-		<section class="home-search-track" aria-label="Пошук відеосцен">
+		<section class="home-search-track" aria-label="Search video scenes">
 			<div class="home-search-stage">
 		<header class="home-header">
-			<p class="home-eyebrow"><span class="status-dot" aria-hidden="true"></span> Візуальний пошук</p>
-			<h1 id="home-title">Знайдіть потрібну сцену</h1>
-			<p class="home-header__description">Опишіть сцену, скажіть голосом або додайте фото — знайдіть кадр для своєї історії.</p>
+			<p class="home-eyebrow"><span class="status-dot" aria-hidden="true"></span> VISUAL SEARCH</p>
+			<h1 id="home-title">Find the scene you need</h1>
+			<p class="home-header__description">Describe a scene, speak your search, or add an image to find the right shot for your story.</p>
 		</header>
 
 		<form id="home-search" class="home-search" (submit)="onSearchSubmit($event)">
 			<div class="home-search__row">
 				<div class="home-search__field">
-					<button class="home-photo-action" type="button" aria-label="Додати фото до пошуку" title="Додати фото до пошуку" aria-controls="home-photo-input" (click)="photoInput.click()"><span class="material-symbols-outlined" aria-hidden="true">add_photo_alternate</span></button>
-					<label class="visually-hidden" for="home-query">Опис сцени</label>
-					<input id="home-query" type="search" [value]="query()" (input)="onQueryChange($event)" placeholder="Наприклад: туман над озером на світанку" />
-					<button class="home-voice-action" type="button" [class.is-listening]="isListening()" [disabled]="!voiceSupported()" [attr.aria-pressed]="isListening()" [attr.aria-label]="isListening() ? 'Зупинити голосовий пошук' : 'Шукати голосом'" [attr.title]="voiceSupported() ? 'Голосовий пошук українською' : 'Голосовий пошук недоступний у цьому браузері'" (click)="onVoiceSearch()"><span class="material-symbols-outlined" aria-hidden="true">{{ isListening() ? 'graphic_eq' : 'mic' }}</span><span>{{ isListening() ? 'Слухаю' : 'Голосом' }}</span></button>
+					<button class="home-photo-action" type="button" aria-label="Add an image to your search" title="Add an image to your search" aria-controls="home-photo-input" (click)="photoInput.click()"><span class="material-symbols-outlined" aria-hidden="true">add_photo_alternate</span></button>
+					<label class="visually-hidden" for="home-query">Describe a scene</label>
+					<input id="home-query" type="search" [value]="query()" (input)="onQueryChange($event)" placeholder="e.g. fog over a lake at sunrise" />
+					<button class="home-voice-action" type="button" [class.is-listening]="isListening()" [disabled]="!voiceSupported()" [attr.aria-pressed]="isListening()" [attr.aria-label]="isListening() ? 'Stop voice search' : 'Search by voice'" [attr.title]="voiceSupported() ? 'Voice search in English' : 'Voice search is unavailable in this browser'" (click)="onVoiceSearch()"><span class="material-symbols-outlined" aria-hidden="true">{{ isListening() ? 'graphic_eq' : 'mic' }}</span><span>{{ isListening() ? 'Listening' : 'Voice' }}</span></button>
 					<input #photoInput id="home-photo-input" class="visually-hidden" tabindex="-1" type="file" accept="image/*" (change)="onPhotoSelected($event)" />
 				</div>
-				<button class="home-primary-action" type="submit"><span class="material-symbols-outlined" aria-hidden="true">search</span>Знайти відео</button>
+				<button class="home-primary-action" type="submit"><span class="material-symbols-outlined" aria-hidden="true">search</span>Find videos</button>
 			</div>
 
 			@if (selectedPhotoName(); as photoName) {
-				<div class="home-photo-preview" aria-live="polite"><span class="material-symbols-outlined" aria-hidden="true">image</span><span class="home-photo-preview__name">{{ photoName }}</span><button class="home-icon-action" type="button" aria-label="Прибрати додане фото" (click)="removePhoto(photoInput)"><span class="material-symbols-outlined" aria-hidden="true">close</span></button></div>
+				<div class="home-photo-preview" aria-live="polite"><span class="material-symbols-outlined" aria-hidden="true">image</span><span class="home-photo-preview__name">{{ photoName }}</span><button class="home-icon-action" type="button" aria-label="Remove selected image" (click)="removePhoto(photoInput)"><span class="material-symbols-outlined" aria-hidden="true">close</span></button></div>
 			}
 			@if (searchMessage()) { <p class="home-search__message" [class.home-search__message--error]="searchError()" role="alert">{{ searchMessage() }}</p> }
 
-			<div class="home-toolbar" aria-label="Фільтри та сортування">
-				<label class="home-filter"><span class="material-symbols-outlined" aria-hidden="true">schedule</span><span class="visually-hidden">Тривалість</span><select aria-label="Тривалість відео" [value]="durationFilter()" (change)="setDurationFilter($event)"><option value="any">Тривалість</option><option value="under-15">До 15 секунд</option><option value="15-30">15–30 секунд</option><option value="over-30">Понад 30 секунд</option></select></label>
-				<label class="home-filter"><span class="material-symbols-outlined" aria-hidden="true">crop</span><span class="visually-hidden">Орієнтація</span><select aria-label="Орієнтація відео" [value]="orientationFilter()" (change)="setOrientationFilter($event)"><option value="any">Орієнтація</option><option value="landscape">Горизонтальне</option><option value="portrait">Вертикальне</option></select></label>
-				<label class="home-filter"><span class="material-symbols-outlined" aria-hidden="true">high_quality</span><span class="visually-hidden">Якість відео</span><select aria-label="Мінімальна якість відео" [value]="qualityFilter()" (change)="setQualityFilter($event)"><option value="any">Якість</option><option value="720p">HD · 720p+</option><option value="1080p">Full HD · 1080p+</option><option value="4k">4K</option></select></label>
-				<label class="home-filter home-filter--sort"><span class="material-symbols-outlined" aria-hidden="true">sort</span><span class="visually-hidden">Сортування</span><select aria-label="Сортування результатів" [value]="sortOrder()" (change)="setSortOrder($event)"><option value="relevance">Релевантність</option><option value="shortest">Коротші спочатку</option><option value="longest">Довші спочатку</option></select></label>
+			<div class="home-toolbar" aria-label="Filters and sorting">
+				<label class="home-filter"><span class="material-symbols-outlined" aria-hidden="true">schedule</span><span class="visually-hidden">Duration</span><select aria-label="Video duration" [value]="durationFilter()" (change)="setDurationFilter($event)"><option value="any">Duration</option><option value="under-15">Under 15 seconds</option><option value="15-30">15–30 seconds</option><option value="over-30">Over 30 seconds</option></select></label>
+				<label class="home-filter"><span class="material-symbols-outlined" aria-hidden="true">crop</span><span class="visually-hidden">Orientation</span><select aria-label="Video orientation" [value]="orientationFilter()" (change)="setOrientationFilter($event)"><option value="any">Orientation</option><option value="landscape">Landscape</option><option value="portrait">Portrait</option></select></label>
+				<label class="home-filter"><span class="material-symbols-outlined" aria-hidden="true">high_quality</span><span class="visually-hidden">Video quality</span><select aria-label="Minimum video quality" [value]="qualityFilter()" (change)="setQualityFilter($event)"><option value="any">Quality</option><option value="720p">HD · 720p+</option><option value="1080p">Full HD · 1080p+</option><option value="4k">4K</option></select></label>
+				<label class="home-filter home-filter--sort"><span class="material-symbols-outlined" aria-hidden="true">sort</span><span class="visually-hidden">Sorting</span><select aria-label="Sort results" [value]="sortOrder()" (change)="setSortOrder($event)"><option value="relevance">Relevance</option><option value="shortest">Shortest first</option><option value="longest">Longest first</option></select></label>
 			</div>
 		</form>
 			</div>
@@ -60,12 +60,12 @@
 		@if (pageMode === 'explore' || submittedQuery()) {
 		<section id="explore-recommendations" class="home-recommendations home-results-stage" aria-labelledby="recommendations-title">
 			<div class="home-section-heading">
-				<div>@if (pageMode === 'search') { <p class="home-section-heading__eyebrow">ПОШУК СЦЕН</p> }<h2 id="recommendations-title">{{ pageMode === 'explore' ? 'Щоденні рекомендації' : 'Результати пошуку' }}</h2>@if (pageMode === 'search') { <p class="home-section-heading__description">Сцени, що відповідають вашому опису й фільтрам.</p> }</div>
-				<div class="home-results-count" aria-live="polite"><span class="material-symbols-outlined" aria-hidden="true">movie</span>@if ((pageMode === 'search' && commonsLoading()) || (pageMode === 'explore' && recommendationsLoading())) { Завантажуємо… } @else { {{ recommendationCountLabel() }} }</div>
+				<div>@if (pageMode === 'search') { <p class="home-section-heading__eyebrow">SCENE SEARCH</p> }<h2 id="recommendations-title">{{ pageMode === 'explore' ? 'Daily recommendations' : 'Search results' }}</h2>@if (pageMode === 'search') { <p class="home-section-heading__description">Scenes matching your description and filters.</p> }</div>
+				<div class="home-results-count" aria-live="polite"><span class="material-symbols-outlined" aria-hidden="true">movie</span>@if ((pageMode === 'search' && commonsLoading()) || (pageMode === 'explore' && recommendationsLoading())) { Loading… } @else { {{ recommendationCountLabel() }} }</div>
 			</div>
 
 			@if (pageMode === 'explore') {
-			<div class="home-categories" role="group" aria-label="Категорії рекомендацій">
+			<div class="home-categories" role="group" aria-label="Recommendation categories">
 				@for (category of categories; track category.id) { <button class="home-category" type="button" [class.is-active]="activeCategory() === category.id" [attr.aria-pressed]="activeCategory() === category.id" (click)="setCategory(category.id)">{{ category.label }}</button> }
 			</div>
 			}
@@ -73,52 +73,52 @@
 			@if (providerNotice()) { <p class="home-search__message" role="status">{{ providerNotice() }}</p> }
 
 			@if ((pageMode === 'search' && commonsLoading()) || (pageMode === 'explore' && recommendationsLoading())) {
-				<div class="home-empty-state" role="status"><span class="material-symbols-outlined" aria-hidden="true">progress_activity</span><p>{{ pageMode === 'search' ? 'Шукаємо відео в Coverr та Wikimedia Commons…' : 'Завантажуємо популярні відео Coverr…' }}</p></div>
+				<div class="home-empty-state" role="status"><span class="material-symbols-outlined" aria-hidden="true">progress_activity</span><p>{{ pageMode === 'search' ? 'Searching Coverr and Wikimedia Commons…' : 'Loading popular videos from Coverr…' }}</p></div>
 			} @else if (pageMode === 'search' && commonsError()) {
-				<div class="home-empty-state" role="alert"><span class="material-symbols-outlined" aria-hidden="true">cloud_off</span><p>{{ commonsError() }}</p><button class="home-reset-action" type="button" (click)="retryCommonsSearch()">Спробувати ще раз</button></div>
+				<div class="home-empty-state" role="alert"><span class="material-symbols-outlined" aria-hidden="true">cloud_off</span><p>{{ commonsError() }}</p><button class="home-reset-action" type="button" (click)="retryCommonsSearch()">Try again</button></div>
 			} @else if (recommendations().length) {
 				<div class="home-video-grid" aria-live="polite">
 					@for (item of visibleRecommendations(); track item.id) {
-						<article class="home-video" tabindex="0" [attr.aria-label]="'Відкрити відео: ' + item.title" (click)="openPreview(item)" (keydown)="onRecommendationKeydown($event, item)">
-							<div class="home-video__poster" [class.home-video__poster--mountains]="item.scene === 'mountains'" [class.home-video__poster--city]="item.scene === 'city'" [class.home-video__poster--coast]="item.scene === 'coast'" [class.home-video__poster--forest]="item.scene === 'forest'" [class.home-video__poster--night]="item.scene === 'night'" [class.home-video__poster--desert]="item.scene === 'desert'">@if (item.thumbnailUrl) { <img class="home-video__thumbnail" [src]="item.thumbnailUrl" [alt]="'Кадр відео: ' + item.title" loading="lazy" /> } @else { <span class="home-video__scene-sun" aria-hidden="true"></span><span class="home-video__scene-ridge" aria-hidden="true"></span><span class="home-video__scene-front" aria-hidden="true"></span> }<span class="home-video__duration">{{ item.durationLabel }}</span><button class="home-video__preview" type="button" [attr.aria-label]="(item.videoUrl ? 'Переглянути відео: ' : 'Відкрити кадр: ') + item.title"><span class="material-symbols-outlined" aria-hidden="true">play_arrow</span><span>{{ item.videoUrl ? 'Переглянути відео' : 'Переглянути кадр' }}</span></button></div>
-							<div class="home-video__body"><h3>{{ item.title }}</h3>@if (item.provider) { <p class="home-video__source">Відео від <a [href]="item.providerUrl || item.sourcePageUrl || 'https://coverr.co'" target="_blank" rel="noopener noreferrer" (click)="$event.stopPropagation()">{{ item.provider }}</a>@if (item.authorUrl) { · автор <a [href]="item.authorUrl" target="_blank" rel="noopener noreferrer" (click)="$event.stopPropagation()">{{ item.authorName }}</a> } @else if (item.authorName) { · автор {{ item.authorName }} }</p> } @else { <span class="home-video__source home-video__source--empty" aria-hidden="true"></span> }<div class="home-video__meta"><span>{{ item.orientation === 'landscape' ? 'Горизонтальне' : 'Вертикальне' }} · {{ item.quality === '4k' ? '4K' : item.quality }}</span><button class="home-save" type="button" [disabled]="savedScenes.busyIds().includes(item.id)" [attr.aria-pressed]="savedScenes.isSaved(item.id)" (click)="$event.stopPropagation(); toggleSavedScene(item)"><span class="material-symbols-outlined" aria-hidden="true">{{ savedScenes.isSaved(item.id) ? 'bookmark_added' : 'bookmark' }}</span>{{ savedScenes.isSaved(item.id) ? 'Збережено' : 'Зберегти' }}</button></div></div>
+						<article class="home-video" tabindex="0" [attr.aria-label]="'Open video: ' + item.title" (click)="openPreview(item)" (keydown)="onRecommendationKeydown($event, item)">
+							<div class="home-video__poster" [class.home-video__poster--mountains]="item.scene === 'mountains'" [class.home-video__poster--city]="item.scene === 'city'" [class.home-video__poster--coast]="item.scene === 'coast'" [class.home-video__poster--forest]="item.scene === 'forest'" [class.home-video__poster--night]="item.scene === 'night'" [class.home-video__poster--desert]="item.scene === 'desert'">@if (item.thumbnailUrl) { <img class="home-video__thumbnail" [src]="item.thumbnailUrl" [alt]="'Video frame: ' + item.title" loading="lazy" /> } @else { <span class="home-video__scene-sun" aria-hidden="true"></span><span class="home-video__scene-ridge" aria-hidden="true"></span><span class="home-video__scene-front" aria-hidden="true"></span> }<span class="home-video__duration">{{ item.durationLabel }}</span><button class="home-video__preview" type="button" [attr.aria-label]="(item.videoUrl ? 'Play video: ' : 'Open frame: ') + item.title"><span class="material-symbols-outlined" aria-hidden="true">play_arrow</span><span>{{ item.videoUrl ? 'Play video' : 'View frame' }}</span></button></div>
+							<div class="home-video__body"><h3>{{ item.title }}</h3>@if (item.provider) { <p class="home-video__source">Video by <a [href]="item.providerUrl || item.sourcePageUrl || 'https://coverr.co'" target="_blank" rel="noopener noreferrer" (click)="$event.stopPropagation()">{{ item.provider }}</a>@if (item.authorUrl) { · creator <a [href]="item.authorUrl" target="_blank" rel="noopener noreferrer" (click)="$event.stopPropagation()">{{ item.authorName }}</a> } @else if (item.authorName) { · creator {{ item.authorName }} }</p> } @else { <span class="home-video__source home-video__source--empty" aria-hidden="true"></span> }<div class="home-video__meta"><span>{{ item.orientation === 'landscape' ? 'Landscape' : 'Portrait' }} · {{ item.quality === '4k' ? '4K' : item.quality }}</span><button class="home-save" type="button" [disabled]="savedScenes.busyIds().includes(item.id)" [attr.aria-pressed]="savedScenes.isSaved(item.id)" (click)="$event.stopPropagation(); toggleSavedScene(item)"><span class="material-symbols-outlined" aria-hidden="true">{{ savedScenes.isSaved(item.id) ? 'bookmark_added' : 'bookmark' }}</span>{{ savedScenes.isSaved(item.id) ? 'Saved' : 'Save' }}</button></div></div>
 						</article>
 					}
 				</div>
 				@if (pageCount() > 1) {
-					<nav class="home-pagination" aria-label="Сторінки результатів">
-						<button class="home-pagination__step" type="button" aria-label="Попередня сторінка" [disabled]="currentPage() === 1" (click)="goToPage(currentPage() - 1)"><span class="material-symbols-outlined" aria-hidden="true">chevron_left</span><span>Назад</span></button>
-						<div class="home-pagination__pages" role="group" aria-label="Номер сторінки">
+					<nav class="home-pagination" aria-label="Result pages">
+						<button class="home-pagination__step" type="button" aria-label="Previous page" [disabled]="currentPage() === 1" (click)="goToPage(currentPage() - 1)"><span class="material-symbols-outlined" aria-hidden="true">chevron_left</span><span>Previous</span></button>
+						<div class="home-pagination__pages" role="group" aria-label="Page number">
 							@for (page of pageNumbers(); track page) {
-								<button class="home-pagination__page" type="button" [class.is-active]="currentPage() === page" [attr.aria-current]="currentPage() === page ? 'page' : null" [attr.aria-label]="'Сторінка ' + page" (click)="goToPage(page)">{{ page }}</button>
+								<button class="home-pagination__page" type="button" [class.is-active]="currentPage() === page" [attr.aria-current]="currentPage() === page ? 'page' : null" [attr.aria-label]="'Page ' + page" (click)="goToPage(page)">{{ page }}</button>
 							}
 						</div>
-						<button class="home-pagination__step" type="button" aria-label="Наступна сторінка" [disabled]="currentPage() === pageCount()" (click)="goToPage(currentPage() + 1)"><span>Далі</span><span class="material-symbols-outlined" aria-hidden="true">chevron_right</span></button>
+						<button class="home-pagination__step" type="button" aria-label="Next page" [disabled]="currentPage() === pageCount()" (click)="goToPage(currentPage() + 1)"><span>Next</span><span class="material-symbols-outlined" aria-hidden="true">chevron_right</span></button>
 					</nav>
 				}
 			} @else {
-				<div class="home-empty-state" role="status"><span class="material-symbols-outlined" aria-hidden="true">filter_alt_off</span><p>{{ pageMode === 'search' ? 'За цим описом і вибраними фільтрами сцен не знайдено.' : 'За вибраними категоріями й фільтрами сцен не знайдено.' }}</p>@if (pageMode === 'search') { <button class="home-reset-action" type="button" (click)="resetSearch()">Очистити пошук і фільтри</button> }</div>
+				<div class="home-empty-state" role="status"><span class="material-symbols-outlined" aria-hidden="true">filter_alt_off</span><p>{{ pageMode === 'search' ? 'No scenes match this description and the selected filters.' : 'No scenes match the selected categories and filters.' }}</p>@if (pageMode === 'search') { <button class="home-reset-action" type="button" (click)="resetSearch()">Clear search and filters</button> }</div>
 			}
 		</section>
 		}
 
 		<dialog #previewDialog class="home-preview-dialog" aria-labelledby="preview-title" (click)="onPreviewDialogClick($event)" (close)="onPreviewDialogClose()">
 			@if (previewScene(); as item) {
-				<button class="home-icon-action home-preview-dialog__close" type="button" aria-label="Закрити перегляд" (click)="closePreview()"><span class="material-symbols-outlined" aria-hidden="true">close</span></button>
+				<button class="home-icon-action home-preview-dialog__close" type="button" aria-label="Close preview" (click)="closePreview()"><span class="material-symbols-outlined" aria-hidden="true">close</span></button>
 				<div class="home-preview-dialog__layout">
-					<section class="home-preview-dialog__visual" aria-label="Відео сцени">
+					<section class="home-preview-dialog__visual" aria-label="Scene video">
 						@if (item.videoUrl) {
-							<video class="home-preview-dialog__video" controls playsinline preload="metadata" [src]="selectedVideoUrl(item)" [poster]="item.thumbnailUrl || ''" [attr.aria-label]="'Відео: ' + item.title">Ваш браузер не підтримує відтворення цього відео.</video>
+							<video class="home-preview-dialog__video" controls playsinline preload="metadata" [src]="selectedVideoUrl(item)" [poster]="item.thumbnailUrl || ''" [attr.aria-label]="'Video: ' + item.title">Your browser does not support video playback.</video>
 						} @else {
-							<div class="home-video__poster home-preview-dialog__frame" [class.home-video__poster--mountains]="item.scene === 'mountains'" [class.home-video__poster--city]="item.scene === 'city'" [class.home-video__poster--coast]="item.scene === 'coast'" [class.home-video__poster--forest]="item.scene === 'forest'" [class.home-video__poster--night]="item.scene === 'night'" [class.home-video__poster--desert]="item.scene === 'desert'"><span class="home-video__scene-sun" aria-hidden="true"></span><span class="home-video__scene-ridge" aria-hidden="true"></span><span class="home-video__scene-front" aria-hidden="true"></span><span class="home-preview-dialog__frame-label"><span class="material-symbols-outlined" aria-hidden="true">image</span>Кадр сцени</span></div>
+							<div class="home-video__poster home-preview-dialog__frame" [class.home-video__poster--mountains]="item.scene === 'mountains'" [class.home-video__poster--city]="item.scene === 'city'" [class.home-video__poster--coast]="item.scene === 'coast'" [class.home-video__poster--forest]="item.scene === 'forest'" [class.home-video__poster--night]="item.scene === 'night'" [class.home-video__poster--desert]="item.scene === 'desert'"><span class="home-video__scene-sun" aria-hidden="true"></span><span class="home-video__scene-ridge" aria-hidden="true"></span><span class="home-video__scene-front" aria-hidden="true"></span><span class="home-preview-dialog__frame-label"><span class="material-symbols-outlined" aria-hidden="true">image</span>Scene still</span></div>
 						}
 					</section>
-					<aside class="home-preview-dialog__info" aria-label="Відомості про сцену">
+					<aside class="home-preview-dialog__info" aria-label="Scene details">
 						<h2 id="preview-title">{{ item.title }}</h2>
-						@if (videoVariants(item).length > 1) { <label class="home-preview-dialog__quality"><span>Якість відтворення</span><select [value]="playbackQuality()" (change)="setPlaybackQuality($event)">@for (variant of videoVariants(item); track variant.key) { <option [value]="variant.key">{{ variant.label }}</option> }</select></label> }
-						<dl class="home-preview-dialog__metadata"><div><dt>Тривалість</dt><dd>{{ item.durationLabel }}</dd></div><div><dt>Якість</dt><dd>{{ item.quality === '4k' ? '4K' : item.quality }}</dd></div><div><dt>Орієнтація</dt><dd>{{ item.orientation === 'landscape' ? 'Горизонтальна' : 'Вертикальна' }}</dd></div></dl>
-						@if (item.sourcePageUrl) { <p class="home-preview-dialog__attribution">Джерело: <a [href]="item.providerUrl || item.sourcePageUrl" target="_blank" rel="noopener noreferrer">{{ item.provider }}</a><br />Автор: @if (item.authorUrl) { <a [href]="item.authorUrl" target="_blank" rel="noopener noreferrer">{{ item.authorName }}</a> } @else { {{ item.authorName }} }<br />Ліцензія: <a [href]="item.licenseUrl || item.sourcePageUrl" target="_blank" rel="noopener noreferrer">{{ item.licenseName }}</a></p><a class="home-preview-dialog__source-link" [href]="item.sourcePageUrl" target="_blank" rel="noopener noreferrer">Переглянути сторінку файлу <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span></a> }
-						<button class="home-preview-dialog__save" type="button" [disabled]="savedScenes.busyIds().includes(item.id)" [attr.aria-pressed]="savedScenes.isSaved(item.id)" (click)="toggleSavedScene(item)"><span class="material-symbols-outlined" aria-hidden="true">{{ savedScenes.isSaved(item.id) ? 'bookmark_added' : 'bookmark_add' }}</span>{{ savedScenes.isSaved(item.id) ? 'Прибрати зі збереженого' : 'Зберегти у папки' }}</button>
+						@if (videoVariants(item).length > 1) { <label class="home-preview-dialog__quality"><span>Playback quality</span><select [value]="playbackQuality()" (change)="setPlaybackQuality($event)">@for (variant of videoVariants(item); track variant.key) { <option [value]="variant.key">{{ variant.label }}</option> }</select></label> }
+						<dl class="home-preview-dialog__metadata"><div><dt>Duration</dt><dd>{{ item.durationLabel }}</dd></div><div><dt>Quality</dt><dd>{{ item.quality === '4k' ? '4K' : item.quality }}</dd></div><div><dt>Orientation</dt><dd>{{ item.orientation === 'landscape' ? 'Landscape' : 'Portrait' }}</dd></div></dl>
+						@if (item.sourcePageUrl) { <p class="home-preview-dialog__attribution">Source: <a [href]="item.providerUrl || item.sourcePageUrl" target="_blank" rel="noopener noreferrer">{{ item.provider }}</a><br />Creator: @if (item.authorUrl) { <a [href]="item.authorUrl" target="_blank" rel="noopener noreferrer">{{ item.authorName }}</a> } @else { {{ item.authorName }} }<br />License: <a [href]="item.licenseUrl || item.sourcePageUrl" target="_blank" rel="noopener noreferrer">{{ item.licenseName }}</a></p><a class="home-preview-dialog__source-link" [href]="item.sourcePageUrl" target="_blank" rel="noopener noreferrer">View source page <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span></a> }
+						<button class="home-preview-dialog__save" type="button" [disabled]="savedScenes.busyIds().includes(item.id)" [attr.aria-pressed]="savedScenes.isSaved(item.id)" (click)="toggleSavedScene(item)"><span class="material-symbols-outlined" aria-hidden="true">{{ savedScenes.isSaved(item.id) ? 'bookmark_added' : 'bookmark_add' }}</span>{{ savedScenes.isSaved(item.id) ? 'Remove from saved' : 'Save to a folder' }}</button>
 					</aside>
 				</div>
 			}

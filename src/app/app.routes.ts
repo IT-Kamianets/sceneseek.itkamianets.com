@@ -49,38 +49,38 @@ const authRoute = (
 });
 
 export const routes: Routes = [
-	landingRoute('', 'Огляд', 'explore'),
-	landingRoute('search', 'Пошук', 'search'),
+	landingRoute('', 'Explore', 'explore'),
+	landingRoute('search', 'Search', 'search'),
 	{
-		...sectionRoute('history', 'Історія'),
+		...sectionRoute('history', 'History'),
 		loadComponent: () =>
 			import('./pages/history/history.component').then((module) => module.HistoryComponent),
 	},
 	{
-		...sectionRoute('saved', 'Збережене'),
+		...sectionRoute('saved', 'Saved'),
 		loadComponent: () =>
 			import('./pages/saved/saved.component').then((module) => module.SavedComponent),
 	},
 	{
-		...sectionRoute('profile', 'Профіль'),
+		...sectionRoute('profile', 'Profile'),
 		loadComponent: () =>
 			import('./pages/profile/profile.component').then((module) => module.ProfileComponent),
 	},
 	{
 		path: 'auth',
 		children: [
-			authRoute('login', 'login', 'Вхід', 'Увійдіть до акаунта SceneSeek.'),
+			authRoute('login', 'login', 'Sign in', 'Sign in to your SceneSeek account.'),
 			authRoute(
 				'register',
 				'register',
-				'Створення акаунта',
-				'Створіть акаунт SceneSeek для власних добірок відеосцен.',
+				'Create account',
+				'Create a SceneSeek account to save and organize video scenes.',
 			),
 			authRoute(
 				'forgot-password',
 				'reset',
-				'Відновлення пароля',
-				'Відновіть доступ до свого акаунта SceneSeek.',
+				'Reset password',
+				'Reset access to your SceneSeek account.',
 			),
 		],
 	},

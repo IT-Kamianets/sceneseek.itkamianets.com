@@ -156,13 +156,13 @@ export class WikimediaCommonsService {
 			const artist = cleanMetadata(metadata['Artist']?.value);
 			const credit = cleanMetadata(metadata['Credit']?.value);
 			const authorName =
-				artist || credit || image.user || 'Автор зазначений на сторінці файлу';
+				artist || credit || image.user || 'Author credited on the source page';
 			const description = cleanMetadata(metadata['ImageDescription']?.value);
 			const title =
 				cleanMetadata(page.title.replace(/^File:/u, '').replace(/_/gu, ' ')).replace(
 					/\.[^.]+$/u,
 					'',
-				) || 'Відеосцена Wikimedia Commons';
+				) || 'Wikimedia Commons video clip';
 			const duration = Math.round(
 				info?.size?.duration ?? readDuration(metadata['Length']?.value),
 			);
@@ -190,7 +190,7 @@ export class WikimediaCommonsService {
 					authorName,
 					licenseName:
 						cleanMetadata(metadata['LicenseShortName']?.value) ||
-						'Ліцензія на сторінці джерела',
+						'License listed on the source page',
 					...(cleanMetadata(metadata['LicenseUrl']?.value)
 						? { licenseUrl: cleanMetadata(metadata['LicenseUrl']?.value) }
 						: {}),

@@ -22,7 +22,7 @@ export class ProfileComponent {
 	protected readonly signOutMessage = signal('');
 	protected readonly initials = computed(() => {
 		const label = this.auth.user()?.displayName ?? this.auth.user()?.email ?? 'SceneSeek';
-		return label.split(/[\s@._-]+/u).filter(Boolean).slice(0, 2).map((part) => part[0]?.toLocaleUpperCase('uk')).join('') || 'SS';
+		return label.split(/[\s@._-]+/u).filter(Boolean).slice(0, 2).map((part) => part[0]?.toLocaleUpperCase('en')).join('') || 'SS';
 	});
 
 	protected readonly themeMode = computed<ProfileTheme>(() =>
@@ -30,6 +30,9 @@ export class ProfileComponent {
 	);
 	protected readonly languages = environment.languages;
 	protected readonly currentLanguage = this._languageService.language;
+	protected readonly languageLabel = computed(
+		() => this.languages.find((language) => language.code === this.currentLanguage())?.nativeName ?? 'English',
+	);
 
 	protected setTheme(mode: ProfileTheme) {
 		this._themeService.setMode(mode);
@@ -51,7 +54,7 @@ export class ProfileComponent {
 			await this.auth.signOut();
 			await this._router.navigateByUrl('/');
 		} catch (error) {
-			this.signOutMessage.set(error instanceof Error ? error.message : 'Не вдалося вийти з акаунта.');
+			this.signOutMessage.set(error instanceof Error ? error.message : 'Could not sign out.');
 		}
 	}
 }

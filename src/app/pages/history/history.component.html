@@ -1,9 +1,9 @@
 <section class="history-page" aria-labelledby="history-title">
 	<header class="history-heading">
 		<div>
-			<p class="history-eyebrow">ВАША БІБЛІОТЕКА АКТИВНОСТІ</p>
-			<h1 id="history-title">Історія</h1>
-			<p>Пошукові запити та нещодавно переглянуті сцени.</p>
+			<p class="history-eyebrow">YOUR ACTIVITY LIBRARY</p>
+			<h1 id="history-title">History</h1>
+			<p>Your searches and recently viewed scenes.</p>
 		</div>
 		<div class="history-heading__actions">
 			@if (auth.user() && history.entries().length) {
@@ -14,7 +14,7 @@
 					(click)="clear()"
 				>
 					<span class="material-symbols-outlined" aria-hidden="true">delete_sweep</span>
-					Очистити пошуки
+					Clear searches
 				</button>
 			}
 			@if (auth.user() && history.viewedScenes().length) {
@@ -25,7 +25,7 @@
 					(click)="clearViewed()"
 				>
 					<span class="material-symbols-outlined" aria-hidden="true">remove_done</span>
-					Очистити перегляди
+					Clear viewed
 				</button>
 			}
 		</div>
@@ -34,21 +34,21 @@
 	@if (!auth.user()) {
 		<div class="history-empty" role="status">
 			<span class="material-symbols-outlined" aria-hidden="true">manage_search</span>
-			<h2>Увійдіть, щоб зберігати історію</h2>
-			<p>Ваші запити та переглянуті сцени зберігатимуться у вашому акаунті.</p>
-			<a routerLink="/auth/login" [queryParams]="{ returnUrl: '/history' }">Увійти</a>
+			<h2>Sign in to keep your history</h2>
+			<p>Your searches and viewed scenes will be saved to your account.</p>
+			<a routerLink="/auth/login" [queryParams]="{ returnUrl: '/history' }">Sign in</a>
 		</div>
 	} @else if (history.isLoading()) {
 		<div class="history-empty" role="status">
 			<span class="material-symbols-outlined history-loading" aria-hidden="true"
 				>progress_activity</span
 			>
-			<p>Завантажуємо історію…</p>
+			<p>Loading history…</p>
 		</div>
 	} @else if (history.message() && history.loadedForUid() !== auth.user()?.uid) {
 		<div class="history-empty" role="alert">
 			<span class="material-symbols-outlined" aria-hidden="true">cloud_off</span>
-			<h2>Історія тимчасово недоступна</h2>
+			<h2>History is temporarily unavailable</h2>
 			<p>{{ history.message() }}</p>
 		</div>
 	} @else {
@@ -59,8 +59,8 @@
 		<section class="history-section" aria-labelledby="search-history-title">
 			<header class="history-section__heading">
 				<div>
-					<p class="history-eyebrow">ВАШІ ЗАПИТИ</p>
-					<h2 id="search-history-title">Пошукові запити</h2>
+					<p class="history-eyebrow">YOUR SEARCHES</p>
+					<h2 id="search-history-title">Searches</h2>
 				</div>
 				<span class="history-section__count">{{ history.entries().length }}</span>
 			</header>
@@ -79,7 +79,7 @@
 								@if (filterLabels(entry).length) {
 									<div
 										class="history-entry__filters"
-										aria-label="Застосовані фільтри"
+										aria-label="Applied filters"
 									>
 										@for (label of filterLabels(entry); track label) {
 											<span>{{ label }}</span>
@@ -96,13 +96,13 @@
 									<span class="material-symbols-outlined" aria-hidden="true"
 										>refresh</span
 									>
-									Повторити
+									Search again
 								</button>
 								<button
 									class="history-remove"
 									type="button"
 									[disabled]="history.isUpdating()"
-									[attr.aria-label]="'Видалити запит: ' + entry.query"
+									[attr.aria-label]="'Delete search: ' + entry.query"
 									(click)="remove(entry)"
 								>
 									<span class="material-symbols-outlined" aria-hidden="true"
@@ -114,15 +114,15 @@
 					}
 				</div>
 			} @else {
-				<p class="history-section__empty">Пошукові запити з’являтимуться тут.</p>
+				<p class="history-section__empty">Your searches will appear here.</p>
 			}
 		</section>
 
 		<section class="history-section" aria-labelledby="viewed-history-title">
 			<header class="history-section__heading">
 				<div>
-					<p class="history-eyebrow">ПОВЕРНІТЬСЯ ДО ПЕРЕГЛЯДУ</p>
-					<h2 id="viewed-history-title">Нещодавно переглянуті</h2>
+					<p class="history-eyebrow">PICK UP WHERE YOU LEFT OFF</p>
+					<h2 id="viewed-history-title">Recently viewed</h2>
 				</div>
 				<span class="history-section__count">{{ history.viewedScenes().length }}</span>
 			</header>
@@ -148,7 +148,7 @@
 									scene.scene === 'desert'
 								"
 							>
-								@if (scene.thumbnailUrl) { <img class="history-viewed-card__thumbnail" [src]="scene.thumbnailUrl" [alt]="'Кадр відео: ' + scene.title" loading="lazy" /> }
+								@if (scene.thumbnailUrl) { <img class="history-viewed-card__thumbnail" [src]="scene.thumbnailUrl" [alt]="'Video frame: ' + scene.title" loading="lazy" /> }
 								<span class="history-viewed-card__duration">{{
 									scene.durationLabel
 								}}</span>
@@ -160,8 +160,8 @@
 									<span>{{ scene.quality === '4k' ? '4K' : scene.quality }}</span>
 									<span>{{
 										scene.orientation === 'landscape'
-											? 'Горизонтальне'
-											: 'Вертикальне'
+											? 'Landscape'
+											: 'Portrait'
 									}}</span>
 								</div>
 								<div class="history-viewed-card__actions">
@@ -173,13 +173,13 @@
 										<span class="material-symbols-outlined" aria-hidden="true"
 											>play_arrow</span
 										>
-										Відкрити кадр
+										Open scene
 									</button>
 									<button
 										class="history-remove"
 										type="button"
 										[disabled]="history.isUpdatingViewed()"
-										[attr.aria-label]="'Прибрати з історії: ' + scene.title"
+										[attr.aria-label]="'Remove from history: ' + scene.title"
 										(click)="removeViewed(scene)"
 									>
 										<span class="material-symbols-outlined" aria-hidden="true"
@@ -192,7 +192,7 @@
 					}
 				</div>
 			} @else {
-				<p class="history-section__empty">Відкриті вами сцени з’являтимуться тут.</p>
+				<p class="history-section__empty">Scenes you view will appear here.</p>
 			}
 		</section>
 	}
@@ -208,21 +208,21 @@
 			<div class="history-view-dialog__content">
 				<header>
 					<div>
-						<p class="history-eyebrow">КАДР СЦЕНИ</p>
+						<p class="history-eyebrow">SCENE PREVIEW</p>
 						<h2 id="viewed-scene-title">{{ scene.title }}</h2>
 					</div>
 					<button
 						class="history-remove"
 						type="button"
-						aria-label="Закрити перегляд"
+						aria-label="Close preview"
 						(click)="closeViewed()"
 					>
 						<span class="material-symbols-outlined" aria-hidden="true">close</span>
 					</button>
 				</header>
 				@if (scene.videoUrl) {
-					@if (videoVariants(scene).length > 1) { <label class="history-view-dialog__quality"><span>Якість відтворення</span><select [value]="playbackQuality()" (change)="setPlaybackQuality($event)">@for (variant of videoVariants(scene); track variant.key) { <option [value]="variant.key">{{ variant.label }}</option> }</select></label> }
-					<video class="history-view-dialog__video" controls playsinline preload="metadata" [src]="selectedVideoUrl(scene)" [poster]="scene.thumbnailUrl || ''" [attr.aria-label]="'Відео: ' + scene.title">Ваш браузер не підтримує відтворення цього відео.</video>
+					@if (videoVariants(scene).length > 1) { <label class="history-view-dialog__quality"><span>Playback quality</span><select [value]="playbackQuality()" (change)="setPlaybackQuality($event)">@for (variant of videoVariants(scene); track variant.key) { <option [value]="variant.key">{{ variant.label }}</option> }</select></label> }
+					<video class="history-view-dialog__video" controls playsinline preload="metadata" [src]="selectedVideoUrl(scene)" [poster]="scene.thumbnailUrl || ''" [attr.aria-label]="'Video: ' + scene.title">Your browser does not support video playback.</video>
 				} @else {
 				<div
 					class="history-viewed-card__visual history-view-dialog__visual"
@@ -243,23 +243,23 @@
 				}
 				<dl class="history-view-dialog__metadata">
 					<div>
-						<dt>Якість</dt>
+						<dt>Quality</dt>
 						<dd>{{ scene.quality === '4k' ? '4K' : scene.quality }}</dd>
 					</div>
 					<div>
-						<dt>Орієнтація</dt>
+						<dt>Orientation</dt>
 						<dd>
 							{{
-								scene.orientation === 'landscape' ? 'Горизонтальна' : 'Вертикальна'
+								scene.orientation === 'landscape' ? 'Landscape' : 'Portrait'
 							}}
 						</dd>
 					</div>
 					<div>
-						<dt>Переглянуто</dt>
+						<dt>Viewed</dt>
 						<dd>{{ dateLabel(scene.viewedAt) }}</dd>
 					</div>
 				</dl>
-				@if (scene.sourcePageUrl) { <p class="history-view-dialog__attribution">Джерело: {{ scene.provider }}<br />Автор: {{ scene.authorName }}<br />Ліцензія: <a [href]="scene.licenseUrl || scene.sourcePageUrl" target="_blank" rel="noopener noreferrer">{{ scene.licenseName }}</a></p><a class="history-view-dialog__source" [href]="scene.sourcePageUrl" target="_blank" rel="noopener noreferrer">Переглянути сторінку файлу <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span></a> }
+				@if (scene.sourcePageUrl) { <p class="history-view-dialog__attribution">Source: {{ scene.provider }}<br />Creator: {{ scene.authorName }}<br />License: <a [href]="scene.licenseUrl || scene.sourcePageUrl" target="_blank" rel="noopener noreferrer">{{ scene.licenseName }}</a></p><a class="history-view-dialog__source" [href]="scene.sourcePageUrl" target="_blank" rel="noopener noreferrer">View source page <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span></a> }
 			</div>
 		}
 	</dialog>

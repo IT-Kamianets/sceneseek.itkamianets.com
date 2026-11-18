@@ -14,7 +14,7 @@
 				<button
 					class="auth-prompt__close"
 					type="button"
-					aria-label="Закрити вікно входу"
+					aria-label="Close sign-in dialog"
 					(click)="prompt.close()"
 				>
 					<span class="material-symbols-outlined" aria-hidden="true">close</span>
@@ -22,26 +22,26 @@
 			</div>
 
 			<p class="auth-prompt__eyebrow">SceneSeek</p>
-			<h2 id="auth-prompt-title">Увійдіть у SceneSeek</h2>
+			<h2 id="auth-prompt-title">Sign in to SceneSeek</h2>
 			<p class="auth-prompt__description" id="auth-prompt-description">
 				@if (prompt.reason() === 'history') {
-					Увійдіть або створіть акаунт, щоб переглядати історію пошуку.
+					Sign in or create an account to view your search history.
 				} @else {
-					Увійдіть або створіть акаунт, щоб зберігати улюблені сцени у власній добірці.
+					Sign in or create an account to save scenes to your collection.
 				}
 			</p>
 
 			<div class="auth-prompt__actions">
 				<a class="auth-prompt__button auth-prompt__button--primary" routerLink="/auth/login" [queryParams]="{ returnUrl: prompt.reason() === 'history' ? '/history' : '/saved' }" (click)="prompt.close()">
-					Увійти
+					Sign in
 				</a>
 				<a class="auth-prompt__button auth-prompt__button--secondary" routerLink="/auth/register" [queryParams]="{ returnUrl: prompt.reason() === 'history' ? '/history' : '/saved' }" (click)="prompt.close()">
-					Створити акаунт
+					Create account
 				</a>
 			</div>
 
 			<button class="auth-prompt__dismiss" type="button" (click)="prompt.close()">
-				Поки продовжити без акаунта
+				Continue without an account
 			</button>
 		</section>
 	</div>

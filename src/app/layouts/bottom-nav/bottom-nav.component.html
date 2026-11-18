@@ -1,15 +1,15 @@
 <aside class="sidebar">
-	<nav class="sidebar__nav" aria-label="Основна навігація">
+	<nav class="sidebar__nav" aria-label="Main navigation">
 		<a
 			class="sidebar__link"
 			routerLink="/"
 			routerLinkActive="is-active"
 			[routerLinkActiveOptions]="{ exact: true }"
 			ariaCurrentWhenActive="page"
-			aria-label="Огляд"
+			aria-label="Explore"
 		>
 			<span class="material-symbols-outlined" aria-hidden="true">explore</span>
-			<span class="sidebar__tooltip" role="tooltip">Огляд</span>
+			<span class="sidebar__tooltip" role="tooltip">Explore</span>
 		</a>
 
 		<a
@@ -17,10 +17,10 @@
 			routerLink="/search"
 			routerLinkActive="is-active"
 			ariaCurrentWhenActive="page"
-			aria-label="Пошук"
+			aria-label="Search"
 		>
 			<span class="material-symbols-outlined" aria-hidden="true">search</span>
-			<span class="sidebar__tooltip" role="tooltip">Пошук</span>
+			<span class="sidebar__tooltip" role="tooltip">Search</span>
 		</a>
 
 		<a
@@ -28,11 +28,11 @@
 			routerLink="/history"
 			routerLinkActive="is-active"
 			ariaCurrentWhenActive="page"
-			aria-label="Історія"
+			aria-label="History"
 			(click)="promptForSignIn('history')"
 		>
 			<span class="material-symbols-outlined" aria-hidden="true">history</span>
-			<span class="sidebar__tooltip" role="tooltip">Історія</span>
+			<span class="sidebar__tooltip" role="tooltip">History</span>
 		</a>
 
 		<a
@@ -40,11 +40,11 @@
 			routerLink="/saved"
 			routerLinkActive="is-active"
 			ariaCurrentWhenActive="page"
-			aria-label="Збережене"
+			aria-label="Saved"
 			(click)="promptForSignIn('saved')"
 		>
 			<span class="material-symbols-outlined" aria-hidden="true">bookmarks</span>
-			<span class="sidebar__tooltip" role="tooltip">Збережене</span>
+			<span class="sidebar__tooltip" role="tooltip">Saved</span>
 		</a>
 
 		<a
@@ -52,10 +52,10 @@
 			routerLink="/profile"
 			routerLinkActive="is-active"
 			ariaCurrentWhenActive="page"
-			aria-label="Профіль"
+			aria-label="Profile"
 		>
 			<span class="material-symbols-outlined" aria-hidden="true">person</span>
-			<span class="sidebar__tooltip" role="tooltip">Профіль</span>
+			<span class="sidebar__tooltip" role="tooltip">Profile</span>
 		</a>
 	</nav>
 </aside>

@@ -20,7 +20,7 @@ export class FooterComponent {
 	protected readonly currentYear = new Date().getFullYear();
 	protected readonly pageLinks = computed<FooterPageLink[]>(() => [
 		{
-			label: 'Landing',
+			label: 'Explore',
 			path: '/',
 		},
 	]);

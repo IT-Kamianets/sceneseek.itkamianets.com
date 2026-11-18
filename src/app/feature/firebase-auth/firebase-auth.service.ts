@@ -93,7 +93,7 @@ export class FirebaseAuthService {
 	async sendPasswordReset(email: string) {
 		const { auth, sdk } = await this._getAuth();
 		try {
-			auth.languageCode = 'uk';
+			auth.languageCode = 'en';
 			await sdk.sendPasswordResetEmail(auth, email.trim());
 		} catch (error) {
 			if (this._errorCode(error) === 'auth/user-not-found') {
@@ -111,10 +111,10 @@ export class FirebaseAuthService {
 
 	private async _getAuth(): Promise<{ auth: Auth; sdk: FirebaseAuthSdk }> {
 		if (!isPlatformBrowser(this._platformId)) {
-			throw new Error('Вхід доступний у браузері.');
+			throw new Error('Sign-in is available in a browser.');
 		}
 		if (!this.isConfigured()) {
-			throw new Error('Підключення Firebase ще не налаштовано. Дані не надсилалися.');
+			throw new Error('Firebase sign-in is not configured yet. No data was sent.');
 		}
 		if (!this._authPromise) {
 			this._authPromise = this._createAuth();
@@ -132,7 +132,7 @@ export class FirebaseAuthService {
 		const [appSdk, sdk] = await Promise.all([import('firebase/app'), import('firebase/auth')]);
 		const app = appSdk.getApps()[0] ?? appSdk.initializeApp(this._firebaseConfig);
 		const auth = sdk.getAuth(app);
-		auth.languageCode = 'uk';
+		auth.languageCode = 'en';
 		await sdk.setPersistence(auth, sdk.browserLocalPersistence);
 		sdk.onAuthStateChanged(auth, (user) => {
 			this.user.set(this._mapUser(user));
@@ -155,24 +155,24 @@ export class FirebaseAuthService {
 	private _errorMessage(error: unknown): string {
 		const code = this._errorCode(error);
 		const messages: Record<string, string> = {
-			'auth/invalid-credential': 'Електронна пошта або пароль неправильні.',
-			'auth/invalid-email': 'Перевірте формат електронної пошти.',
-			'auth/email-already-in-use': 'Акаунт із такою адресою вже існує. Увійдіть або відновіть пароль.',
-			'auth/weak-password': 'Створіть пароль щонайменше з 8 символів.',
-			'auth/too-many-requests': 'Забагато спроб. Спробуйте пізніше.',
-			'auth/network-request-failed': 'Не вдалося з’єднатися. Перевірте інтернет і спробуйте ще раз.',
-			'auth/user-disabled': 'Цей акаунт тимчасово недоступний.',
-			'auth/operation-not-allowed': 'Цей спосіб входу ще не активовано у Firebase.',
-			'auth/unauthorized-domain': 'Цей домен ще не доданий до дозволених у Firebase.',
-			'auth/popup-closed-by-user': 'Вхід через Google скасовано.',
-			'auth/popup-blocked': 'Браузер заблокував вікно Google. Дозвольте спливаючі вікна й спробуйте ще раз.',
-			'auth/cancelled-popup-request': 'Запит входу через Google скасовано. Спробуйте ще раз.',
-			'auth/account-exists-with-different-credential': 'Для цієї пошти вже є акаунт з іншим способом входу. Увійдіть ним.',
+			'auth/invalid-credential': 'The email address or password is incorrect.',
+			'auth/invalid-email': 'Check the email address format.',
+			'auth/email-already-in-use': 'An account with this email address already exists. Sign in or reset your password.',
+			'auth/weak-password': 'Choose a password with at least 8 characters.',
+			'auth/too-many-requests': 'Too many attempts. Please try again later.',
+			'auth/network-request-failed': 'Could not connect. Check your internet connection and try again.',
+			'auth/user-disabled': 'This account is temporarily unavailable.',
+			'auth/operation-not-allowed': 'This sign-in method is not enabled in Firebase yet.',
+			'auth/unauthorized-domain': 'This domain has not been added to the authorized domains in Firebase.',
+			'auth/popup-closed-by-user': 'Google sign-in was canceled.',
+			'auth/popup-blocked': 'Your browser blocked the Google sign-in window. Allow pop-ups and try again.',
+			'auth/cancelled-popup-request': 'Google sign-in was canceled. Please try again.',
+			'auth/account-exists-with-different-credential': 'An account for this email uses a different sign-in method. Try that method instead.',
 		};
 		if (code) {
-			return messages[code] ?? 'Не вдалося виконати дію. Перевірте дані й спробуйте ще раз.';
+			return messages[code] ?? 'Something went wrong. Check your details and try again.';
 		}
-		return error instanceof Error ? error.message : 'Не вдалося виконати дію. Спробуйте ще раз.';
+		return error instanceof Error ? error.message : 'Something went wrong. Please try again.';
 	}
 
 	private _errorCode(error: unknown): string {

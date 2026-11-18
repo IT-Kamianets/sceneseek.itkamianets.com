@@ -7,7 +7,7 @@ const normalizeSearchText = (value: string) =>
 	value
 		.normalize('NFD')
 		.replace(/\p{Diacritic}/gu, '')
-		.toLocaleLowerCase('uk-UA');
+		.toLocaleLowerCase('en-US');
 
 @Component({
 	selector: 'app-saved',
@@ -51,7 +51,7 @@ export class SavedComponent {
 			return searchableText.includes(query);
 		});
 		return [...scenes].sort((a, b) => {
-			const titleOrder = a.title.localeCompare(b.title, 'uk-UA', { sensitivity: 'base' });
+			const titleOrder = a.title.localeCompare(b.title, 'en-US', { sensitivity: 'base' });
 			if (this.sortOrder() === 'title') {
 				return titleOrder;
 			}
@@ -96,7 +96,7 @@ export class SavedComponent {
 					? ''
 					: error instanceof Error
 						? error.message
-						: 'Не вдалося створити папку.',
+						: 'Could not create the folder.',
 			);
 		} finally {
 			this.savingFolder.set(false);
@@ -125,7 +125,7 @@ export class SavedComponent {
 					? ''
 					: error instanceof Error
 						? error.message
-						: 'Не вдалося перейменувати папку.',
+						: 'Could not rename the folder.',
 			);
 		} finally {
 			this.savingFolder.set(false);
@@ -133,7 +133,7 @@ export class SavedComponent {
 	}
 
 	protected async deleteFolder(id: string, name: string) {
-		if (!globalThis.confirm(`Видалити папку «${name}»? Сцени залишаться у «Без папки».`)) {
+		if (!globalThis.confirm(`Delete folder «${name}»? Scenes will remain in Unfiled.`)) {
 			return;
 		}
 		this.folderError.set('');
@@ -149,7 +149,7 @@ export class SavedComponent {
 					? ''
 					: error instanceof Error
 						? error.message
-						: 'Не вдалося видалити папку.',
+						: 'Could not delete the folder.',
 			);
 		} finally {
 			this.savingFolder.set(false);
@@ -190,9 +190,9 @@ export class SavedComponent {
 
 	protected savedDateLabel(savedAt?: number) {
 		if (savedAt == null) {
-			return 'Дата додавання невідома';
+			return 'Date added unknown';
 		}
-		return `Збережено ${new Intl.DateTimeFormat('uk-UA', {
+		return `Saved ${new Intl.DateTimeFormat('en-US', {
 			day: 'numeric',
 			month: 'short',
 			year: 'numeric',

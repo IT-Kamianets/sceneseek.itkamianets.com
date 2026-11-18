@@ -84,7 +84,7 @@ export class SavedScenesService {
 			this.loadedForUid.set(user.uid);
 		} catch {
 			this.message.set(
-				'Не вдалося завантажити збережене. Перевірте налаштування бази даних Firebase.',
+				'Could not load saved scenes. Check your Firebase database settings.',
 			);
 			throw new Error(this.message());
 		}
@@ -99,7 +99,7 @@ export class SavedScenesService {
 				(folder) => folder.name.toLocaleLowerCase() === cleanName.toLocaleLowerCase(),
 			)
 		) {
-			throw new Error('Папка з такою назвою вже існує.');
+			throw new Error('A folder with this name already exists.');
 		}
 		try {
 			const { firestore, sdk } = await this._getFirestore();
@@ -114,7 +114,7 @@ export class SavedScenesService {
 			return folder;
 		} catch (error) {
 			const message =
-				'Не вдалося створити папку. Перевірте правила Firestore у Firebase Console.';
+				'Could not create the folder. Check your Firestore rules in the Firebase Console.';
 			this.message.set(message);
 			throw new Error(message, { cause: error });
 		}
@@ -131,7 +131,7 @@ export class SavedScenesService {
 					folder.name.toLocaleLowerCase() === cleanName.toLocaleLowerCase(),
 			)
 		) {
-			throw new Error('Папка з такою назвою вже існує.');
+			throw new Error('A folder with this name already exists.');
 		}
 		try {
 			const { firestore, sdk } = await this._getFirestore();
@@ -143,7 +143,7 @@ export class SavedScenesService {
 			);
 		} catch (error) {
 			const message =
-				'Не вдалося перейменувати папку. Перевірте правила Firestore у Firebase Console.';
+				'Could not rename the folder. Check your Firestore rules in the Firebase Console.';
 			this.message.set(message);
 			throw new Error(message, { cause: error });
 		}
@@ -152,7 +152,7 @@ export class SavedScenesService {
 	async moveScene(sceneId: string, folderId: string | null) {
 		const user = await this._requireUser();
 		if (folderId && !this.folders().some((folder) => folder.id === folderId)) {
-			throw new Error('Цю папку не знайдено.');
+			throw new Error('Folder not found.');
 		}
 		this.busyIds.update((ids) => [...new Set([...ids, sceneId])]);
 		this.message.set('');
@@ -165,7 +165,7 @@ export class SavedScenesService {
 				items.map((scene) => (scene.id === sceneId ? { ...scene, folderId } : scene)),
 			);
 		} catch (error) {
-			this.message.set('Не вдалося перемістити сцену. Перевірте правила Firestore.');
+			this.message.set('Could not move the scene. Check your Firestore rules.');
 			throw error;
 		} finally {
 			this.busyIds.update((ids) => ids.filter((id) => id !== sceneId));
@@ -196,7 +196,7 @@ export class SavedScenesService {
 			this.folders.update((items) => items.filter((folder) => folder.id !== id));
 		} catch (error) {
 			const message =
-				'Не вдалося видалити папку. Перевірте правила Firestore у Firebase Console.';
+				'Could not delete the folder. Check your Firestore rules in the Firebase Console.';
 			this.message.set(message);
 			throw new Error(message, { cause: error });
 		}
@@ -206,7 +206,7 @@ export class SavedScenesService {
 		await this._auth.waitUntilReady();
 		const user = this._auth.user();
 		if (!user) {
-			throw new Error('Увійдіть, щоб зберігати відеосцени.');
+			throw new Error('Sign in to save video scenes.');
 		}
 
 		this.busyIds.update((ids) => [...new Set([...ids, scene.id])]);
@@ -225,7 +225,7 @@ export class SavedScenesService {
 			this.loadedForUid.set(user.uid);
 		} catch {
 			this.message.set(
-				'Не вдалося зберегти сцену. Перевірте, чи створено базу Firestore та правила доступу.',
+				'Could not save the scene. Check that Firestore is set up and its access rules are published.',
 			);
 			throw new Error(this.message());
 		} finally {
@@ -237,7 +237,7 @@ export class SavedScenesService {
 		await this._auth.waitUntilReady();
 		const user = this._auth.user();
 		if (!user) {
-			throw new Error('Увійдіть, щоб керувати папками зі збереженим.');
+			throw new Error('Sign in to manage your saved folders.');
 		}
 		return user;
 	}
@@ -245,10 +245,10 @@ export class SavedScenesService {
 	private _normalizeFolderName(name: string) {
 		const cleanName = name.trim().replace(/\s+/g, ' ');
 		if (!cleanName) {
-			throw new Error('Введіть назву папки.');
+			throw new Error('Enter a folder name.');
 		}
 		if (cleanName.length > 40) {
-			throw new Error('Назва папки має містити не більше 40 символів.');
+			throw new Error('Folder names must be 40 characters or fewer.');
 		}
 		return cleanName;
 	}
@@ -259,7 +259,7 @@ export class SavedScenesService {
 
 	private async _getFirestore(): Promise<{ firestore: Firestore; sdk: FirestoreSdk }> {
 		if (!isPlatformBrowser(this._platformId)) {
-			throw new Error('Збереження доступне в браузері.');
+			throw new Error('Saving is available in a browser.');
 		}
 		if (!this._firestorePromise) {
 			this._firestorePromise = (async () => {

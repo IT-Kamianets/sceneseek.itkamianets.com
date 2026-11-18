@@ -44,7 +44,7 @@ SceneSeek допомагає знаходити потрібні сцени за
 | Реактивність         | Zoneless Angular та Angular Signals                                                                            |
 | Форми                | Signal Forms рекомендовані для нових форм                                                                      |
 | Асинхронні дані      | `ngxResource()` з `@wawjs/ngx-core`, коли підходить ресурсна модель                                            |
-| Переклади            | `@wawjs/ngx-translate`; зараз лише українська, з можливістю додати інші мови пізніше                           |
+| Переклади            | `@wawjs/ngx-translate`; English is the default, with Ukrainian available in profile settings                    |
 | Тема                 | `ThemeService` з `@wawjs/ngx-ui`; темний режим використовує токени `html[data-mode='dark']`                    |
 | Іконки               | Material Symbols Outlined                                                                                      |
 | Збірка і розгортання | npm, GitHub Actions, GitHub Pages; публікується `dist/app/browser`                                             |
@@ -138,13 +138,13 @@ Build створює `dist/app/browser` і `dist/app/server`; GitHub Pages пу�
 
 - [Повне технічне завдання](docs/technical-spec.md)
 
-## Поточна мова інтерфейсу
+## Мови інтерфейсу
 
-Назви сторінок і весь видимий інтерфейс зараз українською. Структура перекладів зберігається так, щоб згодом додати вибір мови в налаштуваннях акаунту.
+The interface opens in English by default. Users can switch to Ukrainian in profile settings.
 
 ## Відкриті архітектурні рішення
 
-- навчальний обсяг демонстраційного вебзастосунку;
+- product scope and the next implementation priorities;
 - чи потрібен окремий мобільний клієнт на Ionic/Capacitor;
 - чи буде backend окремим сервісом і де він розміщуватиметься;
 - потреба у Storage чи Cloud Functions;
@@ -156,4 +156,4 @@ Build створює `dist/app/browser` і `dist/app/server`; GitHub Pages пу�
 
 ## Правила роботи з контентом
 
-Демонстраційний контент позначайте як прикладовий. У поточній навчальній версії не підключайте реальні бібліотеки та не реалізуйте завантаження сторонніх матеріалів.
+Clearly identify sample content where it appears. Connect media sources only through their documented APIs and follow each source's attribution and license requirements.

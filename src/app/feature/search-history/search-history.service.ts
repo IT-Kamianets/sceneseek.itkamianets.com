@@ -96,13 +96,13 @@ export class SearchHistoryService {
 				);
 			} else {
 				this.viewedMessage.set(
-					'Не вдалося завантажити перегляди. Перевірте правила доступу Firestore.',
+					'Could not load viewed scenes. Check your Firestore access rules.',
 				);
 			}
 			this.loadedForUid.set(user.uid);
 		} catch {
 			this.message.set(
-				'Не вдалося завантажити історію. Перевірте правила доступу Firestore.',
+				'Could not load history. Check your Firestore access rules.',
 			);
 			throw new Error(this.message());
 		} finally {
@@ -158,7 +158,7 @@ export class SearchHistoryService {
 			}
 		} catch {
 			this.viewedMessage.set(
-				'Перегляд відкрито, але не вдалося зберегти його в історії. Перевірте правила Firestore.',
+				'Scene opened, but it could not be saved to your history. Check your Firestore rules.',
 			);
 		}
 	}
@@ -175,7 +175,7 @@ export class SearchHistoryService {
 			await sdk.deleteDoc(sdk.doc(firestore, 'users', user.uid, 'viewedScenes', sceneId));
 			this.viewedScenes.update((items) => items.filter((item) => item.id !== sceneId));
 		} catch {
-			this.viewedMessage.set('Не вдалося прибрати перегляд з історії. Спробуйте ще раз.');
+			this.viewedMessage.set('Could not remove the scene from history. Please try again.');
 			throw new Error(this.viewedMessage());
 		} finally {
 			this.isUpdatingViewed.set(false);
@@ -202,7 +202,7 @@ export class SearchHistoryService {
 			}
 			this.viewedScenes.set([]);
 		} catch {
-			this.viewedMessage.set('Не вдалося очистити перегляди. Спробуйте ще раз.');
+			this.viewedMessage.set('Could not clear viewed scenes. Please try again.');
 			throw new Error(this.viewedMessage());
 		} finally {
 			this.isUpdatingViewed.set(false);
@@ -237,7 +237,7 @@ export class SearchHistoryService {
 			}
 		} catch {
 			this.message.set(
-				'Пошук виконано, але не вдалося зберегти його в історії. Перевірте правила Firestore.',
+				'Search completed, but it could not be saved to your history. Check your Firestore rules.',
 			);
 			throw new Error(this.message());
 		}
@@ -256,7 +256,7 @@ export class SearchHistoryService {
 			await sdk.deleteDoc(sdk.doc(firestore, 'users', user.uid, 'searchHistory', id));
 			this.entries.update((items) => items.filter((item) => item.id !== id));
 		} catch {
-			this.message.set('Не вдалося видалити запис з історії. Спробуйте ще раз.');
+			this.message.set('Could not delete the history entry. Please try again.');
 			throw new Error(this.message());
 		} finally {
 			this.isUpdating.set(false);
@@ -284,7 +284,7 @@ export class SearchHistoryService {
 			}
 			this.entries.set([]);
 		} catch {
-			this.message.set('Не вдалося очистити історію. Спробуйте ще раз.');
+			this.message.set('Could not clear history. Please try again.');
 			throw new Error(this.message());
 		} finally {
 			this.isUpdating.set(false);
@@ -293,7 +293,7 @@ export class SearchHistoryService {
 
 	private async _getFirestore(): Promise<{ firestore: Firestore; sdk: FirestoreSdk }> {
 		if (!isPlatformBrowser(this._platformId)) {
-			throw new Error('Історія пошуку доступна у браузері.');
+			throw new Error('Search history is available in a browser.');
 		}
 		if (!this._firestorePromise) {
 			this._firestorePromise = (async () => {

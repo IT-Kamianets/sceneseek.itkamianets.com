@@ -52,7 +52,7 @@ export interface CoverrVideo extends SavedScene {
 	sourcePageUrl: string;
 	authorName: string;
 	authorUrl?: string;
-	licenseName: 'Ліцензія Coverr';
+	licenseName: 'Coverr License';
 	licenseUrl: 'https://coverr.co/license';
 }
 
@@ -65,7 +65,7 @@ function creatorName(video: CoverrVideoRecord): string {
 			return creator.name.trim();
 		}
 	}
-	return 'Автор не вказаний у відповіді API';
+	return 'Creator not provided by the API';
 }
 
 function creatorUrl(video: CoverrVideoRecord): string | undefined {
@@ -116,13 +116,13 @@ export function videoPlaybackVariants(scene: SavedScene): VideoPlaybackVariant[]
 
 	const maxQuality = scene.quality === '4k' ? '4K' : scene.quality;
 	const variants: VideoPlaybackVariant[] = [
-		{ key: 'max', label: `${maxQuality} · максимальна`, url: maxUrl },
+		{ key: 'max', label: `${maxQuality} · maximum`, url: maxUrl },
 	];
 	if (previewUrl && previewUrl !== maxUrl) {
 		const inferredPreviewQuality = previewUrl.match(/\/(\d{3,4}p)\.mp4(?=[?#]|$)/iu)?.[1];
 		variants.push({
 			key: 'preview',
-			label: `${previewQuality ?? inferredPreviewQuality ?? 'Знижена'} · швидше завантаження`,
+			label: `${previewQuality ?? inferredPreviewQuality ?? 'Preview'} · faster loading`,
 			url: previewUrl,
 		});
 	}
@@ -167,7 +167,7 @@ export class CoverrVideoService {
 			headers: { Accept: 'application/json' },
 		});
 		if (!response.ok) {
-			throw new Error(`Не вдалося завантажити рекомендації (${response.status}).`);
+			throw new Error(`Could not load recommendations (${response.status}).`);
 		}
 		const data = (await response.json()) as CoverrSearchResponse;
 		return this._mapVideos(data);
@@ -185,9 +185,9 @@ export class CoverrVideoService {
 		});
 		if (!response.ok) {
 			if (response.status === 401 || response.status === 403) {
-				throw new Error('Coverr не має локального API-ключа або доступу.');
+				throw new Error('Coverr has no local API key or access.');
 			}
-			throw new Error(`Coverr API повернув помилку ${response.status}.`);
+			throw new Error(`Coverr API returned an error ${response.status}.`);
 		}
 		const data = (await response.json()) as CoverrSearchResponse;
 		if (data.error) {
@@ -205,7 +205,7 @@ export class CoverrVideoService {
 			}
 			const videoPreviewUrl = video.urls?.mp4_preview;
 			const videoPreviewQuality = videoPreviewUrl?.match(/\/(\d{3,4}p)\.mp4(?=[?#]|$)/iu)?.[1];
-			const title = video.title?.trim() || 'Відеосцена Coverr';
+			const title = video.title?.trim() || 'Coverr video clip';
 			const duration = Math.max(0, Math.round(video.duration ?? 0));
 			const width = video.max_width ?? 0;
 			const height = video.max_height ?? 0;
@@ -240,7 +240,7 @@ export class CoverrVideoService {
 					sourcePageUrl,
 					authorName: creatorName(video),
 					authorUrl: creatorUrl(video),
-					licenseName: 'Ліцензія Coverr' as const,
+					licenseName: 'Coverr License' as const,
 					licenseUrl: 'https://coverr.co/license' as const,
 				},
 			];

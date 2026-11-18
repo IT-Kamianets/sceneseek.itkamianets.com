@@ -1,24 +1,24 @@
 <section class="profile-page" aria-labelledby="profile-title">
 	<div class="profile-page__content">
 		<header class="profile-page__heading">
-			<p class="profile-page__eyebrow">Особистий простір</p>
-			<h1 id="profile-title">Профіль</h1>
-			<p>Керуйте даними акаунта та налаштуваннями SceneSeek.</p>
+			<p class="profile-page__eyebrow">YOUR SPACE</p>
+			<h1 id="profile-title">Profile</h1>
+			<p>Manage your account details and SceneSeek settings.</p>
 		</header>
 
-		<section class="profile-identity" aria-label="Дані профілю">
+		<section class="profile-identity" aria-label="Profile details">
 			<div class="profile-identity__avatar" aria-hidden="true">{{ initials() }}</div>
 			<div class="profile-identity__details">
-				<p class="profile-identity__name">{{ auth.user()?.displayName || 'Гостьовий режим' }}</p>
-				<p class="profile-identity__email">{{ auth.user()?.email || 'Увійдіть, щоб синхронізувати свої добірки' }}</p>
+				<p class="profile-identity__name">{{ auth.user()?.displayName || 'Guest mode' }}</p>
+				<p class="profile-identity__email">{{ auth.user()?.email || 'Sign in to sync your collections' }}</p>
 			</div>
 			@if (auth.user()) {
-				<button class="profile-identity__edit" type="button" aria-label="Редагувати профіль">
+				<button class="profile-identity__edit" type="button" aria-label="Edit profile">
 					<span class="material-symbols-outlined" aria-hidden="true">edit</span>
-					<span>Редагувати профіль</span>
+					<span>Edit profile</span>
 				</button>
 			} @else {
-				<a class="profile-identity__edit" routerLink="/auth/login"><span class="material-symbols-outlined" aria-hidden="true">login</span><span>Увійти</span></a>
+				<a class="profile-identity__edit" routerLink="/auth/login"><span class="material-symbols-outlined" aria-hidden="true">login</span><span>Sign in</span></a>
 			}
 		</section>
 		@if (signOutMessage()) { <p class="profile-signout-message" role="alert">{{ signOutMessage() }}</p> }
@@ -28,65 +28,65 @@
 				<span class="profile-pro__icon material-symbols-outlined" aria-hidden="true">auto_awesome</span>
 				<span class="profile-pro__copy">
 					<span class="profile-pro__title">SceneSeek Pro <span class="profile-pro__badge">PRO</span></span>
-					<span class="profile-pro__hint">Переглянути план і можливості</span>
+					<span class="profile-pro__hint">View plan and features</span>
 				</span>
 				<span class="profile-pro__chevron material-symbols-outlined" aria-hidden="true">chevron_right</span>
 			</summary>
 			<div class="profile-pro__details">
-				<p>Переглядайте статус плану та доступні можливості акаунта.</p>
-				<div class="profile-pro__plan"><strong>Pro</strong><span>Поточний план</span></div>
+				<p>Review your plan status and account features.</p>
+				<div class="profile-pro__plan"><strong>Pro</strong><span>Current plan</span></div>
 			</div>
 		</details>
 
 		<div class="profile-groups">
 			<section class="profile-group" aria-labelledby="profile-account-title">
-				<h2 class="profile-group__title" id="profile-account-title">Акаунт</h2>
+				<h2 class="profile-group__title" id="profile-account-title">Account</h2>
 				<div class="profile-group__list">
 					<details class="profile-row">
 						<summary>
 							<span class="profile-row__icon material-symbols-outlined" aria-hidden="true">person</span>
-							<span class="profile-row__label">Особисті дані</span>
+							<span class="profile-row__label">Personal information</span>
 							<span class="profile-row__chevron material-symbols-outlined" aria-hidden="true">chevron_right</span>
 						</summary>
 						<div class="profile-row__details">
-							<div class="profile-setting"><span>Ім’я</span><span class="profile-setting__value">{{ auth.user()?.displayName || 'Не вказано' }}</span></div>
-							<div class="profile-setting"><span>Електронна пошта</span><span class="profile-setting__value">{{ auth.user()?.email || 'Не вказано' }}</span></div>
-							<div class="profile-setting"><span>Фото профілю</span><span class="profile-setting__value">Змінити фото <span class="material-symbols-outlined" aria-hidden="true">chevron_right</span></span></div>
+							<div class="profile-setting"><span>Name</span><span class="profile-setting__value">{{ auth.user()?.displayName || 'Not provided' }}</span></div>
+							<div class="profile-setting"><span>Email address</span><span class="profile-setting__value">{{ auth.user()?.email || 'Not provided' }}</span></div>
+							<div class="profile-setting"><span>Profile photo</span><span class="profile-setting__value">Change photo <span class="material-symbols-outlined" aria-hidden="true">chevron_right</span></span></div>
 						</div>
 					</details>
 
 					<details class="profile-row">
 						<summary>
 							<span class="profile-row__icon material-symbols-outlined" aria-hidden="true">shield</span>
-							<span class="profile-row__label">Безпека й акаунт</span>
+							<span class="profile-row__label">Security and account</span>
 							<span class="profile-row__chevron material-symbols-outlined" aria-hidden="true">chevron_right</span>
 						</summary>
 						<div class="profile-row__details profile-account-actions">
-							<a routerLink="/auth/forgot-password"><span class="material-symbols-outlined" aria-hidden="true">key</span>Змінити пароль</a>
+							<a routerLink="/auth/forgot-password"><span class="material-symbols-outlined" aria-hidden="true">key</span>Change password</a>
 							@if (auth.user()) {
-								<button type="button" (click)="signOut()"><span class="material-symbols-outlined" aria-hidden="true">logout</span>Вийти з акаунта</button>
+								<button type="button" (click)="signOut()"><span class="material-symbols-outlined" aria-hidden="true">logout</span>Sign out</button>
 							} @else {
-								<a routerLink="/auth/login"><span class="material-symbols-outlined" aria-hidden="true">login</span>Увійти в акаунт</a>
+								<a routerLink="/auth/login"><span class="material-symbols-outlined" aria-hidden="true">login</span>Sign in to your account</a>
 							}
-							<button class="profile-account-actions__danger" type="button" disabled><span class="material-symbols-outlined" aria-hidden="true">delete</span>Видалення акаунта поки недоступне</button>
+							<button class="profile-account-actions__danger" type="button" disabled><span class="material-symbols-outlined" aria-hidden="true">delete</span>Account deletion is not available yet</button>
 						</div>
 					</details>
 				</div>
 			</section>
 
 			<section class="profile-group" aria-labelledby="profile-preferences-title">
-				<h2 class="profile-group__title" id="profile-preferences-title">Налаштування</h2>
+				<h2 class="profile-group__title" id="profile-preferences-title">Preferences</h2>
 				<div class="profile-group__list">
 					<details class="profile-row">
 						<summary>
 							<span class="profile-row__icon material-symbols-outlined" aria-hidden="true">language</span>
-							<span class="profile-row__label">Мова інтерфейсу</span>
-							<span class="profile-row__value">Українська</span>
+							<span class="profile-row__label">Interface language</span>
+							<span class="profile-row__value">{{ languageLabel() }}</span>
 							<span class="profile-row__chevron material-symbols-outlined" aria-hidden="true">chevron_right</span>
 						</summary>
 						<div class="profile-row__details">
 							<label class="profile-setting" for="profile-language">
-								<span>Мова інтерфейсу</span>
+								<span>Interface language</span>
 								<select id="profile-language" class="profile-setting__select" [value]="currentLanguage()" (change)="onLanguageChange($event)">
 									@for (language of languages; track language.code) {
 										<option [value]="language.code">{{ language.nativeName }}</option>
@@ -99,19 +99,19 @@
 					<details class="profile-row">
 						<summary>
 							<span class="profile-row__icon material-symbols-outlined" aria-hidden="true">dark_mode</span>
-							<span class="profile-row__label">Оформлення</span>
-							<span class="profile-row__value">{{ themeMode() === 'dark' ? 'Темна тема' : 'Світла тема' }}</span>
+							<span class="profile-row__label">Appearance</span>
+							<span class="profile-row__value">{{ themeMode() === 'dark' ? 'Dark theme' : 'Light theme' }}</span>
 							<span class="profile-row__chevron material-symbols-outlined" aria-hidden="true">chevron_right</span>
 						</summary>
 						<div class="profile-row__details">
-							<div class="profile-theme-options" role="group" aria-label="Вибір теми">
+							<div class="profile-theme-options" role="group" aria-label="Choose a theme">
 								<button
 									type="button"
 									[class.is-selected]="themeMode() === 'light'"
 									[attr.aria-pressed]="themeMode() === 'light'"
 									(click)="setTheme('light')"
 								>
-									Світла
+									Light
 								</button>
 								<button
 									type="button"
@@ -119,7 +119,7 @@
 									[attr.aria-pressed]="themeMode() === 'dark'"
 									(click)="setTheme('dark')"
 								>
-									Темна
+									Dark
 								</button>
 							</div>
 						</div>
