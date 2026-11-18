@@ -90,19 +90,49 @@ export class CoverrVideoService {
 	private readonly _platformId = inject(PLATFORM_ID);
 
 	async search(query: string): Promise<CoverrVideo[]> {
-		if (!isPlatformBrowser(this._platformId)) {
-			return [];
-		}
 		const cleanQuery = query.trim();
 		if (!cleanQuery) {
 			return [];
 		}
 
-		const params = new URLSearchParams({
-			[environment.production ? 'q' : 'query']: cleanQuery,
-			page_size: '12',
-			urls: 'true',
+		return this._fetchVideos(
+			new URLSearchParams({
+				[environment.production ? 'q' : 'query']: cleanQuery,
+				page_size: '12',
+				urls: 'true',
+			}),
+		);
+	}
+
+	async popularVideos(): Promise<CoverrVideo[]> {
+		if (environment.production) {
+			return this._fetchRecommendationsSnapshot();
+		}
+
+		return this._fetchVideos(
+			new URLSearchParams({
+				sort: 'popularity',
+				page_size: '12',
+				urls: 'true',
+			}),
+		);
+	}
+
+	private async _fetchRecommendationsSnapshot(): Promise<CoverrVideo[]> {
+		const response = await fetch('/data/coverr-popular.json', {
+			headers: { Accept: 'application/json' },
 		});
+		if (!response.ok) {
+			throw new Error(`Не вдалося завантажити рекомендації (${response.status}).`);
+		}
+		const data = (await response.json()) as CoverrSearchResponse;
+		return this._mapVideos(data);
+	}
+
+	private async _fetchVideos(params: URLSearchParams): Promise<CoverrVideo[]> {
+		if (!isPlatformBrowser(this._platformId)) {
+			return [];
+		}
 		const requestUrl = environment.production
 			? `${environment.coverrApiUrl}?${params.toString()}`
 			: `/coverr-api/videos?${params.toString()}`;
@@ -120,6 +150,10 @@ export class CoverrVideoService {
 			throw new Error(data.error);
 		}
 
+		return this._mapVideos(data);
+	}
+
+	private _mapVideos(data: CoverrSearchResponse): CoverrVideo[] {
 		return (data.hits ?? []).flatMap((video) => {
 			const videoUrl = video.urls?.mp4_preview || video.urls?.mp4 || video.urls?.mp4_download;
 			if (!video.id || !videoUrl) {

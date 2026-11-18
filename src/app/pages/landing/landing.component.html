@@ -60,8 +60,8 @@
 		@if (pageMode === 'explore' || submittedQuery()) {
 		<section id="explore-recommendations" class="home-recommendations home-results-stage" aria-labelledby="recommendations-title">
 			<div class="home-section-heading">
-				<div><p class="home-section-heading__eyebrow">{{ pageMode === 'explore' ? 'ВІДКРИВАЙТЕ СВОЄ НОВЕ' : 'ПОШУК СЦЕН' }}</p><h2 id="recommendations-title">{{ pageMode === 'explore' ? 'Щоденні рекомендації' : 'Результати пошуку' }}</h2><p class="home-section-heading__description">{{ pageMode === 'explore' ? 'Добірка сцен для натхнення та наступного проєкту.' : 'Сцени, що відповідають вашому опису й фільтрам.' }}</p></div>
-				<div class="home-results-count" aria-live="polite"><span class="material-symbols-outlined" aria-hidden="true">movie</span>@if (pageMode === 'search' && commonsLoading()) { Шукаємо… } @else { {{ recommendationCountLabel() }} }</div>
+				<div><p class="home-section-heading__eyebrow">{{ pageMode === 'explore' ? 'ВІДКРИВАЙТЕ СВОЄ НОВЕ' : 'ПОШУК СЦЕН' }}</p><h2 id="recommendations-title">{{ pageMode === 'explore' ? 'Щоденні рекомендації' : 'Результати пошуку' }}</h2><p class="home-section-heading__description">{{ pageMode === 'explore' ? 'Популярні відео з бібліотеки Coverr.' : 'Сцени, що відповідають вашому опису й фільтрам.' }}</p></div>
+				<div class="home-results-count" aria-live="polite"><span class="material-symbols-outlined" aria-hidden="true">movie</span>@if ((pageMode === 'search' && commonsLoading()) || (pageMode === 'explore' && recommendationsLoading())) { Завантажуємо… } @else { {{ recommendationCountLabel() }} }</div>
 			</div>
 
 			@if (pageMode === 'explore') {
@@ -70,10 +70,10 @@
 			</div>
 			}
 			@if (savedScenes.message()) { <p class="home-search__message home-search__message--error" role="alert">{{ savedScenes.message() }}</p> }
-			@if (pageMode === 'search' && providerNotice()) { <p class="home-search__message" role="status">{{ providerNotice() }}</p> }
+			@if (providerNotice()) { <p class="home-search__message" role="status">{{ providerNotice() }}</p> }
 
-			@if (pageMode === 'search' && commonsLoading()) {
-				<div class="home-empty-state" role="status"><span class="material-symbols-outlined" aria-hidden="true">progress_activity</span><p>Шукаємо відео в Coverr та Wikimedia Commons…</p></div>
+			@if ((pageMode === 'search' && commonsLoading()) || (pageMode === 'explore' && recommendationsLoading())) {
+				<div class="home-empty-state" role="status"><span class="material-symbols-outlined" aria-hidden="true">progress_activity</span><p>{{ pageMode === 'search' ? 'Шукаємо відео в Coverr та Wikimedia Commons…' : 'Завантажуємо популярні відео Coverr…' }}</p></div>
 			} @else if (pageMode === 'search' && commonsError()) {
 				<div class="home-empty-state" role="alert"><span class="material-symbols-outlined" aria-hidden="true">cloud_off</span><p>{{ commonsError() }}</p><button class="home-reset-action" type="button" (click)="retryCommonsSearch()">Спробувати ще раз</button></div>
 			} @else if (recommendations().length) {

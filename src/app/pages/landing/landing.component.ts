@@ -23,7 +23,7 @@ import {
 	SearchHistorySortOrder,
 } from '../../feature/search-history/search-history.service';
 import { SavedScene, SavedScenesService } from '../../feature/saved-scenes/saved-scenes.service';
-import { CoverrVideoService } from '../../feature/coverr/coverr-video.service';
+import { CoverrVideoService, type CoverrVideo } from '../../feature/coverr/coverr-video.service';
 import {
 	WikimediaCommonsService,
 } from '../../feature/wikimedia-commons/wikimedia-commons.service';
@@ -125,6 +125,36 @@ interface Recommendation extends SavedScene {
 	tags: RecommendationTag[];
 }
 
+const RECOMMENDATION_TAGS: Record<RecommendationTag, string[]> = {
+	atmosphere: [
+		'atmosphere',
+		'fog',
+		'mist',
+		'sunset',
+		'sunrise',
+		'rain',
+		'cloud',
+		'light',
+		'mood',
+	],
+	cinematic: ['cinematic', 'film', 'movie', 'dramatic', 'slow motion', 'bokeh', 'lens'],
+	nature: [
+		'nature',
+		'forest',
+		'tree',
+		'lake',
+		'ocean',
+		'sea',
+		'water',
+		'mountain',
+		'wildlife',
+		'flower',
+		'landscape',
+		'beach',
+	],
+	city: ['city', 'urban', 'street', 'building', 'architecture', 'traffic', 'road', 'subway'],
+};
+
 const HOME_CATEGORIES: HomeCategory[] = [
 	{ id: 'for-you', label: 'Для вас' },
 	{ id: 'atmosphere', label: 'Атмосфера' },
@@ -210,6 +240,7 @@ const HOME_RECOMMENDATIONS: Recommendation[] = [
 })
 export class LandingComponent {
 	private readonly _route = inject(ActivatedRoute);
+	private readonly _platformId = inject(PLATFORM_ID);
 	protected readonly pageMode = this._route.snapshot.data['pageMode'] as 'explore' | 'search';
 	protected readonly categories = HOME_CATEGORIES;
 	protected readonly activeCategory = signal<CategoryId>(
@@ -249,6 +280,8 @@ export class LandingComponent {
 	protected readonly commonsError = signal('');
 	protected readonly providerNotice = signal('');
 	private readonly _commonsVideos = signal<Recommendation[]>([]);
+	protected readonly recommendationsLoading = signal(false);
+	private readonly _coverrRecommendations = signal<Recommendation[]>([]);
 	protected readonly recommendationCountLabel = computed(() =>
 		sceneCountLabel(this.recommendations().length),
 	);
@@ -268,6 +301,8 @@ export class LandingComponent {
 		if (this.submittedQuery().trim()) {
 			this._recordSearch('text');
 			void this._loadVideos(this.submittedQuery());
+		} else if (this.pageMode === 'explore') {
+			void this._loadRecommendations();
 		}
 		this._destroyRef.onDestroy(() => {
 			if (this._recognition) {
@@ -288,7 +323,12 @@ export class LandingComponent {
 		const orientationFilter = this.orientationFilter();
 		const qualityFilter = this.qualityFilter();
 
-		const source = this.pageMode === 'search' ? this._commonsVideos() : HOME_RECOMMENDATIONS;
+		const source =
+			this.pageMode === 'search'
+				? this._commonsVideos()
+				: this._coverrRecommendations().length
+					? this._coverrRecommendations()
+					: HOME_RECOMMENDATIONS;
 		let matches = source.filter(
 			(item) => category === 'for-you' || item.tags.includes(category),
 		);
@@ -546,6 +586,44 @@ export class LandingComponent {
 			tags: [],
 			searchText: `${video.title} ${video.searchText}`,
 		};
+	}
+
+	private async _loadRecommendations() {
+		if (!isPlatformBrowser(this._platformId)) {
+			return;
+		}
+		this.recommendationsLoading.set(true);
+		try {
+			const videos = await this._coverr.popularVideos();
+			if (videos.length) {
+				this._coverrRecommendations.set(videos.map((video) => this._toCoverrRecommendation(video)));
+				this.providerNotice.set('Популярні відео Coverr, впорядковані за популярністю.');
+			} else {
+				this._coverrRecommendations.set([]);
+				this.providerNotice.set('Не вдалося завантажити добірку Coverr. Показані приклади сцен.');
+			}
+		} catch {
+			this._coverrRecommendations.set([]);
+			this.providerNotice.set('Coverr недоступний. Показані приклади сцен.');
+		} finally {
+			this.recommendationsLoading.set(false);
+		}
+	}
+
+	private _toCoverrRecommendation(video: CoverrVideo): Recommendation {
+		const searchableText = `${video.title} ${video.searchText}`.toLocaleLowerCase('en');
+		const tags = (Object.keys(RECOMMENDATION_TAGS) as RecommendationTag[]).filter((category) =>
+			RECOMMENDATION_TAGS[category].some((keyword) => searchableText.includes(keyword)),
+		);
+		const scene: Recommendation['scene'] = tags.includes('city')
+			? 'city'
+			: tags.includes('nature')
+				? 'forest'
+				: tags.includes('cinematic')
+					? 'night'
+					: 'coast';
+
+		return { ...video, tags, scene };
 	}
 
 	protected retryCommonsSearch() {
