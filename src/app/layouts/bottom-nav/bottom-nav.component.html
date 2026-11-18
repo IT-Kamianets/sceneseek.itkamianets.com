@@ -23,6 +23,17 @@
 			<span class="sidebar__tooltip" role="tooltip"><span translate>Search</span></span>
 		</a>
 
+		<a [translate]="{ ariaLabel: 'AI agent' }"
+			class="sidebar__link"
+			routerLink="/agent"
+			routerLinkActive="is-active"
+			ariaCurrentWhenActive="page"
+			aria-label="AI agent"
+		>
+			<span class="material-symbols-outlined" aria-hidden="true">smart_toy</span>
+			<span class="sidebar__tooltip" role="tooltip"><span translate>AI agent</span></span>
+		</a>
+
 		<a [translate]="{ ariaLabel: 'History' }"
 			class="sidebar__link"
 			routerLink="/history"

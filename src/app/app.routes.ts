@@ -67,6 +67,11 @@ export const routes: Routes = [
 			import('./pages/profile/profile.component').then((module) => module.ProfileComponent),
 	},
 	{
+		...sectionRoute('agent', 'AI agent'),
+		loadComponent: () =>
+			import('./pages/agent/agent.component').then((module) => module.AgentComponent),
+	},
+	{
 		path: 'auth',
 		children: [
 			authRoute('login', 'login', 'Sign in', 'Sign in to your SceneSeek account.'),

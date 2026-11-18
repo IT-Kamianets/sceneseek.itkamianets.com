@@ -1,0 +1,68 @@
+:host {
+	display: block;
+	min-height: 100%;
+	color: var(--foreground);
+	background:
+		radial-gradient(ellipse at 50% 0%, color-mix(in oklch, var(--primary) 11%, transparent), transparent 34rem),
+		var(--background);
+}
+
+.agent-page {
+	width: min(100%, 76rem);
+	min-height: calc(100dvh - 10rem);
+	margin-inline: auto;
+	padding: 2rem clamp(1rem, 3vw, 2.25rem) 2.5rem;
+}
+
+.agent-page__heading {
+	margin-bottom: 1.5rem;
+}
+
+.agent-page__eyebrow {
+	margin: 0 0 0.4rem;
+	color: var(--primary);
+	font-size: 0.7rem;
+	font-weight: 700;
+	letter-spacing: 0.14em;
+}
+
+.agent-page__heading h1 {
+	margin: 0;
+	color: var(--foreground);
+	font-size: clamp(1.75rem, 4vw, 2.5rem);
+	font-weight: 600;
+}
+
+.agent-page__heading > p:last-child {
+	margin: 0.5rem 0 0;
+	color: var(--muted-foreground);
+}
+
+.agent-frame-shell {
+	min-height: 700px;
+	overflow: hidden;
+	border: 1px solid var(--border);
+	border-radius: 1.25rem;
+	background: #090710;
+	box-shadow: 0 1.25rem 3rem color-mix(in srgb, var(--foreground) 12%, transparent);
+}
+
+.agent-frame {
+	display: block;
+	width: 100%;
+	height: min(78dvh, 58rem);
+	min-height: 700px;
+	border: 0;
+	background: #090710;
+}
+
+@media (max-width: 40rem) {
+	.agent-page {
+		padding-top: 1.5rem;
+	}
+
+	.agent-frame-shell,
+	.agent-frame {
+		min-height: 700px;
+	}
+}
