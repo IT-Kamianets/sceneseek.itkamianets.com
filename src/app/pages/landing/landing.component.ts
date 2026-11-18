@@ -16,6 +16,7 @@ import { FirebaseAuthService } from '../../feature/firebase-auth/firebase-auth.s
 import {
 	SearchHistoryCategory,
 	SearchHistoryDraft,
+	SearchHistoryEntry,
 	SearchHistoryDuration,
 	SearchHistoryInputMethod,
 	SearchHistoryOrientation,
@@ -233,6 +234,8 @@ export class LandingComponent {
 	private readonly _language = inject(LanguageService);
 	private readonly _translate = inject(TranslateService);
 	private readonly _platformId = inject(PLATFORM_ID);
+	protected readonly auth = inject(FirebaseAuthService);
+	protected readonly searchHistory = inject(SearchHistoryService);
 	protected readonly pageMode = this._route.snapshot.data['pageMode'] as 'explore' | 'search';
 	protected readonly categories = HOME_CATEGORIES;
 	protected readonly activeCategory = signal<CategoryId>(
@@ -283,6 +286,17 @@ export class LandingComponent {
 	protected readonly pageNumbers = computed(() =>
 		Array.from({ length: this.pageCount() }, (_, index) => index + 1),
 	);
+	protected readonly recentSearches = computed(() => {
+		const seen = new Set<string>();
+		return this.searchHistory.entries().filter((entry) => {
+			const normalizedQuery = entry.query.trim().toLocaleLowerCase('en');
+			if (!normalizedQuery || seen.has(normalizedQuery)) {
+				return false;
+			}
+			seen.add(normalizedQuery);
+			return true;
+		}).slice(0, 5);
+	});
 	protected readonly visibleRecommendations = computed(() => {
 		const start = (this.currentPage() - 1) * this.pageSize;
 		return this.recommendations().slice(start, start + this.pageSize);
@@ -302,8 +316,6 @@ export class LandingComponent {
 		return this._translate.interpolate(this.translateText('Page {{page}}'), { page });
 	}
 	private readonly _authPrompt = inject(AuthPromptService);
-	private readonly _auth = inject(FirebaseAuthService);
-	private readonly _searchHistory = inject(SearchHistoryService);
 	private readonly _coverr = inject(CoverrVideoService);
 	private readonly _wikimediaCommons = inject(WikimediaCommonsService);
 	protected readonly savedScenes = inject(SavedScenesService);
@@ -319,6 +331,9 @@ export class LandingComponent {
 			void this._loadVideos(this.submittedQuery());
 		} else if (this.pageMode === 'explore') {
 			void this._loadRecommendations();
+		}
+		if (this.pageMode === 'search') {
+			void this.searchHistory.load().catch(() => undefined);
 		}
 		this._destroyRef.onDestroy(() => {
 			if (this._recognition) {
@@ -492,10 +507,26 @@ export class LandingComponent {
 			inputMethod,
 			hasImage: Boolean(this.selectedPhotoName()),
 		};
-		void this._searchHistory.record(entry).catch(() => {
+		void this.searchHistory.record(entry).catch(() => {
 			this.searchError.set(false);
-			this.searchMessage.set(this._searchHistory.message());
+			this.searchMessage.set(this.searchHistory.message());
 		});
+	}
+
+	protected applyRecentSearch(entry: SearchHistoryEntry) {
+		this.query.set(entry.query);
+		this.submittedQuery.set(entry.query);
+		this.durationFilter.set(entry.durationFilter);
+		this.orientationFilter.set(entry.orientationFilter);
+		this.qualityFilter.set(entry.qualityFilter);
+		this.sortOrder.set(entry.sortOrder);
+		this.activeCategory.set(entry.category);
+		this._lastInputMethod.set(entry.inputMethod);
+		this.currentPage.set(1);
+		this.searchMessage.set('');
+		this.searchError.set(false);
+		this._recordSearch(entry.inputMethod);
+		void this._loadVideos(entry.query);
 	}
 
 	protected onVoiceSearch() {
@@ -659,7 +690,7 @@ export class LandingComponent {
 		this.previewScene.set(item);
 		this.playbackQuality.set('max');
 		this._previewDialog?.nativeElement.showModal();
-		void this._searchHistory.recordViewed(item);
+		void this.searchHistory.recordViewed(item);
 	}
 
 	protected videoVariants(item: Recommendation) {
@@ -753,8 +784,8 @@ export class LandingComponent {
 	}
 
 	protected async toggleSavedScene(item: Recommendation) {
-		await this._auth.waitUntilReady();
-		if (!this._auth.user()) {
+		await this.auth.waitUntilReady();
+		if (!this.auth.user()) {
 			this._authPrompt.open('saved');
 			return;
 		}

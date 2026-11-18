@@ -34,18 +34,6 @@
 			<span class="sidebar__tooltip" role="tooltip"><span translate>AI agent</span></span>
 		</a>
 
-		<a [translate]="{ ariaLabel: 'History' }"
-			class="sidebar__link"
-			routerLink="/history"
-			routerLinkActive="is-active"
-			ariaCurrentWhenActive="page"
-			aria-label="History"
-			(click)="promptForSignIn('history')"
-		>
-			<span class="material-symbols-outlined" aria-hidden="true">history</span>
-			<span class="sidebar__tooltip" role="tooltip"><span translate>History</span></span>
-		</a>
-
 		<a [translate]="{ ariaLabel: 'Saved' }"
 			class="sidebar__link"
 			routerLink="/saved"

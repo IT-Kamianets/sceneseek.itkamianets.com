@@ -338,5 +338,9 @@
 	"AI agent": "AI agent",
 	"SCENESEEK CREATIVE COPILOT": "SCENESEEK CREATIVE COPILOT",
 	"Describe the footage you need and get creative help from your SceneSeek copilot.": "Describe the footage you need and get creative help from your SceneSeek copilot.",
-	"SceneSeek AI agent": "SceneSeek AI agent"
+	"SceneSeek AI agent": "SceneSeek AI agent",
+	"Recent searches": "Recent searches",
+	"View all": "View all",
+	"Loading recent searches…": "Loading recent searches…",
+	"Your recent searches will appear here.": "Your recent searches will appear here."
 }

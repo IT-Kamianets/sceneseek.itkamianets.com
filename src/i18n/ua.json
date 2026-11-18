@@ -338,5 +338,9 @@
 	"AI agent": "AI-агент",
 	"SCENESEEK CREATIVE COPILOT": "ТВОРЧИЙ ПОМІЧНИК SCENESEEK",
 	"Describe the footage you need and get creative help from your SceneSeek copilot.": "Опишіть потрібний відеофутаж і отримайте творчу допомогу від AI-помічника SceneSeek.",
-	"SceneSeek AI agent": "AI-агент SceneSeek"
+	"SceneSeek AI agent": "AI-агент SceneSeek",
+	"Recent searches": "Останні запити",
+	"View all": "Переглянути всі",
+	"Loading recent searches…": "Завантажуємо останні запити…",
+	"Your recent searches will appear here.": "Тут з’являтимуться ваші останні запити."
 }

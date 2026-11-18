@@ -53,6 +53,27 @@
 				<label class="home-filter home-filter--sort"><span class="material-symbols-outlined" aria-hidden="true">sort</span><span class="visually-hidden"><span translate>Sorting</span></span><select [translate]="{ ariaLabel: 'Sort results' }" aria-label="Sort results" [value]="sortOrder()" (change)="setSortOrder($event)"><option translate value="relevance">Relevance</option><option translate value="shortest">Shortest first</option><option translate value="longest">Longest first</option></select></label>
 			</div>
 		</form>
+			@if (!submittedQuery() && auth.user()) {
+				<section class="home-recent-searches" aria-labelledby="recent-searches-title">
+					<header class="home-recent-searches__heading">
+						<h2 id="recent-searches-title"><span class="material-symbols-outlined" aria-hidden="true">history</span><span translate>Recent searches</span></h2>
+						<a routerLink="/history"><span translate>View all</span><span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+					</header>
+					@if (searchHistory.isLoading()) {
+						<p class="home-recent-searches__empty"><span translate>Loading recent searches…</span></p>
+					} @else if (searchHistory.message()) {
+						<p class="home-recent-searches__empty" role="status">{{ translateText(searchHistory.message()) }}</p>
+					} @else if (recentSearches().length) {
+						<div class="home-recent-searches__list">
+							@for (entry of recentSearches(); track entry.id) {
+								<button type="button" (click)="applyRecentSearch(entry)"><span class="material-symbols-outlined" aria-hidden="true">search</span><span>{{ entry.query }}</span><span class="material-symbols-outlined home-recent-searches__open" aria-hidden="true">north_west</span></button>
+							}
+						</div>
+					} @else {
+						<p class="home-recent-searches__empty"><span translate>Your recent searches will appear here.</span></p>
+					}
+				</section>
+			}
 			</div>
 		</section>
 		}
