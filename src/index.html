@@ -7,13 +7,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script>
       try {
-        const storedMode = localStorage.getItem('app-mode');
+        const storedMode = localStorage.getItem('theme.mode');
         const preferredMode =
           storedMode === 'dark' || storedMode === 'light'
             ? storedMode
-            : window.matchMedia('(prefers-color-scheme: dark)').matches
-              ? 'dark'
-              : 'light';
+            : 'dark';
         document.documentElement.setAttribute('data-mode', preferredMode);
       } catch {}
     </script>

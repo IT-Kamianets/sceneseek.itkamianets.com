@@ -49,7 +49,7 @@ export const appConfig: ApplicationConfig = {
 		provideNgxDefaultSeo({
 			siteUrl: companyProfile.siteUrl,
 		}),
-		provideNgxUi(),
+		provideNgxUi({ mode: 'dark' }),
 		provideRouter(routes),
 		provideClientHydration(withEventReplay()),
 		provideTranslate({
