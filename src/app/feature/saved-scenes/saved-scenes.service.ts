@@ -36,6 +36,12 @@ export interface SavedFolder {
 
 type FirestoreSdk = typeof import('firebase/firestore');
 
+function omitUndefined<T extends Record<string, unknown>>(value: T): T {
+	return Object.fromEntries(
+		Object.entries(value).filter(([, fieldValue]) => fieldValue !== undefined),
+	) as T;
+}
+
 @Service()
 export class SavedScenesService {
 	private readonly _platformId = inject(PLATFORM_ID);
@@ -210,7 +216,7 @@ export class SavedScenesService {
 				await sdk.deleteDoc(sceneRef);
 				this.scenes.update((items) => items.filter((item) => item.id !== scene.id));
 			} else {
-				const savedScene = { ...scene, savedAt: Date.now() };
+				const savedScene = omitUndefined({ ...scene, savedAt: Date.now() });
 				await sdk.setDoc(sceneRef, savedScene);
 				this.scenes.update((items) => [savedScene, ...items]);
 			}
