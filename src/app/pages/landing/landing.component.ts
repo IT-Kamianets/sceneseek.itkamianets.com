@@ -282,6 +282,18 @@ export class LandingComponent {
 	private readonly _commonsVideos = signal<Recommendation[]>([]);
 	protected readonly recommendationsLoading = signal(false);
 	private readonly _coverrRecommendations = signal<Recommendation[]>([]);
+	protected readonly currentPage = signal(1);
+	protected readonly pageSize = 12;
+	protected readonly pageCount = computed(() =>
+		Math.max(1, Math.ceil(this.recommendations().length / this.pageSize)),
+	);
+	protected readonly pageNumbers = computed(() =>
+		Array.from({ length: this.pageCount() }, (_, index) => index + 1),
+	);
+	protected readonly visibleRecommendations = computed(() => {
+		const start = (this.currentPage() - 1) * this.pageSize;
+		return this.recommendations().slice(start, start + this.pageSize);
+	});
 	protected readonly recommendationCountLabel = computed(() =>
 		sceneCountLabel(this.recommendations().length),
 	);
@@ -418,6 +430,7 @@ export class LandingComponent {
 		}
 
 		this._lastInputMethod.set('text');
+		this.currentPage.set(1);
 		this.submittedQuery.set(query);
 		this.searchError.set(false);
 		this.searchMessage.set(
@@ -430,26 +443,31 @@ export class LandingComponent {
 	}
 
 	protected setCategory(category: CategoryId) {
+		this.currentPage.set(1);
 		this.activeCategory.set(category);
 		this._recordSearch(this._lastInputMethod());
 	}
 
 	protected setSortOrder(event: Event) {
+		this.currentPage.set(1);
 		this.sortOrder.set((event.target as HTMLSelectElement).value as SortOrder);
 		this._recordSearch(this._lastInputMethod());
 	}
 
 	protected setDurationFilter(event: Event) {
+		this.currentPage.set(1);
 		this.durationFilter.set((event.target as HTMLSelectElement).value as DurationFilter);
 		this._recordSearch(this._lastInputMethod());
 	}
 
 	protected setOrientationFilter(event: Event) {
+		this.currentPage.set(1);
 		this.orientationFilter.set((event.target as HTMLSelectElement).value as OrientationFilter);
 		this._recordSearch(this._lastInputMethod());
 	}
 
 	protected setQualityFilter(event: Event) {
+		this.currentPage.set(1);
 		this.qualityFilter.set((event.target as HTMLSelectElement).value as QualityFilter);
 		this._recordSearch(this._lastInputMethod());
 	}
@@ -500,6 +518,7 @@ export class LandingComponent {
 			}
 
 			this.query.set(transcript);
+			this.currentPage.set(1);
 			this.submittedQuery.set(transcript);
 			this._lastInputMethod.set('voice');
 			this.searchMessage.set('');
@@ -544,6 +563,7 @@ export class LandingComponent {
 	}
 
 	private async _loadVideos(query: string) {
+		this.currentPage.set(1);
 		const request = ++this._searchRequest;
 		this._commonsVideos.set([]);
 		this.commonsError.set('');
@@ -592,6 +612,7 @@ export class LandingComponent {
 		if (!isPlatformBrowser(this._platformId)) {
 			return;
 		}
+		this.currentPage.set(1);
 		this.recommendationsLoading.set(true);
 		try {
 			const videos = await this._coverr.popularVideos();
@@ -693,6 +714,7 @@ export class LandingComponent {
 	}
 
 	protected resetSearch() {
+		this.currentPage.set(1);
 		this.query.set('');
 		this.submittedQuery.set('');
 		this.selectedPhotoName.set('');
@@ -706,6 +728,10 @@ export class LandingComponent {
 		if (this._photoInput) {
 			this._photoInput.nativeElement.value = '';
 		}
+	}
+
+	protected goToPage(page: number) {
+		this.currentPage.set(Math.min(Math.max(page, 1), this.pageCount()));
 	}
 
 	protected async toggleSavedScene(item: Recommendation) {

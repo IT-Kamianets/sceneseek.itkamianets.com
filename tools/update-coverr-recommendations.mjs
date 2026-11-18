@@ -10,24 +10,39 @@ if (!apiKey) {
 	throw new Error('The COVERR_API_KEY GitHub secret is missing.');
 }
 
-const params = new URLSearchParams({ sort: 'popularity', page_size: '12', urls: 'true' });
-const response = await fetch(`https://api.coverr.co/videos?${params}`, {
-	headers: { Accept: 'application/json', 'x-api-key': apiKey },
-	signal: AbortSignal.timeout(25_000),
-});
+const pageSize = 12;
+const pageCount = 5;
+const pages = await Promise.all(
+	Array.from({ length: pageCount }, async (_, page) => {
+		const params = new URLSearchParams({
+			sort: 'popular',
+			page: String(page),
+			page_size: String(pageSize),
+			urls: 'true',
+		});
+		const response = await fetch(`https://api.coverr.co/videos?${params}`, {
+			headers: { Accept: 'application/json', 'x-api-key': apiKey },
+			signal: AbortSignal.timeout(25_000),
+		});
 
-if (!response.ok) {
-	throw new Error(`Coverr API request failed with status ${response.status}.`);
-}
+		if (!response.ok) {
+			throw new Error(`Coverr API request for page ${page + 1} failed with status ${response.status}.`);
+		}
+		return response.json();
+	}),
+);
 
-const payload = await response.json();
-if (!Array.isArray(payload.hits) || payload.hits.length === 0) {
+const firstPage = pages[0];
+const hits = pages.flatMap((payload) => (Array.isArray(payload.hits) ? payload.hits : []));
+if (hits.length === 0) {
 	throw new Error('Coverr API returned no popular videos; keeping the previous snapshot.');
 }
 
 const snapshot = {
 	fetchedAt: new Date().toISOString(),
-	hits: payload.hits.slice(0, 12),
+	total: firstPage.total ?? hits.length,
+	pageSize,
+	hits,
 };
 
 await mkdir(dirname(outputPath), { recursive: true });

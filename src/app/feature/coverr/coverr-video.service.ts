@@ -38,6 +38,9 @@ interface CoverrVideoRecord {
 interface CoverrSearchResponse {
 	hits?: CoverrVideoRecord[];
 	error?: string;
+	page?: number;
+	pages?: number;
+	total?: number;
 }
 
 export interface CoverrVideo extends SavedScene {
@@ -111,7 +114,7 @@ export class CoverrVideoService {
 
 		return this._fetchVideos(
 			new URLSearchParams({
-				sort: 'popularity',
+				sort: 'popular',
 				page_size: '12',
 				urls: 'true',
 			}),
