@@ -1,4 +1,4 @@
-<main class="home-page" [attr.aria-labelledby]="pageMode === 'explore' ? 'hero-title' : 'home-title'">
+<main class="home-page" [attr.aria-labelledby]="pageMode === 'explore' ? 'hero-title' : 'home-title'" (document:pointerdown)="onDocumentPointerDown($event)">
 	<div class="home-content">
 		@if (pageMode === 'explore') {
 		<section class="home-hero-track" aria-labelledby="hero-title">
@@ -29,12 +29,12 @@
 			<p class="home-header__description"><span translate>Describe a scene, speak your search, or add an image to find the right shot for your story.</span></p>
 		</header>
 
-		<form id="home-search" class="home-search" (submit)="onSearchSubmit($event)">
+		<form #homeSearchForm id="home-search" class="home-search" (submit)="onSearchSubmit($event)">
 			<div class="home-search__row">
 				<div class="home-search__field">
 					<button [translate]="{ ariaLabel: 'Add an image to your search', title: 'Add an image to your search' }" class="home-photo-action" type="button" aria-label="Add an image to your search" title="Add an image to your search" aria-controls="home-photo-input" (click)="photoInput.click()"><span class="material-symbols-outlined" aria-hidden="true">add_photo_alternate</span></button>
 					<label class="visually-hidden" for="home-query"><span translate>Describe a scene</span></label>
-					<input [translate]="{ placeholder: 'e.g. fog over a lake at sunrise' }" id="home-query" type="search" [value]="query()" (input)="onQueryChange($event)" placeholder="e.g. fog over a lake at sunrise" />
+					<input [translate]="{ placeholder: 'e.g. fog over a lake at sunrise' }" id="home-query" type="search" [value]="query()" (focus)="recentSearchesOpen.set(true)" (keydown.escape)="hideRecentSearches()" (input)="onQueryChange($event)" placeholder="e.g. fog over a lake at sunrise" />
 					<button class="home-voice-action" type="button" [class.is-listening]="isListening()" [disabled]="!voiceSupported()" [attr.aria-pressed]="isListening()" [attr.aria-label]="translateText(isListening() ? 'Stop voice search' : 'Search by voice')" [attr.title]="translateText(voiceSupported() ? 'Voice search in English' : 'Voice search is unavailable in this browser')" (click)="onVoiceSearch()"><span class="material-symbols-outlined" aria-hidden="true">{{ isListening() ? 'graphic_eq' : 'mic' }}</span><span>{{ translateText(isListening() ? 'Listening' : 'Voice') }}</span></button>
 					<input #photoInput id="home-photo-input" class="visually-hidden" tabindex="-1" type="file" accept="image/*" (change)="onPhotoSelected($event)" />
 				</div>
@@ -53,8 +53,8 @@
 				<label class="home-filter home-filter--sort"><span class="material-symbols-outlined" aria-hidden="true">sort</span><span class="visually-hidden"><span translate>Sorting</span></span><select [translate]="{ ariaLabel: 'Sort results' }" aria-label="Sort results" [value]="sortOrder()" (change)="setSortOrder($event)"><option translate value="relevance">Relevance</option><option translate value="shortest">Shortest first</option><option translate value="longest">Longest first</option></select></label>
 			</div>
 		</form>
-			@if (!submittedQuery() && auth.user()) {
-				<section class="home-recent-searches" aria-labelledby="recent-searches-title">
+			@if (!submittedQuery() && auth.user() && recentSearchesOpen()) {
+				<section #recentSearchPanel class="home-recent-searches" aria-labelledby="recent-searches-title">
 					<header class="home-recent-searches__heading">
 						<h2 id="recent-searches-title"><span class="material-symbols-outlined" aria-hidden="true">history</span><span translate>Recent searches</span></h2>
 						<a routerLink="/history"><span translate>View all</span><span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>

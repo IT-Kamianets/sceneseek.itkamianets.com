@@ -248,6 +248,7 @@ export class LandingComponent {
 	);
 	protected readonly query = signal(this._route.snapshot.queryParamMap.get('q') ?? '');
 	protected readonly submittedQuery = signal(this._route.snapshot.queryParamMap.get('q') ?? '');
+	protected readonly recentSearchesOpen = signal(this.pageMode === 'search');
 	protected readonly selectedPhotoName = signal('');
 	protected readonly searchMessage = signal('');
 	protected readonly searchError = signal(false);
@@ -322,6 +323,8 @@ export class LandingComponent {
 	private readonly _destroyRef = inject(DestroyRef);
 	private _recognition: SpeechRecognitionLike | null = null;
 	private _searchRequest = 0;
+	@ViewChild('homeSearchForm') private _homeSearchForm?: ElementRef<HTMLFormElement>;
+	@ViewChild('recentSearchPanel') private _recentSearchPanel?: ElementRef<HTMLElement>;
 	@ViewChild('previewDialog') private _previewDialog?: ElementRef<HTMLDialogElement>;
 	@ViewChild('photoInput') private _photoInput?: ElementRef<HTMLInputElement>;
 
@@ -431,8 +434,24 @@ export class LandingComponent {
 		this.searchError.set(false);
 	}
 
+	protected onDocumentPointerDown(event: PointerEvent) {
+		const target = event.target;
+		if (!(target instanceof Node)) return;
+		if (
+			!this._homeSearchForm?.nativeElement.contains(target) &&
+			!this._recentSearchPanel?.nativeElement.contains(target)
+		) {
+			this.recentSearchesOpen.set(false);
+		}
+	}
+
+	protected hideRecentSearches() {
+		this.recentSearchesOpen.set(false);
+	}
+
 	protected onSearchSubmit(event: Event) {
 		event.preventDefault();
+		this.hideRecentSearches();
 		const query = this.query().trim();
 
 		if (!query && !this.selectedPhotoName()) {
@@ -514,6 +533,7 @@ export class LandingComponent {
 	}
 
 	protected applyRecentSearch(entry: SearchHistoryEntry) {
+		this.hideRecentSearches();
 		this.query.set(entry.query);
 		this.submittedQuery.set(entry.query);
 		this.durationFilter.set(entry.durationFilter);
