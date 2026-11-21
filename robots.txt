@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://sceneseek.itkamianets.com/sitemap.xml
